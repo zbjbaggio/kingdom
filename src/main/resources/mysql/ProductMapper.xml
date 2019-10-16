@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kingdom.system.mapper.TbProductMapper">
+    
+    <resultMap type="com.kingdom.system.data.entity.ProductInfo" id="TbProductResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_date"    />
+        <result property="lastModified"    column="last_modified"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="stock"    column="stock"    />
+        <result property="totalSale"    column="total_sale"    />
+        <result property="priority"    column="priority"    />
+        <result property="totalIn"    column="total_in"    />
+    </resultMap>
+	
+	<sql id="selectTbProductVo">
+        select id, create_date, last_modified, code, name, remark, status, stock, total_sale, priority, total_in from tb_product
+    </sql>
+	
+    <select id="selectTbProductList" parameterType="ProductInfo" resultMap="TbProductResult">
+        <include refid="selectTbProductVo"/>
+        <where>  
+            <if test="id != null  and id != '' "> and id = #{id}</if>
+             <if test="createDate != null "> and create_date = #{createDate}</if>
+             <if test="lastModified != null "> and last_modified = #{lastModified}</if>
+             <if test="code != null  and code != '' "> and code = #{code}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="status != null "> and status = #{status}</if>
+             <if test="stock != null "> and stock = #{stock}</if>
+             <if test="totalSale != null "> and total_sale = #{totalSale}</if>
+             <if test="priority != null "> and priority = #{priority}</if>
+             <if test="totalIn != null "> and total_in = #{totalIn}</if>
+         </where>
+    </select>
+    
+    <select id="selectTbProductById" parameterType="String" resultMap="TbProductResult">
+        <include refid="selectTbProductVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTbProduct" parameterType="ProductInfo">
+        insert into tb_product
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  and id != ''  ">id,</if>
+			<if test="createDate != null  ">create_date,</if>
+			<if test="lastModified != null  ">last_modified,</if>
+			<if test="code != null  and code != ''  ">code,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="status != null  ">status,</if>
+			<if test="stock != null  ">stock,</if>
+			<if test="totalSale != null  ">total_sale,</if>
+			<if test="priority != null  ">priority,</if>
+			<if test="totalIn != null  ">total_in,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  and id != ''  ">#{id},</if>
+			<if test="createDate != null  ">#{createDate},</if>
+			<if test="lastModified != null  ">#{lastModified},</if>
+			<if test="code != null  and code != ''  ">#{code},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="stock != null  ">#{stock},</if>
+			<if test="totalSale != null  ">#{totalSale},</if>
+			<if test="priority != null  ">#{priority},</if>
+			<if test="totalIn != null  ">#{totalIn},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateTbProduct" parameterType="ProductInfo">
+        update tb_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="lastModified != null  ">last_modified = #{lastModified},</if>
+            <if test="code != null  and code != ''  ">code = #{code},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="stock != null  ">stock = #{stock},</if>
+            <if test="totalSale != null  ">total_sale = #{totalSale},</if>
+            <if test="priority != null  ">priority = #{priority},</if>
+            <if test="totalIn != null  ">total_in = #{totalIn},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteTbProductById" parameterType="String">
+        delete from tb_product where id = #{id}
+    </delete>
+	
+    <delete id="deleteTbProductByIds" parameterType="String">
+        delete from tb_product where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
