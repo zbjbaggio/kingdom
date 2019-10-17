@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kingdom.system.mapper.UserSendAddressMapper">
+    
+    <resultMap type="com.kingdom.system.data.entity.UserSendAddress" id="UserSendAddressResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="lastModified"    column="last_modified"    />
+        <result property="address"    column="address"    />
+        <result property="common"    column="common"    />
+        <result property="dr"    column="dr"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="remark"    column="remark"    />
+        <result property="takedName"    column="taked_name"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+	
+	<sql id="selectUserSendAddressVo">
+        select id, create_time, last_modified, address, common, dr, mobile, remark, taked_name, user_id from t_user_send_address
+    </sql>
+	
+    <select id="selectUserSendAddressList" parameterType="com.kingdom.system.data.entity.UserSendAddress" resultMap="UserSendAddressResult">
+        <include refid="selectUserSendAddressVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="lastModified != null "> and last_modified = #{lastModified}</if>
+             <if test="address != null  and address != '' "> and address = #{address}</if>
+             <if test="common != null "> and common = #{common}</if>
+             <if test="dr != null "> and dr = #{dr}</if>
+             <if test="mobile != null  and mobile != '' "> and mobile = #{mobile}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="takedName != null  and takedName != '' "> and taked_name = #{takedName}</if>
+             <if test="userId != null "> and user_id = #{userId}</if>
+         </where>
+    </select>
+    
+    <select id="selectUserSendAddressById" parameterType="Long" resultMap="UserSendAddressResult">
+        <include refid="selectUserSendAddressVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserSendAddress" parameterType="com.kingdom.system.data.entity.UserSendAddress">
+        insert into t_user_send_address
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="lastModified != null  ">last_modified,</if>
+			<if test="address != null  and address != ''  ">address,</if>
+			<if test="common != null  ">common,</if>
+			<if test="dr != null  ">dr,</if>
+			<if test="mobile != null  and mobile != ''  ">mobile,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="takedName != null  and takedName != ''  ">taked_name,</if>
+			<if test="userId != null  ">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="lastModified != null  ">#{lastModified},</if>
+			<if test="address != null  and address != ''  ">#{address},</if>
+			<if test="common != null  ">#{common},</if>
+			<if test="dr != null  ">#{dr},</if>
+			<if test="mobile != null  and mobile != ''  ">#{mobile},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="takedName != null  and takedName != ''  ">#{takedName},</if>
+			<if test="userId != null  ">#{userId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateUserSendAddress" parameterType="com.kingdom.system.data.entity.UserSendAddress">
+        update t_user_send_address
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="lastModified != null  ">last_modified = #{lastModified},</if>
+            <if test="address != null  and address != ''  ">address = #{address},</if>
+            <if test="common != null  ">common = #{common},</if>
+            <if test="dr != null  ">dr = #{dr},</if>
+            <if test="mobile != null  and mobile != ''  ">mobile = #{mobile},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="takedName != null  and takedName != ''  ">taked_name = #{takedName},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteUserSendAddressById" parameterType="Long">
+        delete from t_user_send_address where id = #{id}
+    </delete>
+	
+    <delete id="deleteUserSendAddressByIds" parameterType="String">
+        delete from t_user_send_address where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

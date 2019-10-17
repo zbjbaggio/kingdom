@@ -29,18 +29,8 @@ public class LoginAspect {
 
 
 
-    @Pointcut("execution (* com.springboot.base.controller..*.*(..)) and @annotation(org.springframework.web.bind.annotation.RequestMapping)")
+    @Pointcut("execution (* com.kingdom.system.controller..*.*(..)) and @annotation(org.springframework.web.bind.annotation.RequestMapping)")
     private void aspectMethod() {
-
-    }
-
-    @Pointcut("execution ( * com.springboot.base.controller..*.list*(..)) and @annotation(org.springframework.web.bind.annotation.RequestMapping)")
-    private void aspectListMethod() {
-
-    }
-
-    @Pointcut("execution ( * com.springboot.base.controller..*.get*(..)) and @annotation(org.springframework.web.bind.annotation.RequestMapping)")
-    private void aspectGetMethod() {
 
     }
 
@@ -66,13 +56,4 @@ public class LoginAspect {
         log.info("日志【返回】方法为:{}  返回值为：{}  【共耗时-{}-毫秒】 ", className + "." + methodName, returnValue, System.currentTimeMillis() - startTime);
     }
 
-    @AfterReturning(value = "aspectMethod() &&!aspectListMethod() &&!aspectGetMethod()", returning = "returnValue")
-    public void afterWriteLog(JoinPoint point, Object returnValue) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
-        log.info("URL : " + request.getRequestURL().toString());
-        log.info("HTTP_METHOD : " + request.getMethod());
-        log.info("IP : " + request.getRemoteAddr());
-        log.info("CLASS_METHOD : " + point.getSignature().getDeclaringTypeName() + "." + point.getSignature().getName());
-    }
 }

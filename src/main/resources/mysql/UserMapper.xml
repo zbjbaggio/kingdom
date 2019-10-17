@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kingdom.system.mapper.UserMapper">
+    
+    <resultMap type="com.kingdom.system.data.entity.UserEntity" id="UserResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="lastModified"    column="last_modified"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="realName"    column="real_name"    />
+        <result property="remark"    column="remark"    />
+        <result property="showName"    column="show_name"    />
+        <result property="totalAmount"    column="total_amount"    />
+        <result property="totalSend"    column="total_send"    />
+        <result property="totalTrans"    column="total_trans"    />
+        <result property="dr"    column="dr"    />
+        <result property="memberNo"    column="member_no"    />
+    </resultMap>
+	
+	<sql id="selectUserVo">
+        select id, create_time, last_modified, mobile, real_name, remark, show_name, total_amount, total_send, total_trans, dr, member_no from t_user
+    </sql>
+	
+    <select id="selectUserList" parameterType="com.kingdom.system.data.entity.UserEntity" resultMap="UserResult">
+        <include refid="selectUserVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="createDate != null "> and create_time = #{createDate}</if>
+             <if test="lastModified != null "> and last_modified = #{lastModified}</if>
+             <if test="mobile != null  and mobile != '' "> and mobile = #{mobile}</if>
+             <if test="realName != null  and realName != '' "> and real_name = #{realName}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="showName != null  and showName != '' "> and show_name = #{showName}</if>
+             <if test="totalAmount != null "> and total_amount = #{totalAmount}</if>
+             <if test="totalSend != null "> and total_send = #{totalSend}</if>
+             <if test="totalTrans != null "> and total_trans = #{totalTrans}</if>
+             <if test="dr != null "> and dr = #{dr}</if>
+             <if test="memberNo != null  and memberNo != '' "> and member_no = #{memberNo}</if>
+         </where>
+    </select>
+
+    <select id="list" resultMap="UserResult">
+        <include refid="selectUserVo"/>
+        <where>
+            and dr = 0
+            <if test="search != null and search != '' "> and (real_name like #{search} or mobile like #{search} or member_no like #{search}) </if>
+        </where>
+        order by id desc
+    </select>
+
+    
+    <select id="selectUserById" parameterType="Long" resultMap="UserResult">
+        <include refid="selectUserVo"/>
+        where dr = 0 and id = #{id}
+    </select>
+
+    <select id="listByMemberNo" parameterType="com.kingdom.system.data.entity.UserEntity" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM t_user
+        <where>
+            and dr = 0 and member_no = #{memberNo}
+            <if test="id != null and id != '' "> and id != #{id} </if>
+        </where>
+    </select>
+
+    <insert id="insertUser" parameterType="com.kingdom.system.data.entity.UserEntity" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="createTime != null  ">create_time,</if>
+			<if test="mobile != null  and mobile != ''  ">mobile,</if>
+			<if test="realName != null  and realName != ''  ">real_name,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="showName != null  and showName != ''  ">show_name,</if>
+			<if test="totalAmount != null  ">total_amount,</if>
+			<if test="totalSend != null  ">total_send,</if>
+			<if test="totalTrans != null  ">total_trans,</if>
+			<if test="dr != null  ">dr,</if>
+			<if test="memberNo != null  and memberNo != ''  ">member_no,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="mobile != null  and mobile != ''  ">#{mobile},</if>
+			<if test="realName != null  and realName != ''  ">#{realName},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="showName != null  and showName != ''  ">#{showName},</if>
+			<if test="totalAmount != null  ">#{totalAmount},</if>
+			<if test="totalSend != null  ">#{totalSend},</if>
+			<if test="totalTrans != null  ">#{totalTrans},</if>
+			<if test="dr != null  ">#{dr},</if>
+			<if test="memberNo != null  and memberNo != ''  ">#{memberNo},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateUser" parameterType="com.kingdom.system.data.entity.UserEntity">
+        update t_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="mobile != null  and mobile != ''  ">mobile = #{mobile},</if>
+            <if test="realName != null  and realName != ''  ">real_name = #{realName},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="showName != null  and showName != ''  ">show_name = #{showName},</if>
+            <if test="totalAmount != null  ">total_amount = #{totalAmount},</if>
+            <if test="totalSend != null  ">total_send = #{totalSend},</if>
+            <if test="totalTrans != null  ">total_trans = #{totalTrans},</if>
+            <if test="dr != null  ">dr = #{dr},</if>
+            <if test="memberNo != null  and memberNo != ''  ">member_no = #{memberNo},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    <update id="updateDr">
+        UPDATE t_user SET dr = #{dr} where id = #{id}
+    </update>
+
+    <delete id="deleteUserById" parameterType="Long">
+        delete from t_user where id = #{id}
+    </delete>
+	
+    <delete id="deleteUserByIds" parameterType="String">
+        delete from t_user where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

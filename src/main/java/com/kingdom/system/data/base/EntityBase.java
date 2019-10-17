@@ -3,6 +3,8 @@ package com.kingdom.system.data.base;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,10 +15,21 @@ import java.util.Date;
 @Data
 public class EntityBase implements Serializable {
 
+    @Null(groups = {Insert.class})
+    @NotNull(groups = {Update.class})
     private Long id;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
     private Date lastModified;
+
+    public interface Insert {
+
+    }
+
+    public interface Update {
+
+    }
+
 }

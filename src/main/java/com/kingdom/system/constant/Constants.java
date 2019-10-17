@@ -5,7 +5,7 @@ package com.kingdom.system.constant;
  *
  * @author ruoyi
  */
-public class Constants {
+public interface Constants {
     /**
      * UTF-8 字符集
      */

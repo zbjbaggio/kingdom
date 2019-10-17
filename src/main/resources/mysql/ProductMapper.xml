@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, create_date, last_modified, code, name, remark, status, stock, total_sale, priority, total_in from tb_product
     </sql>
 	
-    <select id="selectTbProductList" parameterType="ProductInfo" resultMap="TbProductResult">
+    <select id="selectTbProductList" parameterType="com.kingdom.system.data.entity.ProductInfo" resultMap="TbProductResult">
         <include refid="selectTbProductVo"/>
         <where>  
             <if test="id != null  and id != '' "> and id = #{id}</if>
@@ -44,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertTbProduct" parameterType="ProductInfo">
+    <insert id="insertTbProduct" parameterType="com.kingdom.system.data.entity.ProductInfo">
         insert into tb_product
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null  and id != ''  ">id,</if>
@@ -74,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 	 
-    <update id="updateTbProduct" parameterType="ProductInfo">
+    <update id="updateTbProduct" parameterType="com.kingdom.system.data.entity.ProductInfo">
         update tb_product
         <trim prefix="SET" suffixOverrides=",">
             <if test="createDate != null  ">create_date = #{createDate},</if>

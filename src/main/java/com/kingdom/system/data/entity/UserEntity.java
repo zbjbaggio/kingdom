@@ -3,6 +3,8 @@ package com.kingdom.system.data.entity;
 import com.kingdom.system.data.base.EntityBase;
 import lombok.Data;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -15,6 +17,7 @@ public class UserEntity extends EntityBase implements Serializable {
     private String showName;
 
     // 真实姓名
+    @NotEmpty(groups = BaseInfoSave.class)
     private String realName;
 
     // 会员卡号
@@ -36,7 +39,11 @@ public class UserEntity extends EntityBase implements Serializable {
     private Integer totalTrans;
 
     // dr状态
-    private Boolean dr;
+    private int dr;
+
+    public interface BaseInfoSave {
+    }
+
 
 /*    public void changeTotal(Integer totalSend, BigDecimal totalAmount, Integer totalTrans) {
         if (totalSend != null) {

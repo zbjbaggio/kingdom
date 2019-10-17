@@ -22,7 +22,7 @@ import java.util.Set;
  * 异常处理
  * Created by jay on 2016-10-25.
  */
-@ControllerAdvice(basePackages = "com.springboot.base.controller.advice")
+@ControllerAdvice(basePackages = "com.kingdom.system.controller.advice")
 @Slf4j
 public class ExceptionControllerAdvice implements ResponseBodyAdvice<Object> {
 
