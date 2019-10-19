@@ -2,6 +2,7 @@ package com.kingdom.system.data.base;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -19,7 +20,7 @@ public class EntityBase implements Serializable {
     @NotNull(groups = {Update.class})
     private Long id;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT-5")
     private Date createTime;
 
     private Date lastModified;

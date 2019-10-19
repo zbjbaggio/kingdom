@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kingdom.system.mapper.ExchangeRateRecordMapper">
+    
+    <resultMap type="com.kingdom.system.data.entity.ExchangeRateRecord" id="ExchangeRateRecordResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"  />
+        <result property="lastModified"    column="last_modified"    />
+        <result property="status"    column="status"    />
+        <result property="rate"    column="rate"    />
+    </resultMap>
+	
+	<sql id="selectExchangeRateRecordVo">
+        select id, create_time, last_modified, status, rate from t_exchange_rate_record
+    </sql>
+	
+    <select id="selectExchangeRateRecordList" parameterType="com.kingdom.system.data.entity.ExchangeRateRecord" resultMap="ExchangeRateRecordResult">
+        <include refid="selectExchangeRateRecordVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="lastModified != null "> and last_modified = #{lastModified}</if>
+             <if test="status != null "> and status = #{status}</if>
+             <if test="rate != null "> and rate = #{rate}</if>
+         </where>
+    </select>
+    
+    <select id="selectExchangeRateRecordById" parameterType="Long" resultMap="ExchangeRateRecordResult">
+        <include refid="selectExchangeRateRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="list" resultMap="ExchangeRateRecordResult">
+        <include refid="selectExchangeRateRecordVo"/>
+        <where>
+            <if test="date != '' "> and  DATE_FORMAT(create_time, '%Y-%m-%d') = #{date}</if>
+        </where>
+        order by id desc
+    </select>
+
+    <insert id="insertExchangeRateRecord" parameterType="com.kingdom.system.data.entity.ExchangeRateRecord">
+        insert into t_exchange_rate_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			create_time,
+			<if test="status != null  ">status,</if>
+			<if test="rate != null  ">rate,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			NOW(),
+			<if test="status != null  ">#{status},</if>
+			<if test="rate != null  ">#{rate},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateExchangeRateRecord" parameterType="com.kingdom.system.data.entity.ExchangeRateRecord">
+        update t_exchange_rate_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="lastModified != null  ">last_modified = #{lastModified},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="rate != null  ">rate = #{rate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateStatus" parameterType="int">
+        update t_exchange_rate_record set status = #{status}
+    </update>
+
+    <delete id="deleteExchangeRateRecordById" parameterType="Long">
+        delete from t_exchange_rate_record where id = #{id}
+    </delete>
+	
+    <delete id="deleteExchangeRateRecordByIds" parameterType="String">
+        delete from t_exchange_rate_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

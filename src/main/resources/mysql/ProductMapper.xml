@@ -2,11 +2,11 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kingdom.system.mapper.TbProductMapper">
+<mapper namespace="com.kingdom.system.mapper.ProductMapper">
     
-    <resultMap type="com.kingdom.system.data.entity.ProductInfo" id="TbProductResult">
+    <resultMap type="com.kingdom.system.data.entity.Product" id="ProductResult">
         <result property="id"    column="id"    />
-        <result property="createTime"    column="create_date"    />
+        <result property="createTime"    column="create_time"    />
         <result property="lastModified"    column="last_modified"    />
         <result property="code"    column="code"    />
         <result property="name"    column="name"    />
@@ -16,17 +16,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="totalSale"    column="total_sale"    />
         <result property="priority"    column="priority"    />
         <result property="totalIn"    column="total_in"    />
+        <result property="costPrice"    column="cost_price"    />
+        <result property="sellingPrice"    column="selling_price"    />
+        <result property="score"    column="score"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <resultMap type="com.kingdom.system.data.vo.ProductVO" id="ProductVOResult" extends="ProductResult">
+
     </resultMap>
 	
-	<sql id="selectTbProductVo">
-        select id, create_date, last_modified, code, name, remark, status, stock, total_sale, priority, total_in from tb_product
+	<sql id="selectProductVo">
+        select id, create_time, type, last_modified, code, name, remark, status, stock, total_sale, priority, total_in, cost_price, selling_price, score from t_product
     </sql>
 	
-    <select id="selectTbProductList" parameterType="com.kingdom.system.data.entity.ProductInfo" resultMap="TbProductResult">
-        <include refid="selectTbProductVo"/>
+    <select id="selectProductList" parameterType="com.kingdom.system.data.entity.Product" resultMap="ProductResult">
+        <include refid="selectProductVo"/>
         <where>  
-            <if test="id != null  and id != '' "> and id = #{id}</if>
-             <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="id != null "> and id = #{id}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
              <if test="lastModified != null "> and last_modified = #{lastModified}</if>
              <if test="code != null  and code != '' "> and code = #{code}</if>
              <if test="name != null  and name != '' "> and name = #{name}</if>
@@ -36,19 +44,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="totalSale != null "> and total_sale = #{totalSale}</if>
              <if test="priority != null "> and priority = #{priority}</if>
              <if test="totalIn != null "> and total_in = #{totalIn}</if>
+             <if test="costPrice != null "> and cost_price = #{costPrice}</if>
+             <if test="sellingPrice != null "> and selling_price = #{sellingPrice}</if>
+             <if test="score != null "> and score = #{score}</if>
          </where>
     </select>
     
-    <select id="selectTbProductById" parameterType="String" resultMap="TbProductResult">
-        <include refid="selectTbProductVo"/>
+    <select id="selectProductById" parameterType="Long" resultMap="ProductResult">
+        <include refid="selectProductVo"/>
         where id = #{id}
     </select>
-        
-    <insert id="insertTbProduct" parameterType="com.kingdom.system.data.entity.ProductInfo">
-        insert into tb_product
+
+    <select id="list" resultMap="ProductResult">
+        <include refid="selectProductVo"/>
+    </select>
+
+    <insert id="insertProduct" parameterType="com.kingdom.system.data.entity.Product">
+        insert into t_product
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  and id != ''  ">id,</if>
-			<if test="createDate != null  ">create_date,</if>
+			<if test="id != null  ">id,</if>
+			<if test="createTime != null  ">create_time,</if>
 			<if test="lastModified != null  ">last_modified,</if>
 			<if test="code != null  and code != ''  ">code,</if>
 			<if test="name != null  and name != ''  ">name,</if>
@@ -58,10 +73,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="totalSale != null  ">total_sale,</if>
 			<if test="priority != null  ">priority,</if>
 			<if test="totalIn != null  ">total_in,</if>
+			<if test="costPrice != null  ">cost_price,</if>
+			<if test="sellingPrice != null  ">selling_price,</if>
+			<if test="score != null  ">score,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  and id != ''  ">#{id},</if>
-			<if test="createDate != null  ">#{createDate},</if>
+			<if test="id != null  ">#{id},</if>
+			<if test="createTime != null  ">#{createTime},</if>
 			<if test="lastModified != null  ">#{lastModified},</if>
 			<if test="code != null  and code != ''  ">#{code},</if>
 			<if test="name != null  and name != ''  ">#{name},</if>
@@ -71,13 +89,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="totalSale != null  ">#{totalSale},</if>
 			<if test="priority != null  ">#{priority},</if>
 			<if test="totalIn != null  ">#{totalIn},</if>
+			<if test="costPrice != null  ">#{costPrice},</if>
+			<if test="sellingPrice != null  ">#{sellingPrice},</if>
+			<if test="score != null  ">#{score},</if>
          </trim>
     </insert>
 	 
-    <update id="updateTbProduct" parameterType="com.kingdom.system.data.entity.ProductInfo">
-        update tb_product
+    <update id="updateProduct" parameterType="com.kingdom.system.data.entity.Product">
+        update t_product
         <trim prefix="SET" suffixOverrides=",">
-            <if test="createDate != null  ">create_date = #{createDate},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
             <if test="lastModified != null  ">last_modified = #{lastModified},</if>
             <if test="code != null  and code != ''  ">code = #{code},</if>
             <if test="name != null  and name != ''  ">name = #{name},</if>
@@ -87,16 +108,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="totalSale != null  ">total_sale = #{totalSale},</if>
             <if test="priority != null  ">priority = #{priority},</if>
             <if test="totalIn != null  ">total_in = #{totalIn},</if>
+            <if test="costPrice != null  ">cost_price = #{costPrice},</if>
+            <if test="sellingPrice != null  ">selling_price = #{sellingPrice},</if>
+            <if test="score != null  ">score = #{score},</if>
         </trim>
         where id = #{id}
     </update>
 
-	<delete id="deleteTbProductById" parameterType="String">
-        delete from tb_product where id = #{id}
+    <update id="updateStatus">
+      update t_product SET status = #{status} where id = #{id}
+
+    </update>
+
+    <delete id="deleteProductById" parameterType="Long">
+        delete from t_product where id = #{id}
     </delete>
 	
-    <delete id="deleteTbProductByIds" parameterType="String">
-        delete from tb_product where id in 
+    <delete id="deleteProductByIds" parameterType="String">
+        delete from t_product where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

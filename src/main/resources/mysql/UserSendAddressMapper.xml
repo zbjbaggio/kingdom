@@ -41,8 +41,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectUserSendAddressVo"/>
         where id = #{id}
     </select>
-        
-    <insert id="insertUserSendAddress" parameterType="com.kingdom.system.data.entity.UserSendAddress">
+
+    <select id="listByUserId" resultType="com.kingdom.system.data.entity.UserSendAddress">
+        <include refid="selectUserSendAddressVo"/>
+        where user_id = #{userId}
+    </select>
+
+    <insert id="insertUserSendAddress" parameterType="com.kingdom.system.data.entity.UserSendAddress" useGeneratedKeys="true" keyProperty="id">
         insert into t_user_send_address
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">id,</if>
@@ -86,7 +91,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-	<delete id="deleteUserSendAddressById" parameterType="Long">
+    <update id="updateUserSendAddressDr">
+        update t_user_send_address set dr = #{dr} where id = #{sendAddressId}
+    </update>
+
+    <delete id="deleteUserSendAddressById" parameterType="Long">
         delete from t_user_send_address where id = #{id}
     </delete>
 	

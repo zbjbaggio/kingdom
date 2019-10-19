@@ -2,6 +2,7 @@ package com.kingdom.system.mapper;
 
 
 import com.kingdom.system.data.entity.UserSendAddress;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -60,4 +61,7 @@ public interface UserSendAddressMapper {
      */
     public int deleteUserSendAddressByIds(String[] ids);
 
+    List<UserSendAddress> listByUserId(@Param(value = "userId") Long userId);
+
+    int updateUserSendAddressDr(@Param(value = "sendAddressId")String sendAddressId, @Param(value = "dr")int dr);
 }
