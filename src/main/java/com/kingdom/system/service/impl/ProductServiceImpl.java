@@ -35,17 +35,19 @@ public class ProductServiceImpl {
                 ids.add(productVO.getId());
             }
         }
-        List<ProductPackageVO> productPackageList = productPackageMapper.listByProductIds(ids);
-        Map<Long, List<ProductPackageVO>> map = new HashMap<>();
-        for (ProductPackageVO productPackage : productPackageList) {
-            List<ProductPackageVO> list = map.get(productPackage.getProductId());
-            if (list == null) {
-                list = new ArrayList<>();
+        if (ids.size() > 0) {
+            List<ProductPackageVO> productPackageList = productPackageMapper.listByProductIds(ids);
+            Map<Long, List<ProductPackageVO>> map = new HashMap<>();
+            for (ProductPackageVO productPackage : productPackageList) {
+                List<ProductPackageVO> list = map.get(productPackage.getProductId());
+                if (list == null) {
+                    list = new ArrayList<>();
+                }
+                list.add(productPackage);
             }
-            list.add(productPackage);
-        }
-        for (ProductVO productVO : productVOList) {
-            productVO.setProductPackageVOList(map.get(productVO.getId()));
+            for (ProductVO productVO : productVOList) {
+                productVO.setProductPackageVOList(map.get(productVO.getId()));
+            }
         }
         return productVOList;
     }

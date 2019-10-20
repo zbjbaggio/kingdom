@@ -55,8 +55,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
-    <select id="list" resultMap="ProductResult">
+    <select id="list" resultMap="ProductVOResult">
         <include refid="selectProductVo"/>
+        where (code LIKE #{search} or name LIKE #{search})
+        order by id desc
     </select>
 
     <insert id="insertProduct" parameterType="com.kingdom.system.data.entity.Product">
