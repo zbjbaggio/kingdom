@@ -10,4 +10,6 @@ public class ProductPackageVO extends ProductPackage {
 
     private String name;
 
+    private String code;
+
 }

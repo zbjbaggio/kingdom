@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
 	<sql id="selectProductPackageVo">
-        select a.id, a.create_time, a.last_modified, a.product_id, a.product_b_id, a.number, b.name from t_product_package a join t_product b on a.product_b_id = b.id
+        select a.id, a.create_time, a.last_modified, a.product_id, a.product_b_id, a.number, b.name,b.code from t_product_package a join t_product b on a.product_b_id = b.id
     </sql>
 	
     <select id="selectProductPackageList" parameterType="com.kingdom.system.data.entity.ProductPackage" resultMap="ProductPackageResult">

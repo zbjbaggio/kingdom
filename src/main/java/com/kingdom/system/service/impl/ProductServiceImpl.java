@@ -47,11 +47,13 @@ public class ProductServiceImpl {
             List<ProductPackageVO> productPackageList = productPackageMapper.listByProductIds(ids);
             Map<Long, List<ProductPackageVO>> map = new HashMap<>();
             for (ProductPackageVO productPackage : productPackageList) {
-                List<ProductPackageVO> list = map.get(productPackage.getProductId());
+                Long productId = productPackage.getProductId();
+                List<ProductPackageVO> list = map.get(productId);
                 if (list == null) {
                     list = new ArrayList<>();
                 }
                 list.add(productPackage);
+                map.put(productId, list);
             }
             for (ProductVO productVO : productVOList) {
                 productVO.setProductPackageVOList(map.get(productVO.getId()));
@@ -62,6 +64,7 @@ public class ProductServiceImpl {
     public Product insert(Product product) {
         checkMemberNo(product);
         product.setCreateTime(new Date());
+        product.setType(0);
         int count = productMapper.insertProduct(product);
         if (count != 1) {
             log.error("产品保存报错！product：{}", product);
@@ -110,6 +113,7 @@ public class ProductServiceImpl {
         checkMemberNo(productEntity);
         Date createTime = new Date();
         productEntity.setCreateTime(createTime);
+        productEntity.setType(1);
         int count = productMapper.insertProduct(productEntity);
         if (count != 1) {
             log.error("产品包新增失败！ productEntity: {}", productEntity);
@@ -128,6 +132,7 @@ public class ProductServiceImpl {
     public ProductDTO updateProductPackage(ProductDTO product) {
         Product productEntity = product.getProduct();
         checkMemberNo(productEntity);
+        productEntity.setType(2);
         int count = productMapper.updateProduct(productEntity);
         if (count != 1) {
             log.error("产品包修改失败！ productEntity: {}", productEntity);

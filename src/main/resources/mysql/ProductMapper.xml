@@ -67,8 +67,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by id desc
     </select>
 
-    <select id="listProductPackage" resultType="com.kingdom.system.data.vo.ProductVO">
-
+    <select id="listProductPackage" resultMap="ProductVOResult">
+        <include refid="selectProductVo"/>
+        where (code LIKE #{search} OR name LIKE #{search}) AND type = 1
+        order by id desc
     </select>
 
     <select id="listByCode" resultType="java.lang.Integer">
@@ -84,7 +86,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">id,</if>
 			<if test="createTime != null  ">create_time,</if>
-			<if test="lastModified != null  ">last_modified,</if>
 			<if test="code != null  and code != ''  ">code,</if>
 			<if test="name != null  and name != ''  ">name,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
@@ -96,11 +97,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="costPrice != null  ">cost_price,</if>
 			<if test="sellingPrice != null  ">selling_price,</if>
 			<if test="score != null  ">score,</if>
+			<if test="type != null  ">type,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">#{id},</if>
 			<if test="createTime != null  ">#{createTime},</if>
-			<if test="lastModified != null  ">#{lastModified},</if>
 			<if test="code != null  and code != ''  ">#{code},</if>
 			<if test="name != null  and name != ''  ">#{name},</if>
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
@@ -112,6 +113,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="costPrice != null  ">#{costPrice},</if>
 			<if test="sellingPrice != null  ">#{sellingPrice},</if>
 			<if test="score != null  ">#{score},</if>
+			<if test="type != null  ">#{type},</if>
          </trim>
     </insert>
 	 
