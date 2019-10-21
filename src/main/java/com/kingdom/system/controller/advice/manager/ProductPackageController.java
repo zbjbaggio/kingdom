@@ -3,6 +3,7 @@ package com.kingdom.system.controller.advice.manager;
 
 import com.kingdom.system.controller.advice.BaseController;
 import com.kingdom.system.data.base.TableDataInfo;
+import com.kingdom.system.data.dto.ProductDTO;
 import com.kingdom.system.data.entity.Product;
 import com.kingdom.system.service.impl.ProductServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -14,12 +15,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 产品信息
+ * 产品包信息
  */
 @RestController
-@RequestMapping("/manage/user/product")
+@RequestMapping("/manage/user/productPackage")
 @Slf4j
-public class ProductController extends BaseController {
+public class ProductPackageController extends BaseController {
 
     @Autowired
     private ProductServiceImpl productService;
@@ -33,19 +34,9 @@ public class ProductController extends BaseController {
      */
     @GetMapping("/list")
     public TableDataInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
-                              @RequestParam(defaultValue = "") String search, @RequestParam String sendDateStart, @RequestParam String sendDateEnd) {
+                              @RequestParam(defaultValue = "") String search) {
         startPage();
-        return getDataTable(productService.listProduct(search == "" ? "" : "%" + search + "%", sendDateStart, sendDateEnd));
-    }
-
-    /**
-     * 获取产品列表
-     * @param search 名字查询
-     * @return
-     */
-    @GetMapping("/listAll")
-    public List<Product> listAll(@RequestParam(defaultValue = "") String search) {
-        return productService.listAll(search == "" ? "" : "%" + search + "%");
+        return getDataTable(productService.listProductPackage(search == "" ? "" : "%" + search + "%"));
     }
 
     /**
@@ -54,8 +45,8 @@ public class ProductController extends BaseController {
      * @param bindingResult 检查结果
      */
     @PostMapping("/insert")
-    public Product insert(@RequestBody @Validated({Product.Insert.class}) Product product, BindingResult bindingResult) {
-        return productService.insert(product);
+    public ProductDTO insert(@RequestBody @Validated({Product.Insert.class}) ProductDTO product, BindingResult bindingResult) {
+        return productService.insertProductPackage(product);
     }
 
     /**
@@ -65,26 +56,7 @@ public class ProductController extends BaseController {
      */
     @PostMapping("/update")
     public Product update(@RequestBody @Validated({Product.Update.class}) Product product, BindingResult bindingResult) {
-        return productService.update(product);
+        return productService.updateProductPackage(product);
     }
 
-    /**
-     * 关闭产品
-     * @param id 产品id
-     *//*
-    @GetMapping("/close/{id}")
-    public void close(@PathVariable("id") String id) {
-        productService.updateStatus(id, 1);
-    }
-
-    *//**
-     * 产品置顶
-     * @param id 产品id
-     *//*
-    @GetMapping("/setUp/{id}")
-    public void setUp(@PathVariable("id") String id) {
-        productService.updatePriority(id);
-    }
-
-*/
 }

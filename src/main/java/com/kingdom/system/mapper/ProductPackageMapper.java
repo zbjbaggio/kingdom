@@ -2,6 +2,7 @@ package com.kingdom.system.mapper;
 
 import com.kingdom.system.data.entity.ProductPackage;
 import com.kingdom.system.data.vo.ProductPackageVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -28,13 +29,7 @@ public interface ProductPackageMapper {
      */
     public List<ProductPackage> selectProductPackageList(ProductPackage productPackage);
 
-    /**
-     * 新增产品包
-     *
-     * @param productPackage 产品包信息
-     * @return 结果
-     */
-    public int insertProductPackage(ProductPackage productPackage);
+    int insertProductPackage(ProductPackage productPackage);
 
     /**
      * 修改产品包
@@ -61,4 +56,9 @@ public interface ProductPackageMapper {
     public int deleteProductPackageByIds(String[] ids);
 
     List<ProductPackageVO> listByProductIds(List<Long> ids);
+
+    int insertProductPackages(List<ProductPackage> productPackageList);
+
+    int deleteProductPackageByProductId(@Param(value = "productId") Long productId);
+
 }

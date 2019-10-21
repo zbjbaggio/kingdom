@@ -1,5 +1,6 @@
 package com.kingdom.system.data.dto;
 
+import com.kingdom.system.data.entity.Product;
 import com.kingdom.system.data.entity.ProductPackage;
 import com.kingdom.system.data.entity.ProductPackageContent;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
 
@@ -18,15 +20,17 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductPackageInfoDTO implements Serializable {
+public class ProductDTO implements Serializable {
 
     private static final long serialVersionUID = 1015716591405659486L;
 
-    @NotNull
+    @NotNull(groups = {Product.Insert.class, Product.Update.class})
     @Valid
-    private ProductPackage productPackage;
+    private Product product;
 
+    @NotNull(groups = {Product.Insert.class, Product.Update.class})
+    @Size(min = 1, groups = {Product.Insert.class, Product.Update.class})
     @Valid
-    private List<ProductPackageContent> productPackageContentList;
+    private List<ProductPackage> productPackageList;
 
 }

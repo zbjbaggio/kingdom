@@ -50,22 +50,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertProductPackage" parameterType="com.kingdom.system.data.entity.ProductPackage">
         insert into t_product_package
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
 			<if test="createTime != null  ">create_time,</if>
-			<if test="lastModified != null  ">last_modified,</if>
 			<if test="productId != null  ">product_id,</if>
 			<if test="productBId != null  ">product_b_id,</if>
 			<if test="number != null  ">number,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
 			<if test="createTime != null  ">#{createTime},</if>
-			<if test="lastModified != null  ">#{lastModified},</if>
 			<if test="productId != null  ">#{productId},</if>
 			<if test="productBId != null  ">#{productBId},</if>
 			<if test="number != null  ">#{number},</if>
          </trim>
     </insert>
+
+    <insert id="insertProductPackages" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into t_product_package
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+           create_time,
+           product_id,
+           product_b_id,
+           number
+        </trim>
+        values
+        <foreach collection="list" item="item" index= "index" separator =",">
+            (#{item.createTime},
+           #{item.productId},
+           #{item.productBId},
+            #{item.number})
+        </foreach>
+    </insert>
+
 	 
     <update id="updateProductPackage" parameterType="com.kingdom.system.data.entity.ProductPackage">
         update t_product_package
@@ -89,5 +103,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    
+
+    <delete id="deleteProductPackageByProductId" parameterType="Long">
+        delete from t_product_package where productId = #{productId}
+    </delete>
+
 </mapper>

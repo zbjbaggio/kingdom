@@ -1,6 +1,6 @@
 package com.kingdom.system.service.impl;
 
-import com.kingdom.system.data.dto.ProductPackageInfoDTO;
+import com.kingdom.system.data.dto.ProductDTO;
 import com.kingdom.system.mapper.ProductPackageMapper;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class ProductPackageServiceImpl {
     private ProductPackageMapper productPackageMapper;
 
 
-    public ProductPackageInfoDTO insert(ProductPackageInfoDTO productPackageInfoDTO) {
+    public ProductDTO insert(ProductDTO productDTO) {
         return null;
     }
 
