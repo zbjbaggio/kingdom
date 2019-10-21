@@ -14,9 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import java.util.*;
 
 @Service
@@ -64,6 +61,7 @@ public class ProductServiceImpl {
 
     public Product insert(Product product) {
         checkMemberNo(product);
+        product.setCreateTime(new Date());
         int count = productMapper.insertProduct(product);
         if (count != 1) {
             log.error("产品保存报错！product：{}", product);
@@ -155,5 +153,9 @@ public class ProductServiceImpl {
         }
         count = productPackageMapper.insertProductPackages(productPackageList);
         return count;
+    }
+
+    public Product getDetail(Long productId) {
+        return productMapper.selectProductById(productId);
     }
 }

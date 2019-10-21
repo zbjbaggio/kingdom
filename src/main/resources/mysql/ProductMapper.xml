@@ -118,8 +118,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateProduct" parameterType="com.kingdom.system.data.entity.Product">
         update t_product
         <trim prefix="SET" suffixOverrides=",">
-            <if test="createTime != null  ">create_time = #{createTime},</if>
-            <if test="lastModified != null  ">last_modified = #{lastModified},</if>
             <if test="code != null  and code != ''  ">code = #{code},</if>
             <if test="name != null  and name != ''  ">name = #{name},</if>
             <if test="remark != null  and remark != ''  ">remark = #{remark},</if>

@@ -38,6 +38,11 @@ public class ProductController extends BaseController {
         return getDataTable(productService.listProduct(search == "" ? "" : "%" + search + "%", sendDateStart, sendDateEnd));
     }
 
+    @GetMapping("/detail/{productId}")
+    public Product detail(@PathVariable(value = "productId") Long productId) {
+        return productService.getDetail(productId);
+    }
+
     /**
      * 获取产品列表
      * @param search 名字查询
