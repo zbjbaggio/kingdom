@@ -84,8 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertProduct" parameterType="com.kingdom.system.data.entity.Product" useGeneratedKeys="true" keyProperty="id">
         insert into t_product
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="createTime != null  ">create_time,</if>
+			create_time,
 			<if test="code != null  and code != ''  ">code,</if>
 			<if test="name != null  and name != ''  ">name,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
@@ -100,8 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="type != null  ">type,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="createTime != null  ">#{createTime},</if>
+			NOW(),
 			<if test="code != null  and code != ''  ">#{code},</if>
 			<if test="name != null  and name != ''  ">#{name},</if>
 			<if test="remark != null  and remark != ''  ">#{remark},</if>

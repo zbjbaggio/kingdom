@@ -73,7 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         values
         <foreach collection="list" item="item" index= "index" separator =",">
-            (#{item.createTime},
+            (NOW(),
            #{item.productId},
            #{item.productBId},
             #{item.number})

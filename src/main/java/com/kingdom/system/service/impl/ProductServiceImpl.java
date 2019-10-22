@@ -63,7 +63,6 @@ public class ProductServiceImpl {
 
     public Product insert(Product product) {
         checkMemberNo(product);
-        product.setCreateTime(new Date());
         product.setType(0);
         int count = productMapper.insertProduct(product);
         if (count != 1) {
@@ -111,8 +110,6 @@ public class ProductServiceImpl {
     public ProductDTO insertProductPackage(ProductDTO product) {
         Product productEntity = product.getProduct();
         checkMemberNo(productEntity);
-        Date createTime = new Date();
-        productEntity.setCreateTime(createTime);
         productEntity.setType(1);
         int count = productMapper.insertProduct(productEntity);
         if (count != 1) {
@@ -150,10 +147,8 @@ public class ProductServiceImpl {
 
     private int insertProductPackage(ProductDTO product, Long productId) {
         int count;
-        Date createTime = new Date();
         List<ProductPackage> productPackageList = product.getProductPackageList();
         for (ProductPackage productPackage : productPackageList) {
-            productPackage.setCreateTime(createTime);
             productPackage.setProductId(productId);
         }
         count = productPackageMapper.insertProductPackages(productPackageList);
