@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kingdom.system.mapper.OrderProductMapper">
+    
+    <resultMap type="com.kingdom.system.data.entity.OrderProduct" id="OrderProductResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="productName"    column="product_name"    />
+        <result property="number"    column="number"    />
+        <result property="hkSellingPrice"    column="hk_selling_price"    />
+        <result property="hkCostPrice"    column="hk_cost_price"    />
+        <result property="hkAmount"    column="hk_amount"    />
+        <result property="hkCostAmount"    column="hk_cost_amount"    />
+        <result property="cnySellingPrice"    column="cny_selling_price"    />
+        <result property="cnyCostPrice"    column="cny_cost_price"    />
+        <result property="cnyAmount"    column="cny_amount"    />
+        <result property="cnyCostAmount"    column="cny_cost_amount"    />
+        <result property="exchangeRate"    column="exchange_rate"    />
+        <result property="exchangeRateId"    column="exchange_rate_id"    />
+        <result property="orderUserName"    column="order_user_name"    />
+        <result property="orderUserMemberNo"    column="order_user_member_no"    />
+        <result property="orderUserId"    column="order_user_id"    />
+    </resultMap>
+	
+	<sql id="selectOrderProductVo">
+        select id, create_time, last_modified, order_id, product_id, product_name, number, hk_selling_price, hk_cost_price, hk_amount, hk_cost_amount, cny_selling_price, cny_cost_price, cny_amount, cny_cost_amount, exchange_rate, exchange_rate_id, order_user_name, order_user_member_no, order_user_id from t_order_product
+    </sql>
+	
+    <select id="selectOrderProductList" parameterType="com.kingdom.system.data.entity.OrderProduct" resultMap="OrderProductResult">
+        <include refid="selectOrderProductVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="orderId != null "> and order_id = #{orderId}</if>
+             <if test="productId != null "> and product_id = #{productId}</if>
+             <if test="productName != null  and productName != '' "> and product_name = #{productName}</if>
+             <if test="number != null "> and number = #{number}</if>
+             <if test="hkSellingPrice != null "> and hk_selling_price = #{hkSellingPrice}</if>
+             <if test="hkCostPrice != null "> and hk_cost_price = #{hkCostPrice}</if>
+             <if test="hkAmount != null "> and hk_amount = #{hkAmount}</if>
+             <if test="hkCostAmount != null "> and hk_cost_amount = #{hkCostAmount}</if>
+             <if test="cnySellingPrice != null "> and cny_selling_price = #{cnySellingPrice}</if>
+             <if test="cnyCostPrice != null "> and cny_cost_price = #{cnyCostPrice}</if>
+             <if test="cnyAmount != null "> and cny_amount = #{cnyAmount}</if>
+             <if test="cnyCostAmount != null "> and cny_cost_amount = #{cnyCostAmount}</if>
+             <if test="exchangeRate != null "> and exchange_rate = #{exchangeRate}</if>
+             <if test="exchangeRateId != null "> and exchange_rate_id = #{exchangeRateId}</if>
+             <if test="orderUserName != null  and orderUserName != '' "> and order_user_name = #{orderUserName}</if>
+             <if test="orderUserMemberNo != null  and orderUserMemberNo != '' "> and order_user_member_no = #{orderUserMemberNo}</if>
+             <if test="orderUserId != null "> and order_user_id = #{orderUserId}</if>
+         </where>
+    </select>
+    
+    <select id="selectOrderProductById" parameterType="Long" resultMap="OrderProductResult">
+        <include refid="selectOrderProductVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOrderProduct" parameterType="com.kingdom.system.data.entity.OrderProduct" useGeneratedKeys="true" keyProperty="id">
+        insert into t_order_product
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="createTime != null  ">create_time,</if>
+			<if test="orderId != null  ">order_id,</if>
+			<if test="productId != null  ">product_id,</if>
+			<if test="productName != null  and productName != ''  ">product_name,</if>
+			<if test="number != null  ">number,</if>
+			<if test="hkSellingPrice != null  ">hk_selling_price,</if>
+			<if test="hkCostPrice != null  ">hk_cost_price,</if>
+			<if test="hkAmount != null  ">hk_amount,</if>
+			<if test="hkCostAmount != null  ">hk_cost_amount,</if>
+			<if test="cnySellingPrice != null  ">cny_selling_price,</if>
+			<if test="cnyCostPrice != null  ">cny_cost_price,</if>
+			<if test="cnyAmount != null  ">cny_amount,</if>
+			<if test="cnyCostAmount != null  ">cny_cost_amount,</if>
+			<if test="exchangeRate != null  ">exchange_rate,</if>
+			<if test="exchangeRateId != null  ">exchange_rate_id,</if>
+			<if test="orderUserName != null  and orderUserName != ''  ">order_user_name,</if>
+			<if test="orderUserMemberNo != null  and orderUserMemberNo != ''  ">order_user_member_no,</if>
+			<if test="orderUserId != null  ">order_user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="orderId != null  ">#{orderId},</if>
+			<if test="productId != null  ">#{productId},</if>
+			<if test="productName != null  and productName != ''  ">#{productName},</if>
+			<if test="number != null  ">#{number},</if>
+			<if test="hkSellingPrice != null  ">#{hkSellingPrice},</if>
+			<if test="hkCostPrice != null  ">#{hkCostPrice},</if>
+			<if test="hkAmount != null  ">#{hkAmount},</if>
+			<if test="hkCostAmount != null  ">#{hkCostAmount},</if>
+			<if test="cnySellingPrice != null  ">#{cnySellingPrice},</if>
+			<if test="cnyCostPrice != null  ">#{cnyCostPrice},</if>
+			<if test="cnyAmount != null  ">#{cnyAmount},</if>
+			<if test="cnyCostAmount != null  ">#{cnyCostAmount},</if>
+			<if test="exchangeRate != null  ">#{exchangeRate},</if>
+			<if test="exchangeRateId != null  ">#{exchangeRateId},</if>
+			<if test="orderUserName != null  and orderUserName != ''  ">#{orderUserName},</if>
+			<if test="orderUserMemberNo != null  and orderUserMemberNo != ''  ">#{orderUserMemberNo},</if>
+			<if test="orderUserId != null  ">#{orderUserId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateOrderProduct" parameterType="com.kingdom.system.data.entity.OrderProduct">
+        update t_order_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="lastModified != null  ">last_modified = #{lastModified},</if>
+            <if test="orderId != null  ">order_id = #{orderId},</if>
+            <if test="productId != null  ">product_id = #{productId},</if>
+            <if test="productName != null  and productName != ''  ">product_name = #{productName},</if>
+            <if test="number != null  ">number = #{number},</if>
+            <if test="hkSellingPrice != null  ">hk_selling_price = #{hkSellingPrice},</if>
+            <if test="hkCostPrice != null  ">hk_cost_price = #{hkCostPrice},</if>
+            <if test="hkAmount != null  ">hk_amount = #{hkAmount},</if>
+            <if test="hkCostAmount != null  ">hk_cost_amount = #{hkCostAmount},</if>
+            <if test="cnySellingPrice != null  ">cny_selling_price = #{cnySellingPrice},</if>
+            <if test="cnyCostPrice != null  ">cny_cost_price = #{cnyCostPrice},</if>
+            <if test="cnyAmount != null  ">cny_amount = #{cnyAmount},</if>
+            <if test="cnyCostAmount != null  ">cny_cost_amount = #{cnyCostAmount},</if>
+            <if test="exchangeRate != null  ">exchange_rate = #{exchangeRate},</if>
+            <if test="exchangeRateId != null  ">exchange_rate_id = #{exchangeRateId},</if>
+            <if test="orderUserName != null  and orderUserName != ''  ">order_user_name = #{orderUserName},</if>
+            <if test="orderUserMemberNo != null  and orderUserMemberNo != ''  ">order_user_member_no = #{orderUserMemberNo},</if>
+            <if test="orderUserId != null  ">order_user_id = #{orderUserId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteOrderProductById" parameterType="Long">
+        delete from t_order_product where id = #{id}
+    </delete>
+	
+    <delete id="deleteOrderProductByIds" parameterType="String">
+        delete from t_order_product where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="insertOrderProducts" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+    insert into t_order_product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+        create_time, order_id, product_id, product_name, number, hk_selling_price, hk_cost_price, hk_amount, hk_cost_amount,
+        cny_selling_price, cny_cost_price, cny_amount, cny_cost_amount, exchange_rate, exchange_rate_id, order_user_name,
+         order_user_member_no,order_user_id
+    </trim>
+    values
+    <foreach collection="list" item="item" index= "index" separator =",">
+        (
+        NOW(), #{item.orderId}, #{item.productId}, #{item.productName}, #{item.number}, #{item.hkSellingPrice},
+        #{item.hkCostPrice}, #{item.hkAmount}, #{item.hkCostAmount}, #{item.cnySellingPrice}, #{item.cnyCostPrice}, #{item.cnyAmount},
+        #{item.cnyCostAmount}, #{item.exchangeRate}, #{item.exchangeRateId}, #{item.orderUserName}, #{item.orderUserMemberNo}, #{item.orderUserId}
+        )
+    </foreach>
+    </insert>
+
+</mapper>

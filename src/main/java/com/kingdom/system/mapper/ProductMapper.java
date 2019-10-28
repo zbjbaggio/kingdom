@@ -5,6 +5,7 @@ import com.kingdom.system.data.vo.ProductVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 产品 数据层
@@ -63,7 +64,7 @@ public interface ProductMapper {
 
     List<Product> listAll(String name);
 
-    List<ProductVO> listProductPackage(String search);
+    List<ProductVO> listProductPackage(@Param(value = "search") String search);
 
     List<ProductVO> listProduct(@Param(value = "search") String search, @Param(value = "sendDateStart") String sendDateStart,
                                 @Param(value = "sendDateEnd") String sendDateEnd);
@@ -71,4 +72,6 @@ public interface ProductMapper {
     int updateStatus(@Param(value = "id") String id, @Param(value = "status") int status);
 
     int listByCode(Product product);
+
+    List<ProductVO> listProductByIds(Set<Long> productIds);
 }

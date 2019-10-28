@@ -55,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
-    <select id="listProduct" resultMap="ProductVOResult">
+    <select id="listProduct" resultMap="ProductVOResult" >
         <include refid="selectProductVo"/>
         where type = 0 and (code LIKE #{search} or name LIKE #{search})
         order by id desc
@@ -69,7 +69,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="listProductPackage" resultMap="ProductVOResult">
         <include refid="selectProductVo"/>
-        where (code LIKE #{search} OR name LIKE #{search}) AND type = 1
+        where type = 1
+        <if test="search != null and search != '' "> and (code LIKE #{search} OR name LIKE #{search}) </if>
         order by id desc
     </select>
 
@@ -79,6 +80,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             and code = #{code}
             <if test="id != null and id != '' "> and id != #{id} </if>
         </where>
+    </select>
+
+    <select id="listProductByIds" resultMap="ProductVOResult">
+        <include refid="selectProductVo"/>
+        where id in
+        <foreach item="id" collection="collection" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </select>
 
     <insert id="insertProduct" parameterType="com.kingdom.system.data.entity.Product" useGeneratedKeys="true" keyProperty="id">

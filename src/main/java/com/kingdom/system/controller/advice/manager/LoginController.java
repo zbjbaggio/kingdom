@@ -1,6 +1,8 @@
 package com.kingdom.system.controller.advice.manager;
 
 import com.kingdom.system.data.base.TableDataInfo;
+import com.kingdom.system.data.entity.Product;
+import com.kingdom.system.data.vo.ProductVO;
 import com.kingdom.system.service.IGenService;
 import com.kingdom.system.controller.advice.BaseController;
 import com.kingdom.system.data.enmus.ErrorInfo;
@@ -8,6 +10,9 @@ import com.kingdom.system.data.entity.ManagerInfo;
 import com.kingdom.system.data.exception.PrivateException;
 import com.kingdom.system.data.vo.ManagerVO;
 import com.kingdom.system.service.ManagerInfoService;
+import com.kingdom.system.service.impl.ProductServiceImpl;
+import com.kingdom.system.util.excel.ExcelUtil;
+import com.kingdom.system.util.excel.HssfExcelUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.ibatis.annotations.Param;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 登录
@@ -70,6 +76,16 @@ public class LoginController extends BaseController {
         response.addHeader("Content-Length", "" + data.length);
         response.setContentType("application/octet-stream; charset=UTF-8");
         IOUtils.write(data, response.getOutputStream());
+    }
+
+    @Inject
+    private ProductServiceImpl productService;
+
+    @GetMapping("/excel/test")
+    public void test(HttpServletResponse response) throws Exception {
+        List<ProductVO> productVOList = productService.listProductPackage("");
+        ExcelUtil excelUtil = new HssfExcelUtil();
+        excelUtil.writeExcel(response, "酒店订单", "酒店订单", productVOList);
     }
 
 }

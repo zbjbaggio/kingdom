@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kingdom.system.mapper.OrderInfoMapper">
+    
+    <resultMap type="com.kingdom.system.data.entity.OrderInfo" id="OrderInfoResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="lastModified"    column="last_modified"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="dr"    column="dr"    />
+        <result property="parentOrderId"    column="parent_order_id"    />
+        <result property="orderUsername"    column="order_username"    />
+        <result property="orderPhone"    column="order_phone"    />
+        <result property="userId"    column="user_id"    />
+        <result property="date"    column="date"    />
+    </resultMap>
+	
+	<sql id="selectOrderInfoVo">
+        select id, create_time, last_modified, status, remark, order_no, dr, parent_order_id, order_name, order_phone, user_id, date from t_order_info
+    </sql>
+	
+    <select id="selectOrderInfoList" parameterType="com.kingdom.system.data.entity.OrderInfo" resultMap="OrderInfoResult">
+        <include refid="selectOrderInfoVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="lastModified != null "> and last_modified = #{lastModified}</if>
+             <if test="status != null "> and status = #{status}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="orderNo != null  and orderNo != '' "> and order_no = #{orderNo}</if>
+             <if test="dr != null "> and dr = #{dr}</if>
+             <if test="parentOrderId != null "> and parent_order_id = #{parentOrderId}</if>
+             <if test="orderUsername != null  and orderUsername != '' "> and order_username = #{orderUsername}</if>
+             <if test="orderPhone != null  and orderPhone != '' "> and order_phone = #{orderPhone}</if>
+             <if test="userId != null "> and user_id = #{userId}</if>
+             <if test="date != null "> and date = #{date}</if>
+         </where>
+    </select>
+    
+    <select id="selectOrderInfoById" parameterType="Long" resultMap="OrderInfoResult">
+        <include refid="selectOrderInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOrderInfo" parameterType="com.kingdom.system.data.entity.OrderInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into t_order_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="lastModified != null  ">last_modified,</if>
+			<if test="status != null  ">status,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="orderNo != null  and orderNo != ''  ">order_no,</if>
+			<if test="dr != null  ">dr,</if>
+			<if test="parentOrderId != null  ">parent_order_id,</if>
+			<if test="orderUsername != null  and orderUsername != ''  ">order_username,</if>
+			<if test="orderPhone != null  and orderPhone != ''  ">order_phone,</if>
+			<if test="userId != null  ">user_id,</if>
+			<if test="date != null  ">date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="lastModified != null  ">#{lastModified},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="orderNo != null  and orderNo != ''  ">#{orderNo},</if>
+			<if test="dr != null  ">#{dr},</if>
+			<if test="parentOrderId != null  ">#{parentOrderId},</if>
+			<if test="orderUsername != null  and orderUsername != ''  ">#{orderUsername},</if>
+			<if test="orderPhone != null  and orderPhone != ''  ">#{orderPhone},</if>
+			<if test="userId != null  ">#{userId},</if>
+			<if test="date != null  ">#{date},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateOrderInfo" parameterType="com.kingdom.system.data.entity.OrderInfo">
+        update t_order_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="lastModified != null  ">last_modified = #{lastModified},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="orderNo != null  and orderNo != ''  ">order_no = #{orderNo},</if>
+            <if test="dr != null  ">dr = #{dr},</if>
+            <if test="parentOrderId != null  ">parent_order_id = #{parentOrderId},</if>
+            <if test="orderUsername != null  and orderUsername != ''  ">order_username = #{orderUsername},</if>
+            <if test="orderPhone != null  and orderPhone != ''  ">order_phone = #{orderPhone},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+            <if test="date != null  ">date = #{date},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteOrderInfoById" parameterType="Long">
+        delete from t_order_info where id = #{id}
+    </delete>
+	
+    <delete id="deleteOrderInfoByIds" parameterType="String">
+        delete from t_order_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

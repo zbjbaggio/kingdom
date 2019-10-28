@@ -64,4 +64,7 @@ public interface ExchangeRateRecordMapper
 	List<ExchangeRateRecord> list(@Param(value = "date") String date);
 
 	int updateStatus(@Param(value = "status") int status);
+
+	ExchangeRateRecord selectDefault();
+
 }

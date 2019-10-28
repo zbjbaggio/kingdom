@@ -2,11 +2,11 @@ package com.kingdom.system.data.entity;
 
 import com.kingdom.system.ann.AllowableValue;
 import com.kingdom.system.data.base.EntityBase;
+import com.kingdom.system.util.excel.ExcelExport;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -36,6 +36,7 @@ public class Product extends EntityBase implements Serializable {
      */
     @NotEmpty(groups = {Insert.class, Update.class})
     @Length(max = 50, groups = {Insert.class, Update.class})
+    @ExcelExport(name = "名字")
     private String name;
 
     /**

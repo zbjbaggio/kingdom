@@ -3,80 +3,47 @@ package com.kingdom.system.data.entity;
 import com.kingdom.system.data.base.EntityBase;
 import lombok.Data;
 import lombok.ToString;
-import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.List;
+import java.util.Date;
+
 
 /**
- * 描述：订单信息
- * Created by jay on 2017-10-18.
+ * 订单表 t_order_info
+ * 
+ * @author kingdom
+ * @date 2019-10-25
  */
 @Data
 @ToString(callSuper = true)
 public class OrderInfo extends EntityBase implements Serializable {
 
-    private String orderNo;
+	/** 订单状态 1 正常订单 2 支付中订单 3 订单支付完成 4 订单处理完成 */
+	private Integer status;
 
-    @NotNull(message = "金额不能为空")
-    @Min(value = 0, message = "金额最小为0")
-    private BigDecimal amount;
+	/** 订单号 */
+	private String orderNo;
 
-    @NotNull(message = "邮费不能为空")
-    @Min(value = 0, message = "邮费最小为0")
-    private BigDecimal postage;
+	/**  */
+	private Integer dr;
 
-    @NotEmpty(message = "邮编不能为空")
-    @Length(message = "邮编长度不能超过100", max = 100)
-    private String postcode;
+	/** 截单主表id */
+	private Long parentOrderId;
 
-    @NotEmpty(message = "邮箱不能为空")
-    @Length(max = 50, message = "email长度超长")
-    private String email;
+	/** 下单人姓名 */
+	@NotEmpty(groups = Insert.class)
+	private String orderUsername;
 
-    @NotEmpty(message = "手机不能为空")
-    @Length(max = 50, message = "手机长度超长")
-    private String phone;
+	/** 下单人电话 */
+	@NotEmpty(groups = Insert.class)
+	private String orderPhone;
 
-    @NotEmpty(message = "收货人名称不能为空")
-    @Length(max = 50, message = "收货人名称长度超长")
-    private String receiverName;
+	/** 下单日期 */
+	private Date date;
 
-    @NotEmpty(message = "收货地址1不能为空")
-    @Length(max = 200, message = "收货地址1长度超长")
-    private String receiverAddress1;
+	private String userId;
 
-    @Length(max = 200, message = "收货地址2长度超长")
-    private String receiverAddress2;
-
-    @NotEmpty(message = "收货城市不能为空")
-    @Length(max = 100, message = "收货城市长度超长")
-    private String receiverCity;
-
-    @NotEmpty(message = "收货地区不能为空")
-    @Length(max = 100, message = "收货地区长度超长")
-    private String receiverArea;
-
-    @NotEmpty(message = "收货国家不能为空")
-    @Length(max = 100, message = "收货国家长度超长")
-    private String receiverCountry;
-
-    @Min(value = 0, message = "订单状态最小为0")
-    private int status;
-
-    @NotNull(message = "邮费Id不能为空")
-    private Long postageId;
-
-    //描述
-    private String description;
-
-    //备注
-    private String remark;
-
-    private List<OrderDetail> orderDetailList;
+	private String remark;
 
 }

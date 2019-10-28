@@ -65,4 +65,6 @@ public interface UserMapper {
     int listByMemberNo(UserEntity user);
 
     int updateDr(@Param(value = "id") String id, @Param(value = "dr") int dr);
+
+    UserEntity selectUserByMemberNo(String orderUserMemberNo);
 }

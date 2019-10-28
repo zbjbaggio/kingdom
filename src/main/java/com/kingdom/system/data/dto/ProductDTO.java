@@ -2,7 +2,6 @@ package com.kingdom.system.data.dto;
 
 import com.kingdom.system.data.entity.Product;
 import com.kingdom.system.data.entity.ProductPackage;
-import com.kingdom.system.data.entity.ProductPackageContent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
