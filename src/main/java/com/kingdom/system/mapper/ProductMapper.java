@@ -74,4 +74,6 @@ public interface ProductMapper {
     int listByCode(Product product);
 
     List<ProductVO> listProductByIds(Set<Long> productIds);
+
+    List<Product> listAllProduct(@Param(value = "search") String productName);
 }

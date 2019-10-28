@@ -63,7 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertOrderProduct" parameterType="com.kingdom.system.data.entity.OrderProduct" useGeneratedKeys="true" keyProperty="id">
         insert into t_order_product
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="createTime != null  ">create_time,</if>
+			create_time,
 			<if test="orderId != null  ">order_id,</if>
 			<if test="productId != null  ">product_id,</if>
 			<if test="productName != null  and productName != ''  ">product_name,</if>
@@ -83,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="orderUserId != null  ">order_user_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="createTime != null  ">#{createTime},</if>
+			NOW(),
 			<if test="orderId != null  ">#{orderId},</if>
 			<if test="productId != null  ">#{productId},</if>
 			<if test="productName != null  and productName != ''  ">#{productName},</if>

@@ -36,7 +36,7 @@ public class ProductServiceImpl {
         return productVOList;
     }
 
-    private void getPackage(List<ProductVO> productVOList) {
+    public void getPackage(List<ProductVO> productVOList) {
         List<Long> ids = new ArrayList<>();
         for (ProductVO productVO : productVOList) {
             if (productVO.getType() == 1) {
@@ -157,5 +157,9 @@ public class ProductServiceImpl {
 
     public Product getDetail(Long productId) {
         return productMapper.selectProductById(productId);
+    }
+
+    public List<Product> listAllProduct(String productName) {
+        return productMapper.listAllProduct(productName);
     }
 }

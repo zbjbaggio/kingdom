@@ -47,9 +47,4 @@ public class PermissionCodeUtils {
         return code.substring(0, code.length() - PLACE_LONG) +  tempCode.substring(tempCode.length() - PLACE_LONG);
     }
 
-    public static void main(String[] args) {
-        System.out.println(PermissionCodeUtils.add("00110013", 90));
-    }
-
-
 }

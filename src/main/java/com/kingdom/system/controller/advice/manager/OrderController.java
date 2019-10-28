@@ -1,5 +1,7 @@
 package com.kingdom.system.controller.advice.manager;
 
+import com.kingdom.system.controller.advice.BaseController;
+import com.kingdom.system.data.base.TableDataInfo;
 import com.kingdom.system.data.dto.OrderDTO;
 import com.kingdom.system.data.enmus.ErrorInfo;
 import com.kingdom.system.data.entity.ManagerInfo;
@@ -11,10 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 订单信息
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/manage/user/order")
 @Slf4j
-public class OrderController {
+public class OrderController extends BaseController {
 
     @Autowired
     private OrderServiceImpl orderServiceImpl;
@@ -31,5 +30,13 @@ public class OrderController {
     public OrderDTO insert(@RequestBody @Validated(OrderInfo.Insert.class) OrderDTO orderDTO, BindingResult bindingResult) throws Exception {
         return orderServiceImpl.insert(orderDTO);
     }
+
+    @GetMapping(value = "/list")
+    public TableDataInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
+                              @RequestParam(defaultValue = "") String search, @RequestParam String sendDateStart, @RequestParam String sendDateEnd) {
+        startPage();
+        return getDataTable(orderServiceImpl.list(search == "" ? "" : "%" + search + "%", sendDateStart, sendDateEnd));
+    }
+
 
 }

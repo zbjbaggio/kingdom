@@ -4,6 +4,7 @@ import com.kingdom.system.data.dto.OrderDTO;
 import com.kingdom.system.data.enmus.ErrorInfo;
 import com.kingdom.system.data.entity.*;
 import com.kingdom.system.data.exception.PrivateException;
+import com.kingdom.system.data.vo.ProductPackageVO;
 import com.kingdom.system.data.vo.ProductVO;
 import com.kingdom.system.mapper.*;
 import com.kingdom.system.util.BigDecimalUtils;
@@ -12,11 +13,10 @@ import com.kingdom.system.util.NOUtils;
 import com.kingdom.system.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -42,7 +42,14 @@ public class OrderServiceImpl {
     @Inject
     private ExchangeRateRecordMapper exchangeRateRecordMapper;
 
+    @Inject
+    private ProductServiceImpl productService;
+
+    @Inject
+    private OrderDetailMapper orderDetailMapper;
+
     @Transactional
+
     public OrderDTO insert(OrderDTO orderDTO) {
         Map<Long, ProductVO> productNameMap = checkOrder(orderDTO);
         OrderInfo orderInfo = orderDTO.getOrderInfo();
@@ -66,6 +73,8 @@ public class OrderServiceImpl {
     private void saveOrderProduct(List<OrderProduct> orderProducts, Long orderId, Map<Long, ProductVO> productMap) {
         ExchangeRateRecord exchangeRateRecord = exchangeRateRecordMapper.selectDefault();
         BigDecimal rate = exchangeRateRecord.getRate();
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        OrderDetail orderDetail = null;
         for (OrderProduct orderProduct : orderProducts) {
             setUserId(orderProduct);
             orderProduct.setOrderId(orderId);
@@ -81,12 +90,38 @@ public class OrderServiceImpl {
             orderProduct.setCnySellingPrice(productVO.getSellingPrice().multiply(rate));
             orderProduct.setCnyCostAmount(BigDecimalUtils.multiply(productVO.getCostPrice(), orderProduct.getNumber()).multiply(rate));
             orderProduct.setCnyAmount(BigDecimalUtils.multiply(productVO.getSellingPrice(), orderProduct.getNumber()).multiply(rate));
-
+            orderProductMapper.insertOrderProduct(orderProduct);
+            // 单品直接存入 产品包存入明细
+            List<ProductPackageVO> productPackageVOList = productVO.getProductPackageVOList();
+            if (productPackageVOList != null && productPackageVOList.size() > 0) {
+                for (ProductPackageVO productPackageVO : productPackageVOList) {
+                    orderDetail = new OrderDetail();
+                    orderDetail.setOrderId(orderId);
+                    orderDetail.setOrderProductId(orderProduct.getId());
+                    orderDetail.setProductId(productPackageVO.getProductBId());
+                    orderDetail.setProductName(productPackageVO.getName());
+                    orderDetail.setProductPackageId(productPackageVO.getProductId());
+                    orderDetail.setNumber(productPackageVO.getNumber() * orderProduct.getNumber());
+                    orderDetails.add(orderDetail);
+                }
+            } else {
+                orderDetail = new OrderDetail();
+                orderDetail.setOrderId(orderId);
+                orderDetail.setOrderProductId(orderProduct.getId());
+                orderDetail.setProductId(orderProduct.getProductId());
+                orderDetail.setProductName(orderProduct.getProductName());
+                orderDetail.setProductPackageId(-1L);
+                orderDetail.setNumber(orderProduct.getNumber());
+                orderDetails.add(orderDetail);
+            }
+            //orderProduct.getp
         }
-        orderProductMapper.insertOrderProducts(orderProducts);
+        orderDetailMapper.insertOrderDetails(orderDetails);
+        //orderProductMapper.insertOrderProducts(orderProducts);
     }
 
-    private void setUserId(OrderProduct orderProduct) {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void setUserId(OrderProduct orderProduct) {
         if (StringUtils.isNoneEmpty(orderProduct.getOrderUserMemberNo())) {
             UserEntity userEntity = userMapper.selectUserByMemberNo(orderProduct.getOrderUserMemberNo());
             if (userEntity == null) {
@@ -111,6 +146,7 @@ public class OrderServiceImpl {
             log.error("产品id和查询出产品数量不一致 orderDTO:{}", orderDTO);
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
+        productService.getPackage(productVOList);
         Map<Long, ProductVO> map = new HashMap<>();
         for (ProductVO productVO : productVOList) {
             map.put(productVO.getId(), productVO);
@@ -118,4 +154,7 @@ public class OrderServiceImpl {
         return map;
     }
 
+    public List<?> list(String search, String sendDateStart, String sendDateEnd) {
+        return null;
+    }
 }

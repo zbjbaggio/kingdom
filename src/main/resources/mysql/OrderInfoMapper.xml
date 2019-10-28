@@ -50,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into t_order_info
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">id,</if>
-			<if test="createTime != null  ">create_time,</if>
+			create_time,
 			<if test="lastModified != null  ">last_modified,</if>
 			<if test="status != null  ">status,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
@@ -63,8 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="date != null  ">date,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="createTime != null  ">#{createTime},</if>
+			NOW(),
 			<if test="lastModified != null  ">#{lastModified},</if>
 			<if test="status != null  ">#{status},</if>
 			<if test="remark != null  and remark != ''  ">#{remark},</if>

@@ -3,34 +3,33 @@ package com.kingdom.system.data.entity;
 import com.kingdom.system.data.base.EntityBase;
 import lombok.Data;
 import lombok.ToString;
-import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
+    
+/**
+ * 订单单品详情表 t_order_detail
+ * 
+ * @author kingdom
+ * @date 2019-10-28
+ */
 @Data
 @ToString(callSuper = true)
 public class OrderDetail extends EntityBase implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-    private Long orderId;
+	/** 订单主表id */
+	private Long orderId;
+	/** 订单购买产品表id */
+	private Long orderProductId;
+	/** 单品id */
+	private Long productId;
 
-    @NotNull(message = "产品id不能为空")
-    private Long productId;
+	private String productName;
 
-    private String productName;
-
-    private BigDecimal price;
-
-    @Min(value = 1, message = "数量最小为1")
-    private long number;
-
-    @NotEmpty(message = "size不能为空")
-    @Length(max = 10, message = "size字符长度不能超过10")
-    private String size;
-
-    private BigDecimal amount;
+	/** 单品总数 */
+	private Integer number;
+	/** 单品对应的产品包id，可能为空 */
+	private Long productPackageId;
 
 }

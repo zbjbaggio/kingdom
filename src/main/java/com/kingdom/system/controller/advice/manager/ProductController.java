@@ -44,7 +44,7 @@ public class ProductController extends BaseController {
     }
 
     /**
-     * 获取产品列表
+     * 获取单品产品列表
      * @param search 名字查询
      * @return
      */
@@ -71,6 +71,16 @@ public class ProductController extends BaseController {
     @PostMapping("/update")
     public Product update(@RequestBody @Validated({Product.Update.class}) Product product, BindingResult bindingResult) {
         return productService.update(product);
+    }
+
+    /**
+     * 获取产品列表
+     * @param search 名字查询
+     * @return
+     */
+    @GetMapping("/listAllProduct")
+    public List<Product> listAllProduct(@RequestParam(defaultValue = "") String search) {
+        return productService.listAllProduct(search == "" ? "" : "%" + search + "%");
     }
 
     /**
