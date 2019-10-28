@@ -1,58 +1,22 @@
 package com.kingdom.system.data.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.kingdom.system.jsonserializer.CustomDoubleSerialize;
+import com.kingdom.system.data.entity.OrderDetail;
+import com.kingdom.system.data.entity.OrderInfo;
+import com.kingdom.system.data.entity.OrderPayment;
+import com.kingdom.system.data.entity.OrderProduct;
 import lombok.Data;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 @Data
 public class OrderVO {
 
-    private Long id;
+    private OrderInfo orderInfo;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date create_time;
+    private List<OrderProduct> orderProducts;
 
-    private String order_no;
+    private List<OrderPayment> orderPayments;
 
-    private String email;
+    private List<OrderDetail> orderDetails;
 
-    private String phone;
-
-    private String receiver_name;
-
-    private String receiver_address1;
-
-    private String receiver_address2;
-
-    private String receiver_city;
-
-    private String receiver_country;
-
-    private String receiver_area;
-
-    private String remark;
-
-    private String description;
-
-    private String postcode;
-
-    private String payment_id;
-
-    @JsonSerialize(using = CustomDoubleSerialize.class)
-    private BigDecimal postage;
-
-    private byte status;
-
-    @JsonSerialize(using = CustomDoubleSerialize.class)
-    private BigDecimal amount;
-
-    @JsonSerialize(using = CustomDoubleSerialize.class)
-    private BigDecimal productAmount;
-
-    private List<OrderDetailVO> orderDetailVOList;
 }

@@ -60,4 +60,6 @@ public interface OrderPaymentMapper {
     public int deleteOrderPaymentByIds(String[] ids);
 
     int insertOrderPayments(List<OrderPayment> orderPayments);
+
+    List<OrderPayment> selectOrderPaymentListByOrderId(Long orderId);
 }

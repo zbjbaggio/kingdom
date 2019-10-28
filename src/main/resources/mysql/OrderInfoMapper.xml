@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectOrderInfoVo">
-        select id, create_time, last_modified, status, remark, order_no, dr, parent_order_id, order_name, order_phone, user_id, date from t_order_info
+        select id, create_time, last_modified, status, remark, order_no, dr, parent_order_id, order_phone, user_id, date from t_order_info
     </sql>
 	
     <select id="selectOrderInfoList" parameterType="com.kingdom.system.data.entity.OrderInfo" resultMap="OrderInfoResult">
@@ -39,6 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="userId != null "> and user_id = #{userId}</if>
              <if test="date != null "> and date = #{date}</if>
          </where>
+         order by id desc
     </select>
     
     <select id="selectOrderInfoById" parameterType="Long" resultMap="OrderInfoResult">

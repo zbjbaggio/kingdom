@@ -8,6 +8,7 @@ import com.kingdom.system.data.entity.ManagerInfo;
 import com.kingdom.system.data.entity.OrderInfo;
 import com.kingdom.system.data.exception.PrivateException;
 import com.kingdom.system.data.vo.ManagerVO;
+import com.kingdom.system.data.vo.OrderVO;
 import com.kingdom.system.service.impl.OrderServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +34,14 @@ public class OrderController extends BaseController {
 
     @GetMapping(value = "/list")
     public TableDataInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
-                              @RequestParam(defaultValue = "") String search, @RequestParam String sendDateStart, @RequestParam String sendDateEnd) {
+                              @RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "") String sendDateStart, @RequestParam(defaultValue = "") String sendDateEnd) {
         startPage();
         return getDataTable(orderServiceImpl.list(search == "" ? "" : "%" + search + "%", sendDateStart, sendDateEnd));
     }
 
+    @GetMapping(value = "/detail/{orderId}")
+    public OrderVO detail(@PathVariable(value = "orderId") Long orderId) {
+        return orderServiceImpl.detail(orderId);
+    }
 
 }

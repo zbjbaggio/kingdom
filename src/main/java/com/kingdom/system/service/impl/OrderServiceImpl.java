@@ -4,6 +4,7 @@ import com.kingdom.system.data.dto.OrderDTO;
 import com.kingdom.system.data.enmus.ErrorInfo;
 import com.kingdom.system.data.entity.*;
 import com.kingdom.system.data.exception.PrivateException;
+import com.kingdom.system.data.vo.OrderVO;
 import com.kingdom.system.data.vo.ProductPackageVO;
 import com.kingdom.system.data.vo.ProductVO;
 import com.kingdom.system.mapper.*;
@@ -155,6 +156,16 @@ public class OrderServiceImpl {
     }
 
     public List<?> list(String search, String sendDateStart, String sendDateEnd) {
-        return null;
+        return orderInfoMapper.selectOrderInfoList(null);
+    }
+
+    public OrderVO detail(Long orderId) {
+        OrderVO orderVO = new OrderVO();
+        OrderInfo orderInfo = orderInfoMapper.selectOrderInfoById(orderId);
+        orderVO.setOrderInfo(orderInfo);
+        orderVO.setOrderDetails(orderDetailMapper.selectOrderDetailListByOrderId(orderId));
+        orderVO.setOrderProducts(orderProductMapper.selectOrderProductListByOrderId(orderId));
+        orderVO.setOrderPayments(orderPaymentMapper.selectOrderPaymentListByOrderId(orderId));
+        return orderVO;
     }
 }

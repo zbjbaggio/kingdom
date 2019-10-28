@@ -60,4 +60,6 @@ public interface OrderDetailMapper {
     public int deleteOrderDetailByIds(String[] ids);
 
     int insertOrderDetails(List<OrderDetail> orderDetails);
+
+    List<OrderDetail> selectOrderDetailListByOrderId(Long orderId);
 }
