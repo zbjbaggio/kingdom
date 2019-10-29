@@ -3,11 +3,7 @@ package com.kingdom.system.controller.advice.manager;
 import com.kingdom.system.controller.advice.BaseController;
 import com.kingdom.system.data.base.TableDataInfo;
 import com.kingdom.system.data.dto.OrderDTO;
-import com.kingdom.system.data.enmus.ErrorInfo;
-import com.kingdom.system.data.entity.ManagerInfo;
 import com.kingdom.system.data.entity.OrderInfo;
-import com.kingdom.system.data.exception.PrivateException;
-import com.kingdom.system.data.vo.ManagerVO;
 import com.kingdom.system.data.vo.OrderVO;
 import com.kingdom.system.service.impl.OrderServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -40,12 +36,12 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping(value = "/insert")
-    public OrderDTO insert(@RequestBody @Validated(OrderInfo.Insert.class) OrderDTO orderDTO, BindingResult bindingResult) throws Exception {
+    public OrderDTO insert(@RequestBody @Validated(OrderInfo.Insert.class) OrderDTO orderDTO, BindingResult bindingResult) {
         return orderServiceImpl.insert(orderDTO);
     }
 
     @PostMapping(value = "/update")
-    public OrderDTO update(@RequestBody @Validated(OrderInfo.Update.class) OrderDTO orderDTO, BindingResult bindingResult) throws Exception {
+    public OrderDTO update(@RequestBody @Validated(OrderInfo.Update.class) OrderDTO orderDTO, BindingResult bindingResult) {
         return orderServiceImpl.update(orderDTO);
     }
 }

@@ -63,4 +63,6 @@ public class OrderProduct extends EntityBase implements Serializable {
 	/** 订货人id */
 	private Long orderUserId;
 
+	private Integer score;
+
 }

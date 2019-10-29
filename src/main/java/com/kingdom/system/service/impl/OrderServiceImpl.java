@@ -91,6 +91,7 @@ public class OrderServiceImpl {
             orderProduct.setCnySellingPrice(productVO.getSellingPrice().multiply(rate));
             orderProduct.setCnyCostAmount(BigDecimalUtils.multiply(productVO.getCostPrice(), orderProduct.getNumber()).multiply(rate));
             orderProduct.setCnyAmount(BigDecimalUtils.multiply(productVO.getSellingPrice(), orderProduct.getNumber()).multiply(rate));
+            orderProduct.setScore(productVO.getScore() * orderProduct.getNumber());
             orderProductMapper.insertOrderProduct(orderProduct);
             // 单品直接存入 产品包存入明细
             List<ProductPackageVO> productPackageVOList = productVO.getProductPackageVOList();
@@ -189,4 +190,10 @@ public class OrderServiceImpl {
         orderPaymentMapper.insertOrderPayments(orderPayments);
         return orderDTO;
     }
+
+/*    private void checkProductExpress(List<OrderDetail> orderDetails, List<OrderExpress> orderExpresses) {
+        for () {
+        }
+
+    }*/
 }

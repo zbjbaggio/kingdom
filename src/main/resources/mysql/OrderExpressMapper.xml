@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kingdom.system.mapper.OrderExpressMapper">
+    
+    <resultMap type="com.kingdom.system.data.entity.OrderExpress" id="OrderExpressResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="lastModified"    column="last_modified"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="expressName"    column="express_name"    />
+        <result property="expressAddress"    column="express_address"    />
+        <result property="expressCompany"    column="express_company"    />
+        <result property="expressNo"    column="express_no"    />
+        <result property="printNumber"    column="print_number"    />
+    </resultMap>
+	
+	<sql id="selectOrderExpressVo">
+        select id, create_time, last_modified, order_id, express_name, express_address, express_company, express_no, print_number from t_order_express
+    </sql>
+	
+    <select id="selectOrderExpressList" parameterType="com.kingdom.system.data.entity.OrderExpress" resultMap="OrderExpressResult">
+        <include refid="selectOrderExpressVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="lastModified != null "> and last_modified = #{lastModified}</if>
+             <if test="orderId != null "> and order_id = #{orderId}</if>
+             <if test="expressName != null  and expressName != '' "> and express_name = #{expressName}</if>
+             <if test="expressAddress != null  and expressAddress != '' "> and express_address = #{expressAddress}</if>
+             <if test="expressCompany != null  and expressCompany != '' "> and express_company = #{expressCompany}</if>
+             <if test="expressNo != null  and expressNo != '' "> and express_no = #{expressNo}</if>
+             <if test="printNumber != null "> and print_number = #{printNumber}</if>
+         </where>
+    </select>
+    
+    <select id="selectOrderExpressById" parameterType="Long" resultMap="OrderExpressResult">
+        <include refid="selectOrderExpressVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOrderExpress" parameterType="com.kingdom.system.data.entity.OrderExpress">
+        insert into t_order_express
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			create_time,
+			<if test="lastModified != null  ">last_modified,</if>
+			<if test="orderId != null  ">order_id,</if>
+			<if test="expressName != null  and expressName != ''  ">express_name,</if>
+			<if test="expressAddress != null  and expressAddress != ''  ">express_address,</if>
+			<if test="expressCompany != null  and expressCompany != ''  ">express_company,</if>
+			<if test="expressNo != null  and expressNo != ''  ">express_no,</if>
+			<if test="printNumber != null  ">print_number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			NOW(),
+			<if test="lastModified != null  ">#{lastModified},</if>
+			<if test="orderId != null  ">#{orderId},</if>
+			<if test="expressName != null  and expressName != ''  ">#{expressName},</if>
+			<if test="expressAddress != null  and expressAddress != ''  ">#{expressAddress},</if>
+			<if test="expressCompany != null  and expressCompany != ''  ">#{expressCompany},</if>
+			<if test="expressNo != null  and expressNo != ''  ">#{expressNo},</if>
+			<if test="printNumber != null  ">#{printNumber},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateOrderExpress" parameterType="com.kingdom.system.data.entity.OrderExpress">
+        update t_order_express
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null  ">order_id = #{orderId},</if>
+            <if test="expressName != null  and expressName != ''  ">express_name = #{expressName},</if>
+            <if test="expressAddress != null  and expressAddress != ''  ">express_address = #{expressAddress},</if>
+            <if test="expressCompany != null  and expressCompany != ''  ">express_company = #{expressCompany},</if>
+            <if test="expressNo != null  and expressNo != ''  ">express_no = #{expressNo},</if>
+            <if test="printNumber != null  ">print_number = #{printNumber},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteOrderExpressById" parameterType="Long">
+        delete from t_order_express where id = #{id}
+    </delete>
+	
+    <delete id="deleteOrderExpressByIds" parameterType="String">
+        delete from t_order_express where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

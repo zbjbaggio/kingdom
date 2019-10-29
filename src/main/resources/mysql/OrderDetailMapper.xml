@@ -13,12 +13,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="productId"    column="product_id"    />
         <result property="number"    column="number"    />
         <result property="productPackageId"    column="product_package_id"    />
+        <result property="productName"    column="product_name"    />
     </resultMap>
 	
 	<sql id="selectOrderDetailVo">
-        select id, create_time, last_modified, order_id, order_product_id, product_id, number, product_package_id from t_order_detail
+        select id, create_time, last_modified, order_id, order_product_id, product_id, number, product_package_id, product_name from t_order_detail
     </sql>
-	
+
+    <sql id="selectOrderDetailGroupByProductIdVo">
+        select id, create_time, last_modified, order_id, order_product_id, product_id, sum(number) number, product_package_id, product_name from t_order_detail
+    </sql>
+
     <select id="selectOrderDetailList" parameterType="com.kingdom.system.data.entity.OrderDetail" resultMap="OrderDetailResult">
         <include refid="selectOrderDetailVo"/>
         <where>  
@@ -39,8 +44,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectOrderDetailListByOrderId" resultMap="OrderDetailResult">
-        <include refid="selectOrderDetailVo"/>
+        <include refid="selectOrderDetailGroupByProductIdVo"/>
         where order_id = #{orderId}
+        group by product_id
     </select>
 
     <insert id="insertOrderDetail" parameterType="com.kingdom.system.data.entity.OrderDetail">

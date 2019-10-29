@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kingdom.system.mapper.OrderExpressDetailMapper">
+    
+    <resultMap type="com.kingdom.system.data.entity.OrderExpressDetail" id="OrderExpressDetailResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="lastModified"    column="last_modified"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="orderExpressId"    column="order_express_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="productName"    column="product_name"    />
+        <result property="number"    column="number"    />
+    </resultMap>
+	
+	<sql id="selectOrderExpressDetailVo">
+        select id, create_time, last_modified, order_id, order_express_id, product_id, product_name, number from t_order_express_detail
+    </sql>
+	
+    <select id="selectOrderExpressDetailList" parameterType="com.kingdom.system.data.entity.OrderExpressDetail" resultMap="OrderExpressDetailResult">
+        <include refid="selectOrderExpressDetailVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="lastModified != null "> and last_modified = #{lastModified}</if>
+             <if test="orderId != null "> and order_id = #{orderId}</if>
+             <if test="orderExpressId != null "> and order_express_id = #{orderExpressId}</if>
+             <if test="productId != null "> and product_id = #{productId}</if>
+             <if test="productName != null  and productName != '' "> and product_name = #{productName}</if>
+             <if test="number != null "> and number = #{number}</if>
+         </where>
+    </select>
+    
+    <select id="selectOrderExpressDetailById" parameterType="Long" resultMap="OrderExpressDetailResult">
+        <include refid="selectOrderExpressDetailVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOrderExpressDetail" parameterType="com.kingdom.system.data.entity.OrderExpressDetail">
+        insert into t_order_express_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">id,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="lastModified != null  ">last_modified,</if>
+			<if test="orderId != null  ">order_id,</if>
+			<if test="orderExpressId != null  ">order_express_id,</if>
+			<if test="productId != null  ">product_id,</if>
+			<if test="productName != null  and productName != ''  ">product_name,</if>
+			<if test="number != null  ">number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  ">#{id},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="lastModified != null  ">#{lastModified},</if>
+			<if test="orderId != null  ">#{orderId},</if>
+			<if test="orderExpressId != null  ">#{orderExpressId},</if>
+			<if test="productId != null  ">#{productId},</if>
+			<if test="productName != null  and productName != ''  ">#{productName},</if>
+			<if test="number != null  ">#{number},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateOrderExpressDetail" parameterType="com.kingdom.system.data.entity.OrderExpressDetail">
+        update t_order_express_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="lastModified != null  ">last_modified = #{lastModified},</if>
+            <if test="orderId != null  ">order_id = #{orderId},</if>
+            <if test="orderExpressId != null  ">order_express_id = #{orderExpressId},</if>
+            <if test="productId != null  ">product_id = #{productId},</if>
+            <if test="productName != null  and productName != ''  ">product_name = #{productName},</if>
+            <if test="number != null  ">number = #{number},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteOrderExpressDetailById" parameterType="Long">
+        delete from t_order_express_detail where id = #{id}
+    </delete>
+	
+    <delete id="deleteOrderExpressDetailByIds" parameterType="String">
+        delete from t_order_express_detail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

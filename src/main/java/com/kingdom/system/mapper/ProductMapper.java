@@ -62,7 +62,7 @@ public interface ProductMapper {
      */
     public int deleteProductByIds(String[] ids);
 
-    List<Product> listAll(String name);
+    List<Product> listAll(@Param(value = "search") String name);
 
     List<ProductVO> listProductPackage(@Param(value = "search") String search);
 
