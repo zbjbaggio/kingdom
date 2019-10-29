@@ -27,16 +27,11 @@ public class OrderController extends BaseController {
     @Autowired
     private OrderServiceImpl orderServiceImpl;
 
-    @PostMapping(value = "/insert")
-    public OrderDTO insert(@RequestBody @Validated(OrderInfo.Insert.class) OrderDTO orderDTO, BindingResult bindingResult) throws Exception {
-        return orderServiceImpl.insert(orderDTO);
-    }
-
     @GetMapping(value = "/list")
     public TableDataInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
                               @RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "") String sendDateStart, @RequestParam(defaultValue = "") String sendDateEnd) {
         startPage();
-        return getDataTable(orderServiceImpl.list(search == "" ? "" : "%" + search + "%", sendDateStart, sendDateEnd));
+        return getDataTable(orderServiceImpl.list("".equals(search) ? "" : "%" + search + "%", sendDateStart, sendDateEnd));
     }
 
     @GetMapping(value = "/detail/{orderId}")
@@ -44,4 +39,13 @@ public class OrderController extends BaseController {
         return orderServiceImpl.detail(orderId);
     }
 
+    @PostMapping(value = "/insert")
+    public OrderDTO insert(@RequestBody @Validated(OrderInfo.Insert.class) OrderDTO orderDTO, BindingResult bindingResult) throws Exception {
+        return orderServiceImpl.insert(orderDTO);
+    }
+
+    @PostMapping(value = "/update")
+    public OrderDTO update(@RequestBody @Validated(OrderInfo.Update.class) OrderDTO orderDTO, BindingResult bindingResult) throws Exception {
+        return orderServiceImpl.update(orderDTO);
+    }
 }

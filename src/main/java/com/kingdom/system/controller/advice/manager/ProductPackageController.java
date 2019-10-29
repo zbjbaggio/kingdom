@@ -12,8 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * 产品包信息
  */
@@ -36,7 +34,7 @@ public class ProductPackageController extends BaseController {
     public TableDataInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
                               @RequestParam(defaultValue = "") String search) {
         startPage();
-        return getDataTable(productService.listProductPackage(search == "" ? "" : "%" + search + "%"));
+        return getDataTable(productService.listProductPackage("".equals(search) ? "" : "%" + search + "%"));
     }
 
     /**

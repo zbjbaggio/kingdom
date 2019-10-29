@@ -32,11 +32,11 @@ public class OrderInfo extends EntityBase implements Serializable {
 	private Long parentOrderId;
 
 	/** 下单人姓名 */
-	@NotEmpty(groups = Insert.class)
+	@NotEmpty(groups = {Insert.class, Update.class})
 	private String orderUsername;
 
 	/** 下单人电话 */
-	@NotEmpty(groups = Insert.class)
+	@NotEmpty(groups = {Insert.class, Update.class})
 	private String orderPhone;
 
 	/** 下单日期 */

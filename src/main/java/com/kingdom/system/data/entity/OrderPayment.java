@@ -23,15 +23,15 @@ import java.util.Date;
 public class OrderPayment extends EntityBase implements Serializable {
 
 	/** 支付方式 0 港币划卡 1 微信 2  支付宝 3 银行转账 */
-	@AllowableValue(intValues = {0, 1, 2, 3}, groups = {Insert.class})
+	@AllowableValue(intValues = {0, 1, 2, 3}, groups = {Insert.class, Update.class})
 	private Integer payType;
 
 	/** 付款金额 */
-	@Min(value = 0, groups = Insert.class)
+	@Min(value = 0, groups = {Insert.class, Update.class})
 	private BigDecimal payAmount;
 
 	/** 付款码 */
-	@NotEmpty(groups = Insert.class)
+	//@NotEmpty(groups = Insert.class)
 	private String payNo;
 
 

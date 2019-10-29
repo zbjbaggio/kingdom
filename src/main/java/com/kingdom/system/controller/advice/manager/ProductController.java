@@ -35,7 +35,7 @@ public class ProductController extends BaseController {
     public TableDataInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
                               @RequestParam(defaultValue = "") String search, @RequestParam String sendDateStart, @RequestParam String sendDateEnd) {
         startPage();
-        return getDataTable(productService.listProduct(search == "" ? "" : "%" + search + "%", sendDateStart, sendDateEnd));
+        return getDataTable(productService.listProduct("".equals(search) ? "" : "%" + search + "%", sendDateStart, sendDateEnd));
     }
 
     @GetMapping("/detail/{productId}")
@@ -50,7 +50,7 @@ public class ProductController extends BaseController {
      */
     @GetMapping("/listAll")
     public List<Product> listAll(@RequestParam(defaultValue = "") String search) {
-        return productService.listAll(search == "" ? "" : "%" + search + "%");
+        return productService.listAll("".equals(search) ? "" : "%" + search + "%");
     }
 
     /**
@@ -80,7 +80,7 @@ public class ProductController extends BaseController {
      */
     @GetMapping("/listAllProduct")
     public List<Product> listAllProduct(@RequestParam(defaultValue = "") String search) {
-        return productService.listAllProduct(search == "" ? "" : "%" + search + "%");
+        return productService.listAllProduct("".equals(search) ? "" : "%" + search + "%");
     }
 
     /**

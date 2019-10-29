@@ -81,17 +81,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateOrderInfo" parameterType="com.kingdom.system.data.entity.OrderInfo">
         update t_order_info
         <trim prefix="SET" suffixOverrides=",">
-            <if test="createTime != null  ">create_time = #{createTime},</if>
-            <if test="lastModified != null  ">last_modified = #{lastModified},</if>
             <if test="status != null  ">status = #{status},</if>
             <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
-            <if test="orderNo != null  and orderNo != ''  ">order_no = #{orderNo},</if>
-            <if test="dr != null  ">dr = #{dr},</if>
             <if test="parentOrderId != null  ">parent_order_id = #{parentOrderId},</if>
             <if test="orderUsername != null  and orderUsername != ''  ">order_username = #{orderUsername},</if>
             <if test="orderPhone != null  and orderPhone != ''  ">order_phone = #{orderPhone},</if>
             <if test="userId != null  ">user_id = #{userId},</if>
-            <if test="date != null  ">date = #{date},</if>
         </trim>
         where id = #{id}
     </update>

@@ -59,7 +59,7 @@ public class OrderServiceImpl {
         orderInfo.setDate(DateUtil.date());
         int count = orderInfoMapper.insertOrderInfo(orderInfo);
         if (count != 1) {
-            log.error("订单保存报错！orderDTO：{}", orderDTO);
+            log.error("订单保存失败！orderDTO：{}", orderDTO);
             throw new PrivateException(ErrorInfo.SAVE_ERROR);
         }
         saveOrderProduct(orderDTO.getOrderProducts(), orderInfo.getId(), productNameMap);
@@ -167,5 +167,26 @@ public class OrderServiceImpl {
         orderVO.setOrderProducts(orderProductMapper.selectOrderProductListByOrderId(orderId));
         orderVO.setOrderPayments(orderPaymentMapper.selectOrderPaymentListByOrderId(orderId));
         return orderVO;
+    }
+
+    public OrderDTO update(OrderDTO orderDTO) {
+        Map<Long, ProductVO> productNameMap = checkOrder(orderDTO);
+        OrderInfo orderInfo = orderDTO.getOrderInfo();
+        int count = orderInfoMapper.updateOrderInfo(orderInfo);
+        if (count != 1) {
+            log.error("订单修改失败！orderDTO：{}", orderDTO);
+            throw new PrivateException(ErrorInfo.UPDATE_ERROR);
+        }
+        Long orderId = orderInfo.getId();
+        orderProductMapper.deleteOrderProductByOrderId(orderId);
+        orderDetailMapper.deleteOrderDetailByOrderId(orderId);
+        saveOrderProduct(orderDTO.getOrderProducts(), orderId, productNameMap);
+        List<OrderPayment> orderPayments = orderDTO.getOrderPayments();
+        for (OrderPayment orderPayment : orderPayments) {
+            orderPayment.setOrderId(orderInfo.getId());
+        }
+        orderPaymentMapper.deleteOrderPaymentByOrderId(orderId);
+        orderPaymentMapper.insertOrderPayments(orderPayments);
+        return orderDTO;
     }
 }
