@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kingdom.system.mapper.OrderUserMapper">
+    
+    <resultMap type="com.kingdom.system.data.entity.OrderUser" id="OrderUserResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="lastModified"    column="last_modified"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userNo"    column="user_no"    />
+    </resultMap>
+	
+	<sql id="selectOrderUserVo">
+        select id, create_time, last_modified, order_id, user_id, user_name, user_no from t_order_user
+    </sql>
+	
+    <select id="selectOrderUserList" parameterType="com.kingdom.system.data.entity.OrderUser" resultMap="OrderUserResult">
+        <include refid="selectOrderUserVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="lastModified != null "> and last_modified = #{lastModified}</if>
+             <if test="orderId != null "> and order_id = #{orderId}</if>
+             <if test="userId != null "> and user_id = #{userId}</if>
+             <if test="userName != null  and userName != '' "> and user_name = #{userName}</if>
+             <if test="userNo != null  and userNo != '' "> and user_no = #{userNo}</if>
+         </where>
+    </select>
+    
+    <select id="selectOrderUserById" parameterType="Long" resultMap="OrderUserResult">
+        <include refid="selectOrderUserVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectOrderUserListByOrderId" resultMap="OrderUserResult">
+        <include refid="selectOrderUserVo"/>
+        where order_id = #{orderId}
+    </select>
+
+    <insert id="insertOrderUser" parameterType="com.kingdom.system.data.entity.OrderUser"  useGeneratedKeys="true" keyProperty="id">
+        insert into t_order_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			create_time,
+			<if test="orderId != null  ">order_id,</if>
+			<if test="userId != null  ">user_id,</if>
+			<if test="userName != null  and userName != ''  ">user_name,</if>
+			<if test="userNo != null  and userNo != ''  ">user_no,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			NOW(),
+			<if test="orderId != null  ">#{orderId},</if>
+			<if test="userId != null  ">#{userId},</if>
+			<if test="userName != null  and userName != ''  ">#{userName},</if>
+			<if test="userNo != null  and userNo != ''  ">#{userNo},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateOrderUser" parameterType="com.kingdom.system.data.entity.OrderUser">
+        update t_order_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="lastModified != null  ">last_modified = #{lastModified},</if>
+            <if test="orderId != null  ">order_id = #{orderId},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+            <if test="userName != null  and userName != ''  ">user_name = #{userName},</if>
+            <if test="userNo != null  and userNo != ''  ">user_no = #{userNo},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteOrderUserById" parameterType="Long">
+        delete from t_order_user where id = #{id}
+    </delete>
+	
+    <delete id="deleteOrderUserByIds" parameterType="String">
+        delete from t_order_user where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

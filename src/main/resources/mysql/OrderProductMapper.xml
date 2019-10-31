@@ -21,14 +21,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="cnyCostAmount"    column="cny_cost_amount"    />
         <result property="exchangeRate"    column="exchange_rate"    />
         <result property="exchangeRateId"    column="exchange_rate_id"    />
-        <result property="orderUserName"    column="order_user_name"    />
-        <result property="orderUserMemberNo"    column="order_user_member_no"    />
         <result property="orderUserId"    column="order_user_id"    />
         <result property="score"    column="score"    />
     </resultMap>
 	
 	<sql id="selectOrderProductVo">
-        select id, create_time, last_modified, order_id, product_id, product_name, number, hk_selling_price, hk_cost_price, hk_amount, hk_cost_amount, cny_selling_price, cny_cost_price, cny_amount, cny_cost_amount, exchange_rate, exchange_rate_id, order_user_name, order_user_member_no, order_user_id, score from t_order_product
+        select id, create_time, last_modified, order_id, product_id, product_name, number, hk_selling_price, hk_cost_price, hk_amount, hk_cost_amount, cny_selling_price, cny_cost_price, cny_amount, cny_cost_amount, exchange_rate, exchange_rate_id, order_user_id, score from t_order_product
     </sql>
 	
     <select id="selectOrderProductList" parameterType="com.kingdom.system.data.entity.OrderProduct" resultMap="OrderProductResult">
@@ -50,8 +48,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="cnyCostAmount != null "> and cny_cost_amount = #{cnyCostAmount}</if>
              <if test="exchangeRate != null "> and exchange_rate = #{exchangeRate}</if>
              <if test="exchangeRateId != null "> and exchange_rate_id = #{exchangeRateId}</if>
-             <if test="orderUserName != null  and orderUserName != '' "> and order_user_name = #{orderUserName}</if>
-             <if test="orderUserMemberNo != null  and orderUserMemberNo != '' "> and order_user_member_no = #{orderUserMemberNo}</if>
              <if test="orderUserId != null "> and order_user_id = #{orderUserId}</if>
          </where>
     </select>
@@ -84,8 +80,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="cnyCostAmount != null  ">cny_cost_amount,</if>
 			<if test="exchangeRate != null  ">exchange_rate,</if>
 			<if test="exchangeRateId != null  ">exchange_rate_id,</if>
-			<if test="orderUserName != null  and orderUserName != ''  ">order_user_name,</if>
-			<if test="orderUserMemberNo != null  and orderUserMemberNo != ''  ">order_user_member_no,</if>
 			<if test="orderUserId != null  ">order_user_id,</if>
 			<if test="score != null  ">score,</if>
          </trim>
@@ -105,8 +99,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="cnyCostAmount != null  ">#{cnyCostAmount},</if>
 			<if test="exchangeRate != null  ">#{exchangeRate},</if>
 			<if test="exchangeRateId != null  ">#{exchangeRateId},</if>
-			<if test="orderUserName != null  and orderUserName != ''  ">#{orderUserName},</if>
-			<if test="orderUserMemberNo != null  and orderUserMemberNo != ''  ">#{orderUserMemberNo},</if>
 			<if test="orderUserId != null  ">#{orderUserId},</if>
 			<if test="score != null  ">#{score},</if>
          </trim>
@@ -131,8 +123,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="cnyCostAmount != null  ">cny_cost_amount = #{cnyCostAmount},</if>
             <if test="exchangeRate != null  ">exchange_rate = #{exchangeRate},</if>
             <if test="exchangeRateId != null  ">exchange_rate_id = #{exchangeRateId},</if>
-            <if test="orderUserName != null  and orderUserName != ''  ">order_user_name = #{orderUserName},</if>
-            <if test="orderUserMemberNo != null  and orderUserMemberNo != ''  ">order_user_member_no = #{orderUserMemberNo},</if>
             <if test="orderUserId != null  ">order_user_id = #{orderUserId},</if>
         </trim>
         where id = #{id}

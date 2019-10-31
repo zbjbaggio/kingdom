@@ -24,8 +24,11 @@ public class OrderProduct extends EntityBase implements Serializable {
 
 	/** 订单主表id */
 	private Long orderId;
-	/** 产品id */
 
+	/** 订单用户表id */
+	private Long orderUserId;
+
+	/** 产品id */
 	@NotNull(groups = {Insert.class, Update.class})
 	private Long productId;
 	/** 产品名称 */
@@ -55,13 +58,6 @@ public class OrderProduct extends EntityBase implements Serializable {
 	private BigDecimal exchangeRate;
 	/**  汇率id*/
 	private Long exchangeRateId;
-	/** 订货人姓名 */
-	@NotEmpty(groups = {Insert.class, Update.class})
-	private String orderUserName;
-	/** 订货人会员号 */
-	private String orderUserMemberNo;
-	/** 订货人id */
-	private Long orderUserId;
 
 	private Integer score;
 

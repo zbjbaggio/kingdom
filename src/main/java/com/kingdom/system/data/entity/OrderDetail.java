@@ -22,6 +22,9 @@ public class OrderDetail extends EntityBase implements Serializable {
 	private Long orderId;
 	/** 订单购买产品表id */
 	private Long orderProductId;
+
+	/** 订单购买产品表id */
+	private Long orderUserId;
 	/** 单品id */
 	private Long productId;
 
@@ -29,6 +32,10 @@ public class OrderDetail extends EntityBase implements Serializable {
 
 	/** 单品总数 */
 	private Integer number;
+
+	/** 发货数量*/
+	private Integer expressNumber;
+
 	/** 单品对应的产品包id，可能为空 */
 	private Long productPackageId;
 

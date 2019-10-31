@@ -1,6 +1,7 @@
 package com.kingdom.system.mapper;
 
 import com.kingdom.system.data.entity.OrderDetail;
+import com.kingdom.system.data.vo.OrderDetailVO;
 
 import java.util.List;
 
@@ -61,7 +62,7 @@ public interface OrderDetailMapper {
 
     int insertOrderDetails(List<OrderDetail> orderDetails);
 
-    List<OrderDetail> selectOrderDetailListByOrderId(Long orderId);
+    List<OrderDetailVO> selectOrderDetailListByOrderId(Long orderId);
 
     int deleteOrderDetailByOrderId(Long orderId);
 }

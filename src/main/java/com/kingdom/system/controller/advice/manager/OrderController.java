@@ -3,6 +3,8 @@ package com.kingdom.system.controller.advice.manager;
 import com.kingdom.system.controller.advice.BaseController;
 import com.kingdom.system.data.base.TableDataInfo;
 import com.kingdom.system.data.dto.OrderDTO;
+import com.kingdom.system.data.dto.OrderExpressDTO;
+import com.kingdom.system.data.entity.OrderExpress;
 import com.kingdom.system.data.entity.OrderInfo;
 import com.kingdom.system.data.vo.OrderVO;
 import com.kingdom.system.service.impl.OrderServiceImpl;
@@ -43,5 +45,10 @@ public class OrderController extends BaseController {
     @PostMapping(value = "/update")
     public OrderDTO update(@RequestBody @Validated(OrderInfo.Update.class) OrderDTO orderDTO, BindingResult bindingResult) {
         return orderServiceImpl.update(orderDTO);
+    }
+
+    @PostMapping(value = "/insertExpress")
+    public OrderDTO insertExpress(@RequestBody @Validated(OrderExpress.Insert.class) OrderExpressDTO orderExpressDTO, BindingResult bindingResult) {
+        return orderServiceImpl.insertExpress(orderExpressDTO);
     }
 }

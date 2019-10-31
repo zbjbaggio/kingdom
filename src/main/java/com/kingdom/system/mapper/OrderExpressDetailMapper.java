@@ -59,5 +59,6 @@ public interface OrderExpressDetailMapper
      * @return 结果
      */
 	public int deleteOrderExpressDetailByIds(String[] ids);
-	
+
+	List<OrderExpressDetail> selectOrderExpressDetailListByOrderId(Long orderId);
 }

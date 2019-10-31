@@ -1,9 +1,6 @@
 package com.kingdom.system.data.vo;
 
-import com.kingdom.system.data.entity.OrderDetail;
-import com.kingdom.system.data.entity.OrderInfo;
-import com.kingdom.system.data.entity.OrderPayment;
-import com.kingdom.system.data.entity.OrderProduct;
+import com.kingdom.system.data.entity.*;
 import lombok.Data;
 
 import java.util.List;
@@ -17,6 +14,8 @@ public class OrderVO {
 
     private List<OrderPayment> orderPayments;
 
-    private List<OrderDetail> orderDetails;
+    private List<OrderUser> orderDetails;
+
+    private List<OrderExpress> orderExpresses;
 
 }

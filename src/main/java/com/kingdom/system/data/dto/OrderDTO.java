@@ -1,9 +1,6 @@
 package com.kingdom.system.data.dto;
 
-import com.kingdom.system.data.entity.OrderDetail;
-import com.kingdom.system.data.entity.OrderInfo;
-import com.kingdom.system.data.entity.OrderPayment;
-import com.kingdom.system.data.entity.OrderProduct;
+import com.kingdom.system.data.entity.*;
 import lombok.Data;
 
 import javax.validation.Valid;
@@ -30,6 +27,6 @@ public class OrderDTO {
     @Valid
     @NotNull(groups = OrderInfo.Insert.class)
     @Size(groups = OrderInfo.Insert.class, min = 1)
-    private List<OrderProduct> orderProducts;
+    private List<OrderUser> orderUsers;
 
 }
