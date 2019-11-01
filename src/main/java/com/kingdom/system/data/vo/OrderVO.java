@@ -10,7 +10,7 @@ public class OrderVO {
 
     private OrderInfo orderInfo;
 
-    private List<OrderProduct> orderProducts;
+    private List<OrderUser> orderProducts;
 
     private List<OrderPayment> orderPayments;
 

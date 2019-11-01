@@ -5,7 +5,10 @@ import com.kingdom.system.data.dto.OrderExpressDTO;
 import com.kingdom.system.data.enmus.ErrorInfo;
 import com.kingdom.system.data.entity.*;
 import com.kingdom.system.data.exception.PrivateException;
-import com.kingdom.system.data.vo.*;
+import com.kingdom.system.data.vo.OrderDetailVO;
+import com.kingdom.system.data.vo.OrderVO;
+import com.kingdom.system.data.vo.ProductPackageVO;
+import com.kingdom.system.data.vo.ProductVO;
 import com.kingdom.system.mapper.*;
 import com.kingdom.system.util.BigDecimalUtils;
 import com.kingdom.system.util.DateUtil;
@@ -181,15 +184,43 @@ public class OrderServiceImpl {
         OrderVO orderVO = new OrderVO();
         OrderInfo orderInfo = orderInfoMapper.selectOrderInfoById(orderId);
         orderVO.setOrderInfo(orderInfo);
-        orderVO.setOrderDetails(getOrderDetails(orderId));
-        orderVO.setOrderProducts(orderProductMapper.selectOrderProductListByOrderId(orderId));
+        List<OrderUser> orderUserVOs = orderUserMapper.selectOrderUserListByOrderId(orderId);
+        getOrderProduct(orderUserVOs, orderId);
+        orderVO.setOrderDetails(getOrderDetails(orderUserVOs, orderId));
         orderVO.setOrderPayments(orderPaymentMapper.selectOrderPaymentListByOrderId(orderId));
         setExpressInfo(orderId, orderVO);
         return orderVO;
     }
 
-    private List<OrderUser> getOrderDetails(Long orderId) {
-        List<OrderUser> orderUserVOs = orderUserMapper.selectOrderUserListByOrderId(orderId);
+    private List<OrderUser> getOrderProduct(List<OrderUser> orderProduct, Long orderId) {
+        List<OrderProduct> orderProducts = orderProductMapper.selectOrderProductListByOrderId(orderId);
+        List<OrderDetailVO> orderDetailVOS = orderDetailMapper.selectOrderDetailPackageListByOrderId(orderId);
+        Map<Long, List<OrderDetailVO>> map = new HashMap<>();
+        for (OrderDetailVO orderDetailVO : orderDetailVOS) {
+            List<OrderDetailVO> voList = map.get(orderDetailVO.getOrderProductId());
+            if (voList == null) {
+                voList = new ArrayList<>();
+            }
+            voList.add(orderDetailVO);
+            map.put(orderDetailVO.getOrderProductId(), voList);
+        }
+        Map<Long, List<OrderProduct>> productMap = new HashMap<>();
+        for (OrderProduct product : orderProducts) {
+            List<OrderProduct> voList = productMap.get(product.getOrderUserId());
+            if (voList == null) {
+                voList = new ArrayList<>();
+            }
+            product.setOrderDetailVOs(map.get(product.getId()));
+            voList.add(product);
+            productMap.put(product.getOrderUserId(), voList);
+        }
+        for (OrderUser orderUser : orderProduct) {
+            orderUser.setOrderProducts(productMap.get(orderUser.getId()));
+        }
+        return orderProduct;
+    }
+
+    private List<OrderUser> getOrderDetails(List<OrderUser> orderUserVOs, Long orderId) {
         List<OrderDetailVO> orderDetailVOs = orderDetailMapper.selectOrderDetailListByOrderId(orderId);
         Map<Long, List<OrderDetailVO>> productMap = new HashMap<>();
         for (OrderDetailVO orderDetailVO : orderDetailVOs) {
@@ -252,10 +283,67 @@ public class OrderServiceImpl {
         return orderDTO;
     }
 
-    public OrderDTO insertExpress(OrderExpressDTO orderExpressDTO) {
+    @Transactional
+    public OrderExpressDTO insertExpress(OrderExpressDTO orderExpressDTO) {
+        OrderExpress orderExpress = orderExpressDTO.getOrderExpress();
+        List<OrderDetailVO> orderDetailVOS = orderDetailMapper.selectExpressByOrderIdAndUserId(orderExpress.getOrderId(), orderExpress.getOrderUserId());
+        if (orderDetailVOS == null || orderDetailVOS.size() == 0) {
+            log.error("订单信息错误！orderExpressDTO:{}", orderExpressDTO);
+            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+        }
+        List<OrderExpressDetail> orderExpressDetailList = orderExpressDTO.getExpressDetails();
+        orderExpressMapper.insertOrderExpress(orderExpress);
+        //修改出货数量
+        Map<Long, List<OrderDetailVO>> productMap = new HashMap<>();
+        for (OrderDetailVO orderDetailVO : orderDetailVOS) {
+            Long key = orderDetailVO.getProductId();
+            List<OrderDetailVO> result = productMap.get(key);
+            if (result == null) {
+                result = new ArrayList<>();
+            }
+            result.add(orderDetailVO);
+            productMap.put(key, result);
+        }
+        for (OrderExpressDetail orderExpressDetail : orderExpressDetailList) {
+            orderExpressDetail.setOrderExpressId(orderExpress.getId());
+            orderExpressDetail.setOrderUserId(orderExpress.getOrderUserId());
+            orderExpressDetail.setOrderId(orderExpress.getOrderId());
+            List<OrderDetailVO> result = productMap.get(orderExpressDetail.getProductId());
+            int expressNumber = orderExpressDetail.getNumber();
+            if (result != null) {
+                orderExpressDetail.setProductName(result.get(0).getProductName());
+                for (OrderDetailVO orderDetailVO : result) {
+                    int number = orderDetailVO.getNumber() - orderDetailVO.getExpressNumber();
+                    if (number >= expressNumber) {
+                        updateNumber(orderDetailVO, expressNumber);
+                        expressNumber = expressNumber - number;
+                        if (expressNumber <= 0) {
+                            break;
+                        }
+                    } else {
+                        updateNumber(orderDetailVO, number);
+                        expressNumber = expressNumber - number;
+                    }
+                }
+                if (expressNumber > 0) {
+                    log.error("发货数量大于下单数量！");
+                    throw new PrivateException(ErrorInfo.UPDATE_ERROR);
+                }
+            }
+        }
+        expressDetailMapper.insertOrderExpressDetails(orderExpressDetailList);
+        return orderExpressDTO;
+    }
 
+    private void updateNumber(OrderDetailVO orderDetailVO, int number) {
+        int count = orderDetailMapper.updateNumber(orderDetailVO.getId(), number);
+        if (count != 1) {
+            log.error("修改发货数量失败！");
+            throw new PrivateException(ErrorInfo.UPDATE_ERROR);
+        }
+    }
 
-
+    public OrderExpressDTO updateExpress(OrderExpressDTO orderExpressDTO) {
         return null;
     }
 

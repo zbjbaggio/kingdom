@@ -1,6 +1,7 @@
 package com.kingdom.system.data.entity;
 
 import com.kingdom.system.data.base.EntityBase;
+import com.kingdom.system.data.vo.OrderDetailVO;
 import lombok.Data;
 import lombok.ToString;
 
@@ -10,8 +11,9 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
-        
+
 /**
  * 订单购买产品表 t_order_product
  * 
@@ -60,5 +62,7 @@ public class OrderProduct extends EntityBase implements Serializable {
 	private Long exchangeRateId;
 
 	private Integer score;
+
+	private List<OrderDetailVO> orderDetailVOs;
 
 }

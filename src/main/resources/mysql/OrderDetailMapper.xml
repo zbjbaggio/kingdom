@@ -59,6 +59,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         group by a.product_id, b.order_user_id;
     </select>
 
+    <select id="selectOrderDetailPackageListByOrderId" resultMap="OrderDetailVOResult">
+        <include refid="selectOrderDetailVo"/>
+        where order_id = #{orderId} and product_package_id != -1
+    </select>
+
+    <select id="selectExpressByOrderIdAndUserId" resultMap="OrderDetailVOResult">
+        <include refid="selectOrderDetailVo"/>
+        where order_id = #{orderId} and order_user_id = #{orderUserId} and  express_number <![CDATA[ < ]]> number
+    </select>
+
     <insert id="insertOrderDetail" parameterType="com.kingdom.system.data.entity.OrderDetail">
         insert into t_order_detail
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -111,7 +121,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-	<delete id="deleteOrderDetailById" parameterType="Long">
+    <update id="updateNumber">
+        update t_order_detail
+        <trim prefix="SET" suffixOverrides=",">
+           express_number = express_number + #{expressNumber}
+        </trim>
+        where id = #{id} and express_number + #{expressNumber} <![CDATA[ <=  ]]> number
+    </update>
+
+    <delete id="deleteOrderDetailById" parameterType="Long">
         delete from t_order_detail where id = #{id}
     </delete>
 	

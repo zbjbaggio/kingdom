@@ -61,4 +61,6 @@ public interface OrderExpressDetailMapper
 	public int deleteOrderExpressDetailByIds(String[] ids);
 
 	List<OrderExpressDetail> selectOrderExpressDetailListByOrderId(Long orderId);
+
+	int insertOrderExpressDetails(List<OrderExpressDetail> orderExpressDetailList);
 }

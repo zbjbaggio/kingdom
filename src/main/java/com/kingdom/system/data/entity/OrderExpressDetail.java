@@ -26,6 +26,8 @@ public class OrderExpressDetail extends EntityBase implements Serializable {
 	/**  */
 	private Long orderDetailId;
 
+	private Long orderUserId;
+
 	/**  */
 	private Long productId;
 	/**  */

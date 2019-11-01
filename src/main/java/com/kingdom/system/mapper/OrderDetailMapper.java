@@ -2,6 +2,7 @@ package com.kingdom.system.mapper;
 
 import com.kingdom.system.data.entity.OrderDetail;
 import com.kingdom.system.data.vo.OrderDetailVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -64,5 +65,11 @@ public interface OrderDetailMapper {
 
     List<OrderDetailVO> selectOrderDetailListByOrderId(Long orderId);
 
+    List<OrderDetailVO> selectOrderDetailPackageListByOrderId(Long orderId);
+
     int deleteOrderDetailByOrderId(Long orderId);
+
+    List<OrderDetailVO> selectExpressByOrderIdAndUserId(@Param(value = "orderId") Long orderId, @Param(value = "orderUserId") Long orderUserId);
+
+    int updateNumber(@Param(value = "id") Long id, @Param(value = "expressNumber") int expressNumber);
 }

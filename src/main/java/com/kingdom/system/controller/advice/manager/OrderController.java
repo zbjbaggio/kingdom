@@ -48,7 +48,12 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping(value = "/insertExpress")
-    public OrderDTO insertExpress(@RequestBody @Validated(OrderExpress.Insert.class) OrderExpressDTO orderExpressDTO, BindingResult bindingResult) {
+    public OrderExpressDTO insertExpress(@RequestBody @Validated(OrderExpress.Insert.class) OrderExpressDTO orderExpressDTO, BindingResult bindingResult) {
         return orderServiceImpl.insertExpress(orderExpressDTO);
+    }
+
+    @PostMapping(value = "/updateExpress")
+    public OrderExpressDTO updateExpress(@RequestBody @Validated(OrderExpress.Update.class) OrderExpressDTO orderExpressDTO, BindingResult bindingResult) {
+        return orderServiceImpl.updateExpress(orderExpressDTO);
     }
 }
