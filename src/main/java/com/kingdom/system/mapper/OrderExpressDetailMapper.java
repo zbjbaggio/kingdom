@@ -63,4 +63,8 @@ public interface OrderExpressDetailMapper
 	List<OrderExpressDetail> selectOrderExpressDetailListByOrderId(Long orderId);
 
 	int insertOrderExpressDetails(List<OrderExpressDetail> orderExpressDetailList);
+
+	List<OrderExpressDetail> selectOrderExpressDetailListByExpressId(Long orderExpressId);
+
+	int deleteOrderExpressDetailByExpressId(Long orderExpressId);
 }

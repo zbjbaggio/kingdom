@@ -87,7 +87,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-	<delete id="deleteOrderExpressById" parameterType="Long">
+    <update id="updatePrintNumber">
+        update t_order_express set print_number = print_number + 1 where id = #{orderExpressId}
+    </update>
+
+    <delete id="deleteOrderExpressById" parameterType="Long">
         delete from t_order_express where id = #{id}
     </delete>
 	

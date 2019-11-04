@@ -61,4 +61,6 @@ public interface OrderExpressMapper
 	public int deleteOrderExpressByIds(String[] ids);
 
 	List<OrderExpress> selectOrderExpressListByOrderId(Long orderId);
+
+	void updatePrintNumber(Long orderExpressId);
 }

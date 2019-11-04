@@ -19,6 +19,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<sql id="selectOrderExpressDetailVo">
         select id, create_time, last_modified, order_id, order_express_id, product_id, product_name, number from t_order_express_detail
     </sql>
+
+    <sql id="selectOrderExpressDetailNumberVo">
+        select id, create_time, last_modified, order_id, order_express_id, product_id, product_name, -number number from t_order_express_detail
+    </sql>
 	
     <select id="selectOrderExpressDetailList" parameterType="com.kingdom.system.data.entity.OrderExpressDetail" resultMap="OrderExpressDetailResult">
         <include refid="selectOrderExpressDetailVo"/>
@@ -42,6 +46,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectOrderExpressDetailVo"/>
         where order_id = #{orderId}
     </select>
+
+    <select id="selectOrderExpressDetailListByExpressId" resultMap="OrderExpressDetailResult">
+        <include refid="selectOrderExpressDetailNumberVo"/>
+        where order_express_id = #{orderExpressId}
+    </select>
+
 
     <insert id="insertOrderExpressDetail" parameterType="com.kingdom.system.data.entity.OrderExpressDetail" useGeneratedKeys="true" keyProperty="id">
         insert into t_order_express_detail
@@ -100,5 +110,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    
+
+    <delete id="deleteOrderExpressDetailByExpressId" parameterType="Long">
+        delete from t_order_express_detail where order_express_id = #{orderExpressId}
+    </delete>
+
 </mapper>

@@ -56,4 +56,9 @@ public class OrderController extends BaseController {
     public OrderExpressDTO updateExpress(@RequestBody @Validated(OrderExpress.Update.class) OrderExpressDTO orderExpressDTO, BindingResult bindingResult) {
         return orderServiceImpl.updateExpress(orderExpressDTO);
     }
+
+    @PostMapping(value = "/printNumber/{orderExpressId}")
+    public void printNumber(@PathVariable(value = "orderExpressId") Long orderExpressId) {
+        orderServiceImpl.printNumber(orderExpressId);
+    }
 }
