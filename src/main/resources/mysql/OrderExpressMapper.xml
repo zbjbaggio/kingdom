@@ -76,7 +76,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateOrderExpress" parameterType="com.kingdom.system.data.entity.OrderExpress">
         update t_order_express
         <trim prefix="SET" suffixOverrides=",">
-            <if test="orderId != null  ">order_id = #{orderId},</if>
             <if test="expressName != null  and expressName != ''  ">express_name = #{expressName},</if>
             <if test="expressAddress != null  and expressAddress != ''  ">express_address = #{expressAddress},</if>
             <if test="expressCompany != null  and expressCompany != ''  ">express_company = #{expressCompany},</if>

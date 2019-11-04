@@ -72,4 +72,6 @@ public interface OrderDetailMapper {
     List<OrderDetailVO> selectExpressByOrderIdAndUserId(@Param(value = "orderId") Long orderId, @Param(value = "orderUserId") Long orderUserId);
 
     int updateNumber(@Param(value = "id") Long id, @Param(value = "expressNumber") int expressNumber);
+
+    List<OrderDetailVO> selectExpressByOrderIdExpress(@Param(value = "orderId") Long orderId, @Param(value = "orderUserId") Long orderUserId);
 }

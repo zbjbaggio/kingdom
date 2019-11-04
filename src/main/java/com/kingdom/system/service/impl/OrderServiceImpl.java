@@ -253,7 +253,7 @@ public class OrderServiceImpl {
         }
         for (OrderExpress orderExpress : orderExpresses) {
             List<OrderExpressDetail> orderExpressDetails = map.get(orderExpress.getId());
-            StringBuffer productDetail = new StringBuffer();
+            StringBuilder productDetail = new StringBuilder();
             for (OrderExpressDetail orderExpressDetail : orderExpressDetails) {
                 productDetail.append(orderExpressDetail.getProductName()).append(" : ").append(orderExpressDetail.getNumber()).append("\n");
             }
@@ -329,6 +329,9 @@ public class OrderServiceImpl {
                     log.error("发货数量大于下单数量！");
                     throw new PrivateException(ErrorInfo.UPDATE_ERROR);
                 }
+            } else {
+                log.error("产品未找到！orderExpressDTO：{}", orderExpressDTO);
+                throw new PrivateException(ErrorInfo.PARAMS_ERROR);
             }
         }
         orderExpressDetailMapper.insertOrderExpressDetails(orderExpressDetailList);
@@ -343,9 +346,10 @@ public class OrderServiceImpl {
         }
     }
 
+    @Transactional
     public OrderExpressDTO updateExpress(OrderExpressDTO orderExpressDTO) {
         OrderExpress orderExpress = orderExpressDTO.getOrderExpress();
-        List<OrderDetailVO> orderDetailVOS = orderDetailMapper.selectExpressByOrderIdAndUserId(orderExpress.getOrderId(), orderExpress.getOrderUserId());
+        List<OrderDetailVO> orderDetailVOS = orderDetailMapper.selectExpressByOrderIdExpress(orderExpress.getOrderId(), orderExpress.getOrderUserId());
         if (orderDetailVOS == null || orderDetailVOS.size() == 0) {
             log.error("订单信息错误！orderExpressDTO:{}", orderExpressDTO);
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
@@ -354,6 +358,16 @@ public class OrderServiceImpl {
         orderExpressMapper.updateOrderExpress(orderExpress);
         List<OrderExpressDetail> orderExpressDetailListOld = orderExpressDetailMapper.selectOrderExpressDetailListByExpressId(orderExpress.getId());
         orderExpressDetailListOld.addAll(orderExpressDTO.getExpressDetails());
+        Map<Long, Integer> map = new HashMap<>();
+        for (OrderExpressDetail orderExpressDetail : orderExpressDetailListOld) {
+            Integer number = map.get(orderExpressDetail.getProductId());
+            if (number == null) {
+                number = 0;
+            }
+            number += orderExpressDetail.getNumber();
+            map.put(orderExpressDetail.getProductId(), number);
+        }
+
         Map<Long, List<OrderDetailVO>> productMap = new HashMap<>();
         for (OrderDetailVO orderDetailVO : orderDetailVOS) {
             Long key = orderDetailVO.getProductId();
@@ -364,25 +378,33 @@ public class OrderServiceImpl {
             result.add(orderDetailVO);
             productMap.put(key, result);
         }
-        for (OrderExpressDetail orderExpressDetail : orderExpressDetailListOld) {
-            List<OrderDetailVO> result = productMap.get(orderExpressDetail.getProductId());
-            int expressNumber = orderExpressDetail.getNumber();
+        for (Map.Entry<Long, Integer> entry : map.entrySet()) {
+            List<OrderDetailVO> result = productMap.get(entry.getKey());
+            int expressNumber = entry.getValue();
             if (result != null) {
-                orderExpressDetail.setProductName(result.get(0).getProductName());
                 for (OrderDetailVO orderDetailVO : result) {
-                    int number = orderDetailVO.getNumber() - orderDetailVO.getExpressNumber();
-                    if (number >= expressNumber) {
-                        updateNumber(orderDetailVO, expressNumber);
-                        expressNumber = expressNumber - number;
-                        if (expressNumber <= 0) {
+                    if (expressNumber > 0) {
+                        int number = orderDetailVO.getNumber() - orderDetailVO.getExpressNumber();
+                        if (number >= expressNumber) {
+                            updateNumber(orderDetailVO, expressNumber);
+                            expressNumber = 0;
                             break;
+                        } else {
+                            updateNumber(orderDetailVO, number);
+                            expressNumber = expressNumber - number;
                         }
                     } else {
-                        updateNumber(orderDetailVO, number);
-                        expressNumber = expressNumber - number;
+                        if (orderDetailVO.getExpressNumber() >= -expressNumber) {
+                            updateNumber(orderDetailVO, expressNumber);
+                            expressNumber = 0;
+                            break;
+                        } else {
+                            updateNumber(orderDetailVO, orderDetailVO.getExpressNumber());
+                            expressNumber = expressNumber +  orderDetailVO.getExpressNumber();
+                        }
                     }
                 }
-                if (expressNumber > 0) {
+                if (expressNumber != 0) {
                     log.error("发货数量大于下单数量！");
                     throw new PrivateException(ErrorInfo.UPDATE_ERROR);
                 }
