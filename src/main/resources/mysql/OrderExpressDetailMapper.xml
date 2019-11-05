@@ -14,6 +14,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="productName"    column="product_name"    />
         <result property="number"    column="number"    />
         <result property="orderUserId"    column="order_user_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userNo"    column="user_no"    />
     </resultMap>
 	
 	<sql id="selectOrderExpressDetailVo">
@@ -42,9 +45,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectOrderExpressDetailVo"/>
         where id = #{id}
     </select>
+
     <select id="selectOrderExpressDetailListByOrderId" resultMap="OrderExpressDetailResult">
-        <include refid="selectOrderExpressDetailVo"/>
-        where order_id = #{orderId}
+        select a.id, a.create_time, a.last_modified, a.order_id, a.order_express_id, a.product_id, a.product_name, a.number, b.user_name,b.user_id,b.user_no
+        from t_order_express_detail a
+        join t_order_user b on a.order_user_id = b.id
+        where a.order_id = #{orderId}
     </select>
 
     <select id="selectOrderExpressDetailListByExpressId" resultMap="OrderExpressDetailResult">

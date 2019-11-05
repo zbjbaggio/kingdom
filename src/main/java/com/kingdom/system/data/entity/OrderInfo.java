@@ -46,4 +46,9 @@ public class OrderInfo extends EntityBase implements Serializable {
 
 	private String remark;
 
+	/**
+	 * 是否有快递 0 没有 1 有
+	 */
+	private Integer express;
+
 }

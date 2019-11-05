@@ -5,8 +5,7 @@ import com.kingdom.system.data.base.EntityBase;
 import lombok.Data;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -40,10 +39,20 @@ public class OrderExpressDetail implements Serializable {
 	private Long orderUserId;
 
 	/**  */
+	@NotNull(groups = {EntityBase.Insert.class, EntityBase.Update.class})
 	private Long productId;
 	/**  */
 	private String productName;
+
 	/**  */
+	@NotNull(groups = {EntityBase.Insert.class, EntityBase.Update.class})
+	@Min(1)
 	private Integer number;
+
+	private String userName;
+
+	private String userNo;
+
+	private Long userId;
 
 }

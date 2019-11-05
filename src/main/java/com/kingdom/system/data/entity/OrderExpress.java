@@ -7,8 +7,9 @@ import lombok.ToString;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
-    
+
 /**
  * 订单快递表 t_order_express
  * 
@@ -48,5 +49,9 @@ public class OrderExpress extends EntityBase implements Serializable {
 	private Integer printNumber;
 
 	private String productDetail;
+
+	private String userName;
+
+	private List<OrderExpressDetail> orderExpressDetails;
 
 }

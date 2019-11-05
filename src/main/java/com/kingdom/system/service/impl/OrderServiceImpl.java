@@ -253,16 +253,23 @@ public class OrderServiceImpl {
         }
         for (OrderExpress orderExpress : orderExpresses) {
             List<OrderExpressDetail> orderExpressDetails = map.get(orderExpress.getId());
-            StringBuilder productDetail = new StringBuilder();
+            /*StringBuilder productDetail = new StringBuilder();
             for (OrderExpressDetail orderExpressDetail : orderExpressDetails) {
                 productDetail.append(orderExpressDetail.getProductName()).append(" : ").append(orderExpressDetail.getNumber()).append("\n");
             }
-            orderExpress.setProductDetail(productDetail.toString());
+            orderExpress.setProductDetail(productDetail.toString());*/
+            orderExpress.setUserName(orderExpressDetails.get(0).getUserName());
+            orderExpress.setOrderExpressDetails(orderExpressDetails);
         }
         orderVO.setOrderExpresses(orderExpresses);
     }
 
     public OrderDTO update(OrderDTO orderDTO) {
+        OrderInfo oldOrderDTO = orderInfoMapper.selectOrderInfoById(orderDTO.getOrderInfo().getId());
+        if (oldOrderDTO.getExpress() != 0) {
+            log.error("订单已经有快递信息不能修改！orderDTO：{}", orderDTO);
+            throw new PrivateException(ErrorInfo.ORDER_UPDATE_ERROR);
+        }
         Map<Long, ProductVO> productNameMap = checkOrder(orderDTO);
         OrderInfo orderInfo = orderDTO.getOrderInfo();
         int count = orderInfoMapper.updateOrderInfo(orderInfo);
