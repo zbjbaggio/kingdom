@@ -15,10 +15,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="expressNo"    column="express_no"    />
         <result property="printNumber"    column="print_number"    />
         <result property="remark"    column="remark"    />
+        <result property="expressPhone"    column="express_phone"    />
     </resultMap>
 	
 	<sql id="selectOrderExpressVo">
-        select id, create_time, last_modified, order_id, express_name, express_address, express_company, express_no, print_number, remark from t_order_express
+        select id, create_time, last_modified, order_id, express_name, express_phone, express_address, express_company, express_no, print_number, remark from t_order_express
     </sql>
 	
     <select id="selectOrderExpressList" parameterType="com.kingdom.system.data.entity.OrderExpress" resultMap="OrderExpressResult">
@@ -34,6 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="expressNo != null  and expressNo != '' "> and express_no = #{expressNo}</if>
              <if test="printNumber != null "> and print_number = #{printNumber}</if>
              <if test="remark != null "> and remark = #{remark}</if>
+             <if test="expressPhone != null "> and express_phone = #{expressPhone}</if>
          </where>
     </select>
     
@@ -59,6 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="expressNo != null  and expressNo != ''  ">express_no,</if>
 			<if test="printNumber != null  ">print_number,</if>
 			<if test="remark != null  ">remark,</if>
+			<if test="expressPhone != null  ">express_phone,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			NOW(),
@@ -70,6 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="expressNo != null  and expressNo != ''  ">#{expressNo},</if>
 			<if test="printNumber != null  ">#{printNumber},</if>
 			<if test="remark != null  ">#{remark},</if>
+			<if test="expressPhone != null  ">#{expressPhone},</if>
          </trim>
     </insert>
 	 
@@ -82,6 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="expressNo != null  and expressNo != ''  ">express_no = #{expressNo},</if>
             <if test="printNumber != null  ">print_number = #{printNumber},</if>
             <if test="remark != null  ">remark = #{remark},</if>
+            <if test="express_phone != null  ">express_phone = #{expressPhone},</if>
         </trim>
         where id = #{id}
     </update>

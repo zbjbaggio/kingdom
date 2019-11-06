@@ -43,6 +43,10 @@ public class OrderExpress extends EntityBase implements Serializable {
 	@NotEmpty(groups = {Insert.class, Update.class})
 	private String expressNo;
 
+	/** 收货人电话 */
+	@NotEmpty(groups = {Insert.class, Update.class})
+	private String expressPhone;
+
 	private String remark;
 
 	/** 打印次数 */

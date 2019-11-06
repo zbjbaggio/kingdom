@@ -3,10 +3,12 @@ package com.kingdom.system.controller.advice.manager;
 import com.kingdom.system.controller.advice.BaseController;
 import com.kingdom.system.data.base.TableDataInfo;
 import com.kingdom.system.data.dto.OrderDTO;
+import com.kingdom.system.data.dto.OrderDetailDTO;
 import com.kingdom.system.data.dto.OrderExpressDTO;
 import com.kingdom.system.data.entity.OrderExpress;
 import com.kingdom.system.data.entity.OrderInfo;
 import com.kingdom.system.data.vo.OrderVO;
+import com.kingdom.system.service.OrderService;
 import com.kingdom.system.service.impl.OrderServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,4 +63,10 @@ public class OrderController extends BaseController {
     public void printNumber(@PathVariable(value = "orderExpressId") Long orderExpressId) {
         orderServiceImpl.printNumber(orderExpressId);
     }
+
+    @PostMapping(value = "/updateDetail")
+    public void updateDetail(@RequestBody @Validated OrderDetailDTO orderDetailDTO, BindingResult bindingResult) {
+        orderServiceImpl.updateDetail(orderDetailDTO);
+    }
+
 }

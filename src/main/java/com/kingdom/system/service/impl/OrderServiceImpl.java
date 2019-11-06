@@ -1,6 +1,7 @@
 package com.kingdom.system.service.impl;
 
 import com.kingdom.system.data.dto.OrderDTO;
+import com.kingdom.system.data.dto.OrderDetailDTO;
 import com.kingdom.system.data.dto.OrderExpressDTO;
 import com.kingdom.system.data.enmus.ErrorInfo;
 import com.kingdom.system.data.entity.*;
@@ -431,6 +432,10 @@ public class OrderServiceImpl {
 
     public void printNumber(Long orderExpressId) {
         orderExpressMapper.updatePrintNumber(orderExpressId);
+    }
+
+    public void updateDetail(OrderDetailDTO orderDetailDTO) {
+        orderInfoMapper.updateDetail(orderDetailDTO.getId(), orderDetailDTO.getRemark());
     }
 
 /*    private void checkProductExpress(List<OrderDetail> orderDetails, List<OrderExpress> orderExpresses) {
