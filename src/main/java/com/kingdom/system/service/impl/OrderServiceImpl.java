@@ -183,7 +183,7 @@ public class OrderServiceImpl {
 
     public OrderVO detail(Long orderId) {
         OrderVO orderVO = new OrderVO();
-        OrderInfo orderInfo = orderInfoMapper.selectOrderInfoById(orderId);
+        OrderInfo orderInfo = orderInfoMapper.selectOrderDetailInfoById(orderId);
         orderVO.setOrderInfo(orderInfo);
         List<OrderUser> orderUserVOs = orderUserMapper.selectOrderUserListByOrderId(orderId);
         getOrderProduct(orderUserVOs, orderId);

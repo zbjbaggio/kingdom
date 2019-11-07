@@ -65,4 +65,6 @@ public class OrderProduct extends EntityBase implements Serializable {
 
 	private List<OrderDetailVO> orderDetailVOs;
 
+	private Integer expressNumber;
+
 }

@@ -21,6 +21,8 @@ public interface OrderInfoMapper {
      */
     public OrderInfo selectOrderInfoById(Long id);
 
+    OrderInfo selectOrderDetailInfoById(Long id);
+
     /**
      * 查询订单列表
      *

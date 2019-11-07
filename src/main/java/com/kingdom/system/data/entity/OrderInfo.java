@@ -51,4 +51,6 @@ public class OrderInfo extends EntityBase implements Serializable {
 	 */
 	private Integer express;
 
+	private Integer score;
+
 }
