@@ -26,24 +26,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, create_time, last_modified, status, express, remark, order_no, dr, parent_order_id, order_phone, order_username, user_id, date from t_order_info
     </sql>
 	
-    <select id="selectOrderInfoList" parameterType="com.kingdom.system.data.entity.OrderInfo" resultMap="OrderInfoResult">
+    <select id="selectOrderInfoList" resultMap="OrderInfoResult">
         select a.id, a.create_time, a.last_modified, a.status, a.express, a.remark, a.order_no, a.dr, a.parent_order_id, a.order_phone, a.order_username, a.user_id, a.date,
         sum(b.cny_amount) cny_amount, sum(b.hk_amount) hk_amount
         from t_order_info a join t_order_product b on a.id = b.order_id
-        <where>  
-            <if test="id != null "> and id = #{id}</if>
-             <if test="createTime != null "> and create_time = #{createTime}</if>
-             <if test="lastModified != null "> and last_modified = #{lastModified}</if>
-             <if test="status != null "> and status = #{status}</if>
-             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
-             <if test="orderNo != null  and orderNo != '' "> and order_no = #{orderNo}</if>
-             <if test="dr != null "> and dr = #{dr}</if>
-             <if test="parentOrderId != null "> and parent_order_id = #{parentOrderId}</if>
-             <if test="orderUsername != null  and orderUsername != '' "> and order_username = #{orderUsername}</if>
-             <if test="orderPhone != null  and orderPhone != '' "> and order_phone = #{orderPhone}</if>
-             <if test="userId != null "> and user_id = #{userId}</if>
-             <if test="date != null "> and date = #{date}</if>
-         </where>
+        <if test=" express != ''  "> left join t_order_express e on a.id = e.order_id and (e.express_name like #{express} or e.express_phone like #{express} )</if>
+        <if test=" orderUser != ''  "> join t_order_user d on a.id = d.order_id  and (d.user_name like #{orderUser} or d.user_no like #{orderUser} ) </if>
+        where 1 = 1
+        <if test=" payUser != ''  "> and (a.order_username like #{payUser} or a.order_phone like #{payUser} )</if>
         group by a.id
         order by a.id desc
     </select>

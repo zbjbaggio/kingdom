@@ -178,8 +178,8 @@ public class OrderServiceImpl {
         return map;
     }
 
-    public List<OrderInfo> list(String search, String sendDateStart, String sendDateEnd) {
-        return orderInfoMapper.selectOrderInfoList(null);
+    public List<OrderInfo> list(String payUser, String orderUser, String express) {
+        return orderInfoMapper.selectOrderInfoList(payUser, orderUser, express);
     }
 
     public OrderVO detail(Long orderId) {

@@ -31,6 +31,8 @@ public interface OrderInfoMapper {
      */
     public List<OrderInfo> selectOrderInfoList(OrderInfo orderInfo);
 
+    public List<OrderInfo> selectOrderInfoList(@Param(value = "payUser") String payUser, @Param(value = "orderUser") String orderUser, @Param(value = "express") String express);
+
     /**
      * 新增订单
      *
