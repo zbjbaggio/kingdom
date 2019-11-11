@@ -1,7 +1,6 @@
 package com.kingdom.system.mapper;
 
 import com.kingdom.system.data.entity.OrderProduct;
-import com.kingdom.system.data.entity.ProductPackage;
 
 import java.util.List;
 
@@ -65,4 +64,6 @@ public interface OrderProductMapper {
     List<OrderProduct> selectOrderProductListByOrderId(Long orderId);
 
     int deleteOrderProductByOrderId(Long orderId);
+
+    List<OrderProduct> listProductByIds(List<Long> orderIds);
 }

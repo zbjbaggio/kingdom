@@ -63,4 +63,6 @@ public interface OrderUserMapper
 	public int deleteOrderUserByIds(String[] ids);
 
 	List<OrderUser> selectOrderUserListByOrderId(Long orderId);
+
+    List<OrderUser> listUserByIds(List<Long> orderIds);
 }

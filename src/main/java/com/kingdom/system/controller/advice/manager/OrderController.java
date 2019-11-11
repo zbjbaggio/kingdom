@@ -5,8 +5,8 @@ import com.kingdom.system.data.base.TableDataInfo;
 import com.kingdom.system.data.dto.OrderDTO;
 import com.kingdom.system.data.dto.OrderDetailDTO;
 import com.kingdom.system.data.dto.OrderExpressDTO;
-import com.kingdom.system.data.entity.OrderExpress;
-import com.kingdom.system.data.entity.OrderInfo;
+import com.kingdom.system.data.entity.*;
+import com.kingdom.system.data.vo.OrderDetailVO;
 import com.kingdom.system.data.vo.OrderVO;
 import com.kingdom.system.service.OrderService;
 import com.kingdom.system.service.impl.OrderServiceImpl;
@@ -15,6 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 订单信息
@@ -31,7 +36,39 @@ public class OrderController extends BaseController {
     public TableDataInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
                               @RequestParam(defaultValue = "") String search, @RequestParam(defaultValue = "") String sendDateStart, @RequestParam(defaultValue = "") String sendDateEnd) {
         startPage();
-        return getDataTable(orderServiceImpl.list("".equals(search) ? "" : "%" + search + "%", sendDateStart, sendDateEnd));
+        TableDataInfo dataTable = getDataTable(orderServiceImpl.list("".equals(search) ? "" : "%" + search + "%", sendDateStart, sendDateEnd));
+        List<OrderInfo> rows = (List<OrderInfo>) dataTable.getRows();
+        if (rows != null && rows.size() > 0) {
+            List<Long> orderIds = new ArrayList<>();
+            for (OrderInfo row : rows) {
+                orderIds.add(row.getId());
+            }
+            List<OrderDetailVO> orderProducts = orderServiceImpl.listProductByIds(orderIds);
+            Map<Long, List<OrderDetailVO>> orderProductMap = new HashMap<>();
+            for (OrderDetailVO orderProduct : orderProducts) {
+                List<OrderDetailVO> orderDetailVOS = orderProductMap.get(orderProduct.getOrderId());
+                if (orderDetailVOS == null) {
+                    orderDetailVOS = new ArrayList<>();
+                }
+                orderDetailVOS.add(orderProduct);
+                orderProductMap.put(orderProduct.getOrderId(), orderDetailVOS);
+            }
+            List<OrderPayment> orderPayments = orderServiceImpl.listOrderPaymentByIds(orderIds);
+            Map<Long, List<OrderPayment>> orderPaymentMap = new HashMap<>();
+            for (OrderPayment orderPayment : orderPayments) {
+                List<OrderPayment> orderPaymentList = orderPaymentMap.get(orderPayment.getOrderId());
+                if (orderPaymentList == null) {
+                    orderPaymentList = new ArrayList<>();
+                }
+                orderPaymentList.add(orderPayment);
+                orderPaymentMap.put(orderPayment.getOrderId(), orderPaymentList);
+            }
+            for (OrderInfo row : rows) {
+                row.setOrderDetailVOS(orderProductMap.get(row.getId()));
+                row.setOrderPayments(orderPaymentMap.get(row.getId()));
+            }
+        }
+        return dataTable;
     }
 
     @GetMapping(value = "/detail/{orderId}")

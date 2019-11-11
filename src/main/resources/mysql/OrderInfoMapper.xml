@@ -18,6 +18,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="userId"    column="user_id"    />
         <result property="date"    column="date"    />
         <result property="express"    column="express"    />
+        <result property="cnyAmount"    column="cny_amount"    />
+        <result property="hkAmount"    column="hk_amount"    />
     </resultMap>
 	
 	<sql id="selectOrderInfoVo">
@@ -25,7 +27,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 	
     <select id="selectOrderInfoList" parameterType="com.kingdom.system.data.entity.OrderInfo" resultMap="OrderInfoResult">
-        <include refid="selectOrderInfoVo"/>
+        select a.id, a.create_time, a.last_modified, a.status, a.express, a.remark, a.order_no, a.dr, a.parent_order_id, a.order_phone, a.order_username, a.user_id, a.date,
+        sum(b.cny_amount) cny_amount, sum(b.hk_amount) hk_amount
+        from t_order_info a join t_order_product b on a.id = b.order_id
         <where>  
             <if test="id != null "> and id = #{id}</if>
              <if test="createTime != null "> and create_time = #{createTime}</if>
@@ -40,7 +44,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="userId != null "> and user_id = #{userId}</if>
              <if test="date != null "> and date = #{date}</if>
          </where>
-         order by id desc
+        group by a.id
+        order by a.id desc
     </select>
     
     <select id="selectOrderInfoById" parameterType="Long" resultMap="OrderInfoResult">
@@ -60,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into t_order_info
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">id,</if>
-			create_time,express
+			create_time,express,
 			<if test="lastModified != null  ">last_modified,</if>
 			<if test="status != null  ">status,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>

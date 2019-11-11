@@ -67,6 +67,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where a.order_id = #{orderId}
     </select>
 
+    <select id="listProductByIds" resultType="com.kingdom.system.data.entity.OrderProduct">
+        <include refid="selectOrderProductVo"/>
+        where order_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{orderIds}
+        </foreach>
+    </select>
+
     <insert id="insertOrderProduct" parameterType="com.kingdom.system.data.entity.OrderProduct" useGeneratedKeys="true" keyProperty="id">
         insert into t_order_product
 		<trim prefix="(" suffix=")" suffixOverrides=",">

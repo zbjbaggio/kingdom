@@ -1,12 +1,15 @@
 package com.kingdom.system.data.entity;
 
 import com.kingdom.system.data.base.EntityBase;
+import com.kingdom.system.data.vo.OrderDetailVO;
 import lombok.Data;
 import lombok.ToString;
 
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -52,5 +55,13 @@ public class OrderInfo extends EntityBase implements Serializable {
 	private Integer express;
 
 	private Integer score;
+
+	private BigDecimal cnyAmount;
+
+	private BigDecimal hkAmount;
+
+	private List<OrderDetailVO> orderDetailVOS;
+
+	private List<OrderPayment> orderPayments;
 
 }

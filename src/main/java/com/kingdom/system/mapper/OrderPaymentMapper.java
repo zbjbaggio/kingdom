@@ -64,4 +64,6 @@ public interface OrderPaymentMapper {
     List<OrderPayment> selectOrderPaymentListByOrderId(Long orderId);
 
     int deleteOrderPaymentByOrderId(Long orderId);
+
+    List<OrderPayment> listPaymentByIds(List<Long> orderIds);
 }

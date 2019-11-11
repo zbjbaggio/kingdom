@@ -3,6 +3,7 @@ package com.kingdom.system.service.impl;
 import com.kingdom.system.data.dto.OrderDTO;
 import com.kingdom.system.data.dto.OrderDetailDTO;
 import com.kingdom.system.data.dto.OrderExpressDTO;
+import com.kingdom.system.data.dto.OrderProductDTO;
 import com.kingdom.system.data.enmus.ErrorInfo;
 import com.kingdom.system.data.entity.*;
 import com.kingdom.system.data.exception.PrivateException;
@@ -177,7 +178,7 @@ public class OrderServiceImpl {
         return map;
     }
 
-    public List<?> list(String search, String sendDateStart, String sendDateEnd) {
+    public List<OrderInfo> list(String search, String sendDateStart, String sendDateEnd) {
         return orderInfoMapper.selectOrderInfoList(null);
     }
 
@@ -436,6 +437,18 @@ public class OrderServiceImpl {
 
     public void updateDetail(OrderDetailDTO orderDetailDTO) {
         orderInfoMapper.updateDetail(orderDetailDTO.getId(), orderDetailDTO.getRemark());
+    }
+
+    public List<OrderDetailVO> listProductByIds(List<Long> orderIds) {
+        return orderDetailMapper.listProductByIds(orderIds);
+    }
+
+    public List<OrderUser> listUserByIds(List<Long> orderIds) {
+        return orderUserMapper.listUserByIds(orderIds);
+    }
+
+    public List<OrderPayment> listOrderPaymentByIds(List<Long> orderIds) {
+        return orderPaymentMapper.listPaymentByIds(orderIds);
     }
 
 /*    private void checkProductExpress(List<OrderDetail> orderDetails, List<OrderExpress> orderExpresses) {

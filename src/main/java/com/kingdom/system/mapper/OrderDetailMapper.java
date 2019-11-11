@@ -1,6 +1,7 @@
 package com.kingdom.system.mapper;
 
 import com.kingdom.system.data.entity.OrderDetail;
+import com.kingdom.system.data.entity.OrderProduct;
 import com.kingdom.system.data.vo.OrderDetailVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -74,4 +75,6 @@ public interface OrderDetailMapper {
     int updateNumber(@Param(value = "id") Long id, @Param(value = "expressNumber") int expressNumber);
 
     List<OrderDetailVO> selectExpressByOrderIdExpress(@Param(value = "orderId") Long orderId, @Param(value = "orderUserId") Long orderUserId);
+
+    List<OrderDetailVO> listProductByIds(List<Long> orderIds);
 }
