@@ -31,7 +31,9 @@ public interface OrderInfoMapper {
      */
     public List<OrderInfo> selectOrderInfoList(OrderInfo orderInfo);
 
-    public List<OrderInfo> selectOrderInfoList(@Param(value = "payUser") String payUser, @Param(value = "orderUser") String orderUser, @Param(value = "express") String express);
+    public List<OrderInfo> selectOrderInfoList(@Param(value = "payUser") String payUser, @Param(value = "orderUser") String orderUser,
+                                               @Param(value = "express") String express, @Param(value = "startDate") String startDate,
+                                               @Param(value = "endDate") String endDate);
 
     /**
      * 新增订单
@@ -66,4 +68,6 @@ public interface OrderInfoMapper {
     public int deleteOrderInfoByIds(String[] ids);
 
     int updateDetail(@Param(value = "id") Long id, @Param(value = "remark") String remark);
+
+    int updateOrderParentId(@Param(value = "orderParentId")Long orderParentId);
 }

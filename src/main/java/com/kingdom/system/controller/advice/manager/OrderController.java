@@ -35,10 +35,11 @@ public class OrderController extends BaseController {
     @GetMapping(value = "/list")
     public TableDataInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
                               @RequestParam(defaultValue = "") String payUser, @RequestParam(defaultValue = "") String orderUser,
-                              @RequestParam(defaultValue = "") String express) {
+                              @RequestParam(defaultValue = "") String express, @RequestParam(defaultValue = "") String startDate,
+                              @RequestParam(defaultValue = "") String endDate) {
         startPage();
         TableDataInfo dataTable = getDataTable(orderServiceImpl.list("".equals(payUser) ? "" : "%" + payUser + "%",
-                "".equals(orderUser) ? "" : "%" + orderUser + "%", "".equals(express) ? "" : "%" + express + "%"));
+                "".equals(orderUser) ? "" : "%" + orderUser + "%", "".equals(express) ? "" : "%" + express + "%", startDate, endDate));
         List<OrderInfo> rows = (List<OrderInfo>) dataTable.getRows();
         if (rows != null && rows.size() > 0) {
             List<Long> orderIds = new ArrayList<>();
@@ -98,14 +99,57 @@ public class OrderController extends BaseController {
         return orderServiceImpl.updateExpress(orderExpressDTO);
     }
 
+    /**
+     * 记录打印次数
+     * @param orderExpressId
+     */
     @PostMapping(value = "/printNumber/{orderExpressId}")
     public void printNumber(@PathVariable(value = "orderExpressId") Long orderExpressId) {
         orderServiceImpl.printNumber(orderExpressId);
     }
 
+    /**
+     * 修改备注
+     * @param orderDetailDTO
+     * @param bindingResult
+     */
     @PostMapping(value = "/updateDetail")
     public void updateDetail(@RequestBody @Validated OrderDetailDTO orderDetailDTO, BindingResult bindingResult) {
         orderServiceImpl.updateDetail(orderDetailDTO);
+    }
+
+    /**
+     * 保存截单
+     * @param orderParent
+     * @param bindingResult
+     */
+    @PostMapping(value = "/saveOrderParent")
+    public void saveOrderParent(@RequestBody @Validated OrderParent orderParent, BindingResult bindingResult) {
+        orderServiceImpl.orderParentSave(orderParent);
+    }
+
+    /**
+     * 截单列表查询
+     * @param pageNum
+     * @param pageSize
+     * @param name
+     * @return
+     */
+    @GetMapping(value = "/listOrderParent")
+    public TableDataInfo listOrderParent(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
+                                             @RequestParam(value = "name", defaultValue = "") String name) {
+        startPage();
+        return getDataTable(orderServiceImpl.listOrderParent(!"".equals(name) ? "%" + name + "%" : ""));
+    }
+
+    /**
+     * 截单
+     * @param orderParent
+     * @param bindingResult
+     */
+    @PostMapping(value = "/doneOrder")
+    public void doneOrder(@RequestBody @Validated OrderParent orderParent, BindingResult bindingResult) {
+        orderServiceImpl.doneOrder(orderParent);
     }
 
 }

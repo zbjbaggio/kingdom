@@ -116,6 +116,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         UPDATE t_user SET dr = #{dr} where id = #{id}
     </update>
 
+    <update id="updateScore">
+        <foreach item="item" collection="list" separator=";" index="index">
+            update t_user set score = score + #{item.score}
+            where id = #{item.userId} and score = #{item.oldScore};
+        </foreach>
+    </update>
+
     <delete id="deleteUserById" parameterType="Long">
         delete from t_user where id = #{id}
     </delete>

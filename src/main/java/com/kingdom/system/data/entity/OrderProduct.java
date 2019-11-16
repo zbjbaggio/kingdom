@@ -67,4 +67,8 @@ public class OrderProduct extends EntityBase implements Serializable {
 
 	private Integer expressNumber;
 
+	private Long userId;
+
+	private Integer oldScore;
+
 }

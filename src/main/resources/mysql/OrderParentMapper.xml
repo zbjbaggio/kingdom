@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kingdom.system.mapper.OrderParentMapper">
+    
+    <resultMap type="com.kingdom.system.data.entity.OrderParent" id="OrderParentResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="lastModified"    column="last_modified"    />
+        <result property="name"    column="name"    />
+        <result property="operationId"    column="operation_id"    />
+        <result property="date"    column="date"    />
+    </resultMap>
+	
+	<sql id="selectOrderParentVo">
+        select id, create_time, last_modified, name, operation_id, date, t_order_parentcol from t_order_parent
+    </sql>
+	
+    <select id="selectOrderParentList" parameterType="com.kingdom.system.data.entity.OrderParent" resultMap="OrderParentResult">
+        <include refid="selectOrderParentVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="lastModified != null "> and last_modified = #{lastModified}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="operationId != null "> and operation_id = #{operationId}</if>
+             <if test="date != null "> and date = #{date}</if>
+             <if test="tOrderParentcol != null  and tOrderParentcol != '' "> and t_order_parentcol = #{tOrderParentcol}</if>
+         </where>
+    </select>
+    
+    <select id="selectOrderParentById" parameterType="Long" resultMap="OrderParentResult">
+        <include refid="selectOrderParentVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectOrderParentListByName" resultType="com.kingdom.system.data.entity.OrderParent">
+        <include refid="selectOrderParentVo"/>
+        where 1 = 1
+        <if test="name != '' "> and (name like #{name} or date like #{name}) </if>
+    </select>
+
+    <insert id="insertOrderParent" parameterType="com.kingdom.system.data.entity.OrderParent" useGeneratedKeys="true" keyProperty="id">
+        insert into t_order_parent
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			create_time,
+			<if test="lastModified != null  ">last_modified,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="operationId != null  ">operation_id,</if>
+			<if test="date != null  ">date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			NOW(),
+			<if test="lastModified != null  ">#{lastModified},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="operationId != null  ">#{operationId},</if>
+			<if test="date != null  ">#{date},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateOrderParent" parameterType="com.kingdom.system.data.entity.OrderParent">
+        update t_order_parent
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="lastModified != null  ">last_modified = #{lastModified},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="operationId != null  ">operation_id = #{operationId},</if>
+            <if test="date != null  ">date = #{date},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteOrderParentById" parameterType="Long">
+        delete from t_order_parent where id = #{id}
+    </delete>
+	
+    <delete id="deleteOrderParentByIds" parameterType="String">
+        delete from t_order_parent where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

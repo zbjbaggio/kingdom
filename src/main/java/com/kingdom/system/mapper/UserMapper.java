@@ -1,5 +1,6 @@
 package com.kingdom.system.mapper;
 
+import com.kingdom.system.data.entity.OrderProduct;
 import com.kingdom.system.data.entity.UserEntity;
 import org.apache.ibatis.annotations.Param;
 
@@ -67,4 +68,6 @@ public interface UserMapper {
     int updateDr(@Param(value = "id") String id, @Param(value = "dr") int dr);
 
     UserEntity selectUserByMemberNo(String orderUserMemberNo);
+
+    int updateScore(List<OrderProduct> list);
 }

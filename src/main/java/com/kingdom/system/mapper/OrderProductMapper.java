@@ -66,4 +66,7 @@ public interface OrderProductMapper {
     int deleteOrderProductByOrderId(Long orderId);
 
     List<OrderProduct> listProductByIds(List<Long> orderIds);
+
+    List<OrderProduct> selectUserSore();
+
 }

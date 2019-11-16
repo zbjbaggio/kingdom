@@ -3,7 +3,6 @@ package com.kingdom.system.service.impl;
 import com.kingdom.system.data.dto.OrderDTO;
 import com.kingdom.system.data.dto.OrderDetailDTO;
 import com.kingdom.system.data.dto.OrderExpressDTO;
-import com.kingdom.system.data.dto.OrderProductDTO;
 import com.kingdom.system.data.enmus.ErrorInfo;
 import com.kingdom.system.data.entity.*;
 import com.kingdom.system.data.exception.PrivateException;
@@ -61,6 +60,9 @@ public class OrderServiceImpl {
 
     @Inject
     private OrderUserMapper orderUserMapper;
+
+    @Inject
+    private OrderParentMapper orderParentMapper;
 
     @Transactional
     public OrderDTO insert(OrderDTO orderDTO) {
@@ -178,8 +180,8 @@ public class OrderServiceImpl {
         return map;
     }
 
-    public List<OrderInfo> list(String payUser, String orderUser, String express) {
-        return orderInfoMapper.selectOrderInfoList(payUser, orderUser, express);
+    public List<OrderInfo> list(String payUser, String orderUser, String express, String startDate, String endDate) {
+        return orderInfoMapper.selectOrderInfoList(payUser, orderUser, express, startDate, endDate);
     }
 
     public OrderVO detail(Long orderId) {
@@ -449,6 +451,27 @@ public class OrderServiceImpl {
 
     public List<OrderPayment> listOrderPaymentByIds(List<Long> orderIds) {
         return orderPaymentMapper.listPaymentByIds(orderIds);
+    }
+
+    public void orderParentSave(OrderParent orderParent) {
+        orderParentMapper.insertOrderParent(orderParent);
+    }
+
+    public List<OrderParent> listOrderParent(String name) {
+        return orderParentMapper.selectOrderParentListByName(name);
+    }
+
+    @Transactional
+    public void doneOrder(OrderParent orderParent) {
+        orderParentSave(orderParent);
+        //计算积分
+/*        List<OrderProduct> list = orderProductMapper.selectUserSore();
+        userMapper.updateScore(list);*/
+        updateOrderParentId(orderParent.getId());
+    }
+
+    private void updateOrderParentId(Long orderParentId) {
+        orderInfoMapper.updateOrderParentId(orderParentId);
     }
 
 /*    private void checkProductExpress(List<OrderDetail> orderDetails, List<OrderExpress> orderExpresses) {

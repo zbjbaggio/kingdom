@@ -30,6 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select a.id, a.create_time, a.last_modified, a.status, a.express, a.remark, a.order_no, a.dr, a.parent_order_id, a.order_phone, a.order_username, a.user_id, a.date,
         sum(b.cny_amount) cny_amount, sum(b.hk_amount) hk_amount
         from t_order_info a join t_order_product b on a.id = b.order_id
+        <if test=" startDate != '' and endDate != '' ">  join t_order_parent f on a.parent_id = f.id and (f.date <![CDATA[ >= ]]> #{startDate} and f.date <![CDATA[ <= ]]> #{endDate} )</if>
         <if test=" express != ''  ">  join t_order_express e on a.id = e.order_id and (e.express_name like #{express} or e.express_phone like #{express} )</if>
         <if test=" orderUser != ''  "> join t_order_user d on a.id = d.order_id  and (d.user_name like #{orderUser} or d.user_no like #{orderUser} ) </if>
         where 1 = 1
@@ -56,7 +57,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">id,</if>
 			create_time,express,
-			<if test="lastModified != null  ">last_modified,</if>
 			<if test="status != null  ">status,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
 			<if test="orderNo != null  and orderNo != ''  ">order_no,</if>
@@ -69,7 +69,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			NOW(),0,
-			<if test="lastModified != null  ">#{lastModified},</if>
 			<if test="status != null  ">#{status},</if>
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
 			<if test="orderNo != null  and orderNo != ''  ">#{orderNo},</if>
@@ -97,6 +96,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <update id="updateDetail">
         update t_order_info set remark = #{remark} where id = #{id}
+    </update>
+
+    <update id="updateOrderParentId">
+        update t_order_info set parent_order_id = #{orderParentId} where parent_order_id = -1
     </update>
 
     <delete id="deleteOrderInfoById" parameterType="Long">

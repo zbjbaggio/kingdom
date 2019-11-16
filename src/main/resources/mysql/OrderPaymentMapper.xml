@@ -48,7 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </select>
 
-    <insert id="insertOrderPayment" parameterType="com.kingdom.system.data.entity.OrderPayment">
+    <insert id="insertOrderPayment" parameterType="com.kingdom.system.data.entity.OrderPayment" useGeneratedKeys="true" keyProperty="id">
         insert into t_order_payment
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">id,</if>

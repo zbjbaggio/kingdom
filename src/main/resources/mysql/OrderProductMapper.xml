@@ -24,6 +24,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="orderUserId"    column="order_user_id"    />
         <result property="score"    column="score"    />
         <result property="expressNumber"    column="express_number"    />
+        <result property="userId"    column="user_id"    />
+        <result property="oldScore"    column="oldScore"    />
     </resultMap>
 	
 	<sql id="selectOrderProductVo">
@@ -73,6 +75,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{orderIds}
         </foreach>
+    </select>
+
+    <select id="selectUserSore" resultType="com.kingdom.system.data.entity.OrderProduct">
+       select c.user_id,sum(b.score) score,d.score oldScore from t_order_info a
+        join t_order_user c on c.order_id = a.id
+        join t_user d on d.id = c.user_id
+        join t_order_product b on a.id = b.order_id
+        where c.user_id is not null and a.parent_order_id != -1
+        group by c.user_id;
     </select>
 
     <insert id="insertOrderProduct" parameterType="com.kingdom.system.data.entity.OrderProduct" useGeneratedKeys="true" keyProperty="id">
