@@ -162,4 +162,9 @@ public class ProductServiceImpl {
     public List<Product> listAllProduct(String productName) {
         return productMapper.listAllProduct(productName);
     }
+
+    public void addNumber(Product product) {
+        Product olderProduct = productMapper.selectProductById(product.getId());
+        productMapper.updateStock(product.getId(), product.getStock(), olderProduct.getStock());
+    }
 }

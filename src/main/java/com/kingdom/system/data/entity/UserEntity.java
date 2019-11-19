@@ -41,6 +41,8 @@ public class UserEntity extends EntityBase implements Serializable {
     // dr状态
     private int dr;
 
+    private Long score;
+
     public interface BaseInfoSave {
     }
 

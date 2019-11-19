@@ -17,6 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="totalTrans"    column="total_trans"    />
         <result property="dr"    column="dr"    />
         <result property="memberNo"    column="member_no"    />
+        <result property="score"    column="score"    />
     </resultMap>
 	
 	<sql id="selectUserVo">
@@ -42,12 +43,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="list" resultMap="UserResult">
-        <include refid="selectUserVo"/>
+        select a.id, a.create_time, a.last_modified, a.mobile, a.real_name, a.remark, a.show_name, a.total_amount, a.total_send,
+        a.total_trans, a.dr, a.member_no, sum(c.score) score
+        from t_user a JOIN t_order_user b on a.id = b.user_id join t_order_product c on b.id = c.order_user_id
         <where>
-            and dr = 0
-            <if test="search != null and search != '' "> and (real_name like #{search} or mobile like #{search} or member_no like #{search}) </if>
+            and a.dr = 0
+            <if test="search != null and search != '' "> and (a.real_name like #{search} or a.mobile like #{search} or a.member_no like #{search}) </if>
         </where>
-        order by id desc
+        GROUP BY a.id
+        order by a.id desc
     </select>
 
     

@@ -83,6 +83,11 @@ public class ProductController extends BaseController {
         return productService.listAllProduct("".equals(search) ? "" : "%" + search + "%");
     }
 
+    @PostMapping("/addNumber")
+    public void addNumber(@RequestBody @Validated({Product.Id.class, Product.Stock.class}) Product product, BindingResult bindingResult) {
+        productService.addNumber(product);
+    }
+
     /**
      * 关闭产品
      * @param id 产品id

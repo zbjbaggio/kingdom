@@ -5,6 +5,7 @@ import com.kingdom.system.data.vo.ProductVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -76,4 +77,8 @@ public interface ProductMapper {
     List<ProductVO> listProductByIds(Set<Long> productIds);
 
     List<Product> listAllProduct(@Param(value = "search") String productName);
+
+    int updateNumber(Map<Long, Integer> productNumberMap);
+
+    int updateStock(@Param(value = "productId") Long id, @Param(value = "stock") Integer stock, @Param(value = "oldStock") Integer oldStock);
 }

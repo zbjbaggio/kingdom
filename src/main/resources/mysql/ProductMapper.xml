@@ -155,6 +155,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
       update t_product SET status = #{status} where id = #{id}
 
     </update>
+    <update id="updateNumber" parameterType="java.util.Map">
+        <foreach collection="map.entrySet()" index="key" item="value">
+            update t_product
+            set stock = #{value}
+            when id = #{key};
+        </foreach>
+    </update>
+
+
+    <update id="updateStock">
+        update t_product set stock = stock + #{stock} where id = #{productId} and stock = #{oldStock};
+    </update>
 
     <delete id="deleteProductById" parameterType="Long">
         delete from t_product where id = #{id}

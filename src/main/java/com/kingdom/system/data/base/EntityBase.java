@@ -16,7 +16,7 @@ import java.util.Date;
 public class EntityBase implements Serializable {
 
     @Null(groups = {Insert.class})
-    @NotNull(groups = {Update.class})
+    @NotNull(groups = {Update.class, Id.class})
     private Long id;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT-5")
@@ -29,6 +29,10 @@ public class EntityBase implements Serializable {
     }
 
     public interface Update {
+
+    }
+
+    public interface Id {
 
     }
 

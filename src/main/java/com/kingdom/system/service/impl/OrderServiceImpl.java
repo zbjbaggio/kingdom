@@ -346,7 +346,22 @@ public class OrderServiceImpl {
             }
         }
         orderExpressDetailMapper.insertOrderExpressDetails(orderExpressDetailList);
+        //修改商品库存数量
+        Map<Long, Integer> productNumberMap = new HashMap<>();
+        for (Map.Entry<Long, List<OrderDetailVO>> entry : productMap.entrySet()) {
+            List<OrderDetailVO> result = productMap.get(entry.getKey());
+            Integer number = 0;
+            for (OrderDetailVO orderDetailVO : result) {
+                number += orderDetailVO.getNumber();
+            }
+            productNumberMap.put(entry.getKey(), number);
+        }
+        modifyProductNumber(productNumberMap);
         return orderExpressDTO;
+    }
+
+    private void modifyProductNumber(Map<Long, Integer> productNumberMap) {
+        productMapper.updateNumber(productNumberMap);
     }
 
     private void updateNumber(OrderDetailVO orderDetailVO, int number) {
@@ -428,6 +443,7 @@ public class OrderServiceImpl {
             orderExpressDetail.setOrderUserId(orderExpress.getOrderUserId());
             orderExpressDetail.setOrderId(orderExpress.getOrderId());
         }
+        modifyProductNumber(map);
         orderExpressDetailMapper.deleteOrderExpressDetailByExpressId(orderExpress.getId());
         orderExpressDetailMapper.insertOrderExpressDetails(orderExpressDetailList);
         return null;

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -49,6 +50,8 @@ public class Product extends EntityBase implements Serializable {
     /**
      * 库存
      */
+    @NotNull(groups = Stock.class)
+    @Max(value = 1L, groups = Stock.class)
     private Integer stock;
 
     /**
@@ -94,7 +97,7 @@ public class Product extends EntityBase implements Serializable {
 
     private String remark;
 
-    private interface BaseInfoSave {
+    public interface Stock {
 
     }
 
