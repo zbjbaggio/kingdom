@@ -16,6 +16,8 @@ public class ValueHolder {
 
     private ThreadLocal<Long> userIdHolder = new ThreadLocal<>();
 
+    private ThreadLocal<Long> mobileUserHolder = new ThreadLocal<>();
+
     public Long getUserIdHolder() {
         return userIdHolder.get();
     }
@@ -24,4 +26,7 @@ public class ValueHolder {
         this.userIdHolder.set(userIdHolder);
     }
 
+    public void setMobileUserHolder(Long mobileUserHolder) {
+        this.mobileUserHolder.set(mobileUserHolder);
+    }
 }

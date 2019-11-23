@@ -152,4 +152,12 @@ public class OrderController extends BaseController {
         orderServiceImpl.doneOrder(orderParent);
     }
 
+    /**
+     * 删除
+     */
+    @PostMapping(value = "/delete/{orderId}")
+    public void delete(@PathVariable(value = "orderId") Long orderId) {
+        orderServiceImpl.delete(orderId);
+    }
+
 }

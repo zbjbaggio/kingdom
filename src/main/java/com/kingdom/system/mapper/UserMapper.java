@@ -70,4 +70,6 @@ public interface UserMapper {
     UserEntity selectUserByMemberNo(String orderUserMemberNo);
 
     int updateScore(List<OrderProduct> list);
+
+    UserEntity getByUsername(@Param(value = "mobile")String mobile);
 }

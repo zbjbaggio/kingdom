@@ -1,5 +1,6 @@
 package com.kingdom.system.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kingdom.system.data.base.EntityBase;
 import lombok.Data;
 
@@ -24,7 +25,18 @@ public class UserEntity extends EntityBase implements Serializable {
     private String memberNo;
 
     // 电话
+    @NotEmpty(groups = {BaseInfoSave.class, Login.class})
     private String mobile;
+
+    private String salt;
+
+    private String key;
+
+    private String token;
+
+    @JsonIgnore
+    @NotEmpty(groups = {BaseInfoSave.class, Login.class})
+    private String password;
 
     // 备注
     private String remark;
@@ -46,6 +58,9 @@ public class UserEntity extends EntityBase implements Serializable {
     public interface BaseInfoSave {
     }
 
+    public interface Login {
+
+    }
 
 /*    public void changeTotal(Integer totalSend, BigDecimal totalAmount, Integer totalTrans) {
         if (totalSend != null) {

@@ -490,6 +490,25 @@ public class OrderServiceImpl {
         orderInfoMapper.updateOrderParentId(orderParentId);
     }
 
+    @Transactional
+    public void delete(Long orderId) {
+        List<OrderDetailVO> orderDetailVOS = orderDetailMapper.selectOrderDetailListByOrderId(orderId);
+        orderInfoMapper.deleteOrderInfoById(orderId);
+        orderUserMapper.deleteOrderUserByOrderId(orderId);
+        orderProductMapper.deleteOrderProductByOrderId(orderId);
+        orderDetailMapper.deleteOrderDetailByOrderId(orderId);
+        //返回库存
+        Map<Long, Integer> map = new HashMap<>();
+        for (OrderDetailVO orderDetailVO : orderDetailVOS) {
+            Integer sum = map.get(orderDetailVO.getProductId());
+            if (sum == null) {
+                sum = 0;
+            }
+            map.put(orderDetailVO.getProductId(), sum + orderDetailVO.getNumber());
+        }
+        modifyProductNumber(map);
+    }
+
 /*    private void checkProductExpress(List<OrderDetail> orderDetails, List<OrderExpress> orderExpresses) {
         for () {
         }

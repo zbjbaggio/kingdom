@@ -73,6 +73,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where dr = 0 and member_no = #{memberNo}
     </select>
 
+    <select id="getByUsername" resultType="com.kingdom.system.data.entity.UserEntity">
+        <include refid="selectUserVo"/>
+        where dr = 0 and mobile = #{mobile}
+    </select>
+
     <insert id="insertUser" parameterType="com.kingdom.system.data.entity.UserEntity" useGeneratedKeys="true" keyProperty="id">
         insert into t_user
 		<trim prefix="(" suffix=")" suffixOverrides=",">

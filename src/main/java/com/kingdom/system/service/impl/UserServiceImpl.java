@@ -7,10 +7,14 @@ import com.kingdom.system.data.exception.PrivateException;
 import com.kingdom.system.data.vo.UserVO;
 import com.kingdom.system.mapper.UserMapper;
 import com.kingdom.system.mapper.UserSendAddressMapper;
+import com.kingdom.system.service.RedisService;
 import com.kingdom.system.util.StringUtils;
+import com.kingdom.system.util.TokenUtils;
+import com.kingdom.system.util.ValueHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.method.HandlerMethod;
 
 import javax.inject.Inject;
 import java.util.Date;
@@ -25,6 +29,12 @@ public class UserServiceImpl {
 
     @Inject
     private UserSendAddressMapper userSendAddressMapper;
+
+    @Inject
+    private ValueHolder valueHolder;
+
+    @Inject
+    private RedisService redisService;
 
     public List<UserEntity> list(String search) {
         return userMapper.list(search);
@@ -93,4 +103,33 @@ public class UserServiceImpl {
     public void updateSendAddressDr(String sendAddressId, int dr) {
         userSendAddressMapper.updateUserSendAddressDr(sendAddressId, dr);
     }
+
+    public UserEntity login(UserEntity userEntity) throws Exception {
+        UserEntity userData = userMapper.getByUsername(userEntity.getMobile());
+        if (userData != null || userEntity.getPassword().equals(userData.getPassword())) {
+            log.info("手机号或者密码错误！userEntity{}", userEntity);
+            throw new PrivateException(ErrorInfo.MOBILE_LOGIN_ERROR);
+        }
+        userData.setPassword(null);
+        userData.setToken(TokenUtils.getToken(userData));
+        userEntity.setKey(TokenUtils.getKey(userEntity));
+        redisService.saveMobile(userEntity);
+        return userData;
+    }
+
+    public boolean checkToken(String token, String key, HandlerMethod handler) {
+        if (org.springframework.util.StringUtils.isEmpty(token) || org.springframework.util.StringUtils.isEmpty(key)) {
+            log.info("未登录！");
+            return false;
+        }
+        UserEntity userEntity = redisService.getMobileByKey(key);
+        if (userEntity != null && token.equals(userEntity.getToken())) {
+            valueHolder.setMobileUserHolder(userEntity.getId());
+            redisService.saveMobile(userEntity);
+            return true;
+        }
+        log.info("重新登录, token:{}, key:{}, userEntity:{}！", token, key, userEntity);
+        return false;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.kingdom.system.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kingdom.system.constant.RegularExpressionConstant;
 import com.kingdom.system.data.base.EntityBase;
 import lombok.Data;
@@ -35,6 +36,7 @@ public class ManagerInfo extends EntityBase implements Serializable {
 
     @NotEmpty(groups = {LoginGroup.class}, message = "用户密码不能为空！")
     @Length(max = 30, message = "密码不能超过50个字！")
+    @JsonIgnore
     private String password;
 
     @NotEmpty(groups = {BaseInfo.class})

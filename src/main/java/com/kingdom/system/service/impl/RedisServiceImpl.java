@@ -3,6 +3,7 @@ package com.kingdom.system.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.kingdom.system.constant.ManagerLoginConstants;
 import com.kingdom.system.data.entity.ManagerInfo;
+import com.kingdom.system.data.entity.UserEntity;
 import com.kingdom.system.service.RedisService;
 import com.kingdom.system.util.DateUtil;
 import com.kingdom.system.util.StringUtils;
@@ -28,6 +29,11 @@ public class RedisServiceImpl implements RedisService {
 
     @Inject
     private StringRedisTemplate template;
+
+    @Override
+    public void saveMobile(UserEntity userEntity) {
+        save(StringUtils.concatStringWithSign("_", USER_TOKEN_KEY, userEntity.getKey()), userEntity, managerLoginConstants.getTime(), TimeUnit.MINUTES);
+    }
 
     @Override
     public void saveUser(ManagerInfo managerInfo) {
@@ -73,6 +79,11 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public ManagerInfo getUserInfoByKey(String key) {
         return get(StringUtils.concatStringWithSign("_", USER_TOKEN_KEY, key), ManagerInfo.class);
+    }
+
+    @Override
+    public UserEntity getMobileByKey(String key) {
+        return get(StringUtils.concatStringWithSign("_", MOBILE_TOKEN_KEY, key), UserEntity.class);
     }
 
     @Override

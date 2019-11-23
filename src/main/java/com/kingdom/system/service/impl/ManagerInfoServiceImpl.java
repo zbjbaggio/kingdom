@@ -82,7 +82,6 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
         }
         ManagerInfo managerInfo = redisService.getUserInfoByKey(key);
         if (managerInfo != null && token.equals(managerInfo.getToken()) && checkPermission(handler, managerInfo)) {
-            ;
             valueHolder.setUserIdHolder(managerInfo.getId());
             redisService.saveUser(managerInfo);
             return true;

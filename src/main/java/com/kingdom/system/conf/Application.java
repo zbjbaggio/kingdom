@@ -1,6 +1,7 @@
 package com.kingdom.system.conf;
 
 import com.kingdom.system.interceptor.AuthenticationInterceptor;
+import com.kingdom.system.interceptor.MobileAuthenticationInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -39,6 +40,9 @@ public class Application implements WebMvcConfigurer {
 
 	@Inject
     private AuthenticationInterceptor authenticationInterceptor;
+
+	@Inject
+	private MobileAuthenticationInterceptor mobileAuthenticationInterceptor;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
@@ -85,6 +89,7 @@ public class Application implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 	    //TODO 上线前关掉
 		//registry.addInterceptor(authenticationInterceptor).addPathPatterns("/manage/user/**");
+		//registry.addInterceptor(mobileAuthenticationInterceptor).addPathPatterns("/web/user/**");
 	}
 
 /*	@Bean

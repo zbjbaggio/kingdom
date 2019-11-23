@@ -1,6 +1,7 @@
 package com.kingdom.system.service;
 
 import com.kingdom.system.data.entity.ManagerInfo;
+import com.kingdom.system.data.entity.UserEntity;
 
 /**
  * 描述：redis 服务
@@ -14,6 +15,9 @@ public interface RedisService {
 
     String USER_LOCKED_NUMBER_KEY = "user_locked_number";//用户欲锁定次数
 
+    String MOBILE_TOKEN_KEY = "mobile_token";//手机端用户登录后存入redis的key
+
+    void saveMobile(UserEntity userEntity);
 
     /**
      * FUNCTION
@@ -32,6 +36,8 @@ public interface RedisService {
 
 
     ManagerInfo getUserInfoByKey(String key);
+
+    UserEntity getMobileByKey(String key);
 
     void removeUserTokenByKey(String key);
 
