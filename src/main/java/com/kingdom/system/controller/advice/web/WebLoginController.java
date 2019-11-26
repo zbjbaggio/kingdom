@@ -15,7 +15,7 @@ import javax.inject.Inject;
 @RestController
 @RequestMapping("/web/")
 @Slf4j
-public class LoginController {
+public class WebLoginController {
 
     @Inject
     private UserServiceImpl userService;

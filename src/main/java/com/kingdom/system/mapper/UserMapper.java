@@ -63,7 +63,7 @@ public interface UserMapper {
 
     List<UserEntity> list(@Param(value = "search") String search);
 
-    int listByMemberNo(UserEntity user);
+    int getCountByMemberNo(UserEntity user);
 
     int updateDr(@Param(value = "id") String id, @Param(value = "dr") int dr);
 
@@ -72,4 +72,6 @@ public interface UserMapper {
     int updateScore(List<OrderProduct> list);
 
     UserEntity getByUsername(@Param(value = "mobile")String mobile);
+
+    List<UserEntity> listByMemberNo(@Param(value = "memberNo")String memberNo);
 }

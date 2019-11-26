@@ -38,6 +38,9 @@ public class OrderInfo extends EntityBase implements Serializable {
 	@NotEmpty(groups = {Insert.class, Update.class})
 	private String orderUsername;
 
+	@NotEmpty(groups = {Insert.class, Update.class})
+	private String memberNo;
+
 	/** 下单人电话 */
 	@NotEmpty(groups = {Insert.class, Update.class})
 	private String orderPhone;
@@ -45,7 +48,7 @@ public class OrderInfo extends EntityBase implements Serializable {
 	/** 下单日期 */
 	private Date date;
 
-	private String userId;
+	private Long userId;
 
 	private String remark;
 

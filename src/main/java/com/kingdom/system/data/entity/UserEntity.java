@@ -22,10 +22,11 @@ public class UserEntity extends EntityBase implements Serializable {
     private String realName;
 
     // 会员卡号
+    @NotEmpty(groups = {Login.class})
     private String memberNo;
 
     // 电话
-    @NotEmpty(groups = {BaseInfoSave.class, Login.class})
+    @NotEmpty(groups = {BaseInfoSave.class})
     private String mobile;
 
     private String salt;

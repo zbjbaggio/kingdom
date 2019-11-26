@@ -16,7 +16,7 @@ public class TokenUtils {
     }
 
     public static String getKey(UserEntity userEntity) throws Exception {
-        return Md5Util.MD5Encode(userEntity.getMobile(), userEntity.getSalt());
+        return Md5Util.MD5Encode(userEntity.getMemberNo(), userEntity.getSalt());
     }
 
     public static String getToken(UserEntity userEntity) throws Exception {

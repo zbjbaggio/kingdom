@@ -66,6 +66,7 @@ public class OrderServiceImpl {
 
     @Transactional
     public OrderDTO insert(OrderDTO orderDTO) {
+        //校验同时存入userId
         Map<Long, ProductVO> productNameMap = checkOrder(orderDTO);
         OrderInfo orderInfo = orderDTO.getOrderInfo();
         orderInfo.setStatus(1);
@@ -158,7 +159,27 @@ public class OrderServiceImpl {
     }
 
     //返回产品名称map
+    @Transactional(propagation = Propagation.REQUIRED)
     private Map<Long, ProductVO> checkOrder(OrderDTO orderDTO) {
+        //校验下单人
+        OrderInfo orderInfo = orderDTO.getOrderInfo();
+        if (orderInfo.getUserId() == null) {
+            UserEntity userEntity = userMapper.selectUserByMemberNo(orderInfo.getMemberNo());
+            if (userEntity != null) {
+                orderInfo.setUserId(userEntity.getId());
+            } else {
+                UserEntity newUserEntity = new UserEntity();
+                newUserEntity.setMemberNo(orderInfo.getMemberNo());
+                newUserEntity.setMobile(orderInfo.getOrderPhone());
+                newUserEntity.setRealName(orderInfo.getOrderUsername());
+                int count = userMapper.insertUser(newUserEntity);
+                if (count != 1) {
+                    log.error("用户存盘失败！userEntity:{}", newUserEntity);
+                    throw new PrivateException(ErrorInfo.ORDER_ERROR);
+                }
+                orderInfo.setUserId(newUserEntity.getId());
+            }
+        }
         List<OrderUser> orderUsers = orderDTO.getOrderUsers();
         Set<Long> productIds = new HashSet<>();
         for (OrderUser orderUser : orderUsers) {

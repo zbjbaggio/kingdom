@@ -8,8 +8,8 @@ import com.kingdom.system.data.dto.OrderExpressDTO;
 import com.kingdom.system.data.entity.*;
 import com.kingdom.system.data.vo.OrderDetailVO;
 import com.kingdom.system.data.vo.OrderVO;
-import com.kingdom.system.service.OrderService;
 import com.kingdom.system.service.impl.OrderServiceImpl;
+import com.kingdom.system.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -31,6 +31,9 @@ public class OrderController extends BaseController {
 
     @Autowired
     private OrderServiceImpl orderServiceImpl;
+
+    @Autowired
+    private UserServiceImpl userService;
 
     @GetMapping(value = "/list")
     public TableDataInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
@@ -72,6 +75,11 @@ public class OrderController extends BaseController {
             }
         }
         return dataTable;
+    }
+
+    @GetMapping(value = "/listUser/{memberNo}")
+    public List<UserEntity> listUser(@PathVariable(value = "memberNo") String memberNo) {
+        return userService.listByMemberNo(memberNo);
     }
 
     @GetMapping(value = "/detail/{orderId}")

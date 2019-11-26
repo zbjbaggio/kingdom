@@ -36,6 +36,8 @@ public class UserServiceImpl {
     @Inject
     private RedisService redisService;
 
+
+
     public List<UserEntity> list(String search) {
         return userMapper.list(search);
     }
@@ -63,7 +65,7 @@ public class UserServiceImpl {
 
     private void checkMemberNo(UserEntity user) {
         if (StringUtils.isNotEmpty(user.getMemberNo())) {
-            int count = userMapper.listByMemberNo(user);
+            int count = userMapper.getCountByMemberNo(user);
             if (count > 0) {
                 log.error("会员卡号不唯一！ user：{}", user);
                 throw new PrivateException(ErrorInfo.MEMBER_NO_ERROR);
@@ -105,9 +107,9 @@ public class UserServiceImpl {
     }
 
     public UserEntity login(UserEntity userEntity) throws Exception {
-        UserEntity userData = userMapper.getByUsername(userEntity.getMobile());
+        UserEntity userData = userMapper.getByUsername(userEntity.getMemberNo());
         if (userData != null || userEntity.getPassword().equals(userData.getPassword())) {
-            log.info("手机号或者密码错误！userEntity{}", userEntity);
+            log.info("会员号或者密码错误！userEntity{}", userEntity);
             throw new PrivateException(ErrorInfo.MOBILE_LOGIN_ERROR);
         }
         userData.setPassword(null);
@@ -132,4 +134,7 @@ public class UserServiceImpl {
         return false;
     }
 
+    public List<UserEntity> listByMemberNo(String memberNo) {
+        return userMapper.listByMemberNo("%" + memberNo + "%");
+    }
 }
