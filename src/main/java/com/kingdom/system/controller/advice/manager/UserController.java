@@ -44,7 +44,7 @@ public class UserController extends BaseController {
      */
     @PostMapping("/add")
     public UserEntity add(@RequestBody @Validated({UserEntity.Insert.class, UserEntity.BaseInfoSave.class}) UserEntity user,
-                               BindingResult bindingResult) {
+                               BindingResult bindingResult) throws Exception {
         return userService.insert(user);
     }
 
@@ -55,7 +55,7 @@ public class UserController extends BaseController {
      */
     @PostMapping("/update")
     public UserEntity update(@RequestBody @Validated({UserEntity.Update.class, UserEntity.BaseInfoSave.class}) UserEntity user,
-                           BindingResult bindingResult) {
+                           BindingResult bindingResult) throws Exception {
         return userService.updateUser(user);
     }
 

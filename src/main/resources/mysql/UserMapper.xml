@@ -18,10 +18,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="dr"    column="dr"    />
         <result property="memberNo"    column="member_no"    />
         <result property="score"    column="score"    />
+        <result property="salt"    column="salt"    />
+        <result property="password"    column="password"    />
     </resultMap>
 	
 	<sql id="selectUserVo">
-        select id, create_time, last_modified, mobile, real_name, remark, show_name, total_amount, total_send, total_trans, dr, member_no from t_user
+        select id, create_time, last_modified, mobile, real_name, remark, show_name, total_amount, total_send, total_trans, dr, member_no, password, salt from t_user
     </sql>
 	
     <select id="selectUserList" parameterType="com.kingdom.system.data.entity.UserEntity" resultMap="UserResult">
@@ -45,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="list" resultMap="UserResult">
         select a.id, a.create_time, a.last_modified, a.mobile, a.real_name, a.remark, a.show_name, a.total_amount, a.total_send,
         a.total_trans, a.dr, a.member_no, sum(c.score) score
-        from t_user a JOIN t_order_user b on a.id = b.user_id join t_order_product c on b.id = c.order_user_id
+        from t_user a LEFT JOIN t_order_user b on a.id = b.user_id LEFT join t_order_product c on b.id = c.order_user_id
         <where>
             and a.dr = 0
             <if test="search != null and search != '' "> and (a.real_name like #{search} or a.mobile like #{search} or a.member_no like #{search}) </if>
@@ -68,17 +70,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="selectUserByMemberNo" resultType="com.kingdom.system.data.entity.UserEntity">
+    <select id="selectUserByMemberNo" resultMap="UserResult">
         <include refid="selectUserVo"/>
         where dr = 0 and member_no LIKE #{memberNo}
     </select>
 
-    <select id="getByUsername" resultType="com.kingdom.system.data.entity.UserEntity">
+    <select id="getByMemberNo" resultMap="UserResult">
         <include refid="selectUserVo"/>
-        where dr = 0 and mobile = #{mobile}
+        where dr = 0 and member_no = #{memberNo}
     </select>
 
-    <select id="listByMemberNo" resultType="com.kingdom.system.data.entity.UserEntity">
+    <select id="listByMemberNo" resultMap="UserResult">
         <include refid="selectUserVo"/>
         where dr = 0 and member_no = #{memberNo}
         limit 5
@@ -96,7 +98,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="totalSend != null  ">total_send,</if>
 			<if test="totalTrans != null  ">total_trans,</if>
 			<if test="dr != null  ">dr,</if>
+			<if test="salt != null  ">salt,</if>
 			<if test="memberNo != null  and memberNo != ''  ">member_no,</if>
+			<if test="password != null  and password != ''  ">password,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="createTime != null  ">#{createTime},</if>
@@ -108,7 +112,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="totalSend != null  ">#{totalSend},</if>
 			<if test="totalTrans != null  ">#{totalTrans},</if>
 			<if test="dr != null  ">#{dr},</if>
+			<if test="salt != null  ">#{salt},</if>
 			<if test="memberNo != null  and memberNo != ''  ">#{memberNo},</if>
+			<if test="password != null  and password != ''  ">#{password},</if>
          </trim>
     </insert>
 	 
@@ -124,6 +130,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="totalTrans != null  ">total_trans = #{totalTrans},</if>
             <if test="dr != null  ">dr = #{dr},</if>
             <if test="memberNo != null  and memberNo != ''  ">member_no = #{memberNo},</if>
+            <if test="salt != null  and salt != ''  ">salt = #{salt},</if>
+            <if test="password != null  and password != ''  ">password = #{password},</if>
         </trim>
         where id = #{id}
     </update>

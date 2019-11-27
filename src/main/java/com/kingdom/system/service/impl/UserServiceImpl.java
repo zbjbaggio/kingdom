@@ -8,6 +8,7 @@ import com.kingdom.system.data.vo.UserVO;
 import com.kingdom.system.mapper.UserMapper;
 import com.kingdom.system.mapper.UserSendAddressMapper;
 import com.kingdom.system.service.RedisService;
+import com.kingdom.system.util.PasswordUtil;
 import com.kingdom.system.util.StringUtils;
 import com.kingdom.system.util.TokenUtils;
 import com.kingdom.system.util.ValueHolder;
@@ -19,6 +20,7 @@ import org.springframework.web.method.HandlerMethod;
 import javax.inject.Inject;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -36,14 +38,13 @@ public class UserServiceImpl {
     @Inject
     private RedisService redisService;
 
-
-
     public List<UserEntity> list(String search) {
         return userMapper.list(search);
     }
 
-    public UserEntity insert(UserEntity user) {
+    public UserEntity insert(UserEntity user) throws Exception {
         checkMemberNo(user);
+        updatePassword(user);
         user.setCreateTime(new Date());
         int count = userMapper.insertUser(user);
         if (count != 1) {
@@ -53,14 +54,24 @@ public class UserServiceImpl {
         return user;
     }
 
-    public UserEntity updateUser(UserEntity user) {
+    public UserEntity updateUser(UserEntity user) throws Exception {
         checkMemberNo(user);
+        if (!StringUtils.isEmpty(user.getPassword())) {
+            updatePassword(user);
+        }
         int count = userMapper.updateUser(user);
         if (count != 1) {
             log.error("修改失败！user：{}", user);
             throw new PrivateException(ErrorInfo.UPDATE_ERROR);
         }
         return user;
+    }
+
+    private void updatePassword(UserEntity user) throws Exception {
+        UUID uuid = UUID.randomUUID();
+        String salt = uuid.toString();
+        user.setSalt(salt);
+        user.setPassword(PasswordUtil.getPassword(user.getPassword(), salt));
     }
 
     private void checkMemberNo(UserEntity user) {
@@ -107,15 +118,15 @@ public class UserServiceImpl {
     }
 
     public UserEntity login(UserEntity userEntity) throws Exception {
-        UserEntity userData = userMapper.getByUsername(userEntity.getMemberNo());
-        if (userData != null || userEntity.getPassword().equals(userData.getPassword())) {
+        UserEntity userData = userMapper.getByMemberNo(userEntity.getMemberNo());
+        if (userData == null || userEntity.getPassword().equals(userData.getPassword())) {
             log.info("会员号或者密码错误！userEntity{}", userEntity);
             throw new PrivateException(ErrorInfo.MOBILE_LOGIN_ERROR);
         }
         userData.setPassword(null);
         userData.setToken(TokenUtils.getToken(userData));
-        userEntity.setKey(TokenUtils.getKey(userEntity));
-        redisService.saveMobile(userEntity);
+        userData.setKey(TokenUtils.getKey(userEntity));
+        redisService.saveMobile(userData);
         return userData;
     }
 

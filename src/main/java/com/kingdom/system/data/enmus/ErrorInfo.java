@@ -10,7 +10,7 @@ public enum ErrorInfo {
     ERROR(500, "系统异常"),
     PARAMS_ERROR(50001, "参数错误！"),
     LOGIN_ERROR(50002, "用户名或密码错误！"),
-    MOBILE_LOGIN_ERROR(50002, "手机号或者密码错误！"),
+    MOBILE_LOGIN_ERROR(50002, "会员号或者密码错误！"),
     LOGIN_AGAIN(50003, "重新登录！"),
     NO_LOGIN(50004, "未登录！"),
     NO_AUTHORITY(50005, "未权限！"),

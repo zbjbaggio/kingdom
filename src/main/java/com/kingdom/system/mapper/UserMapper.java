@@ -71,7 +71,7 @@ public interface UserMapper {
 
     int updateScore(List<OrderProduct> list);
 
-    UserEntity getByUsername(@Param(value = "mobile")String mobile);
+    UserEntity getByMemberNo(@Param(value = "memberNo")String memberNo);
 
     List<UserEntity> listByMemberNo(@Param(value = "memberNo")String memberNo);
 }

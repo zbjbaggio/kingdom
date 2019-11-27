@@ -1,11 +1,10 @@
 package com.kingdom.system.data.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kingdom.system.data.base.EntityBase;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -29,14 +28,15 @@ public class UserEntity extends EntityBase implements Serializable {
     @NotEmpty(groups = {BaseInfoSave.class})
     private String mobile;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String salt;
 
     private String key;
 
     private String token;
 
-    @JsonIgnore
     @NotEmpty(groups = {BaseInfoSave.class, Login.class})
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     // 备注
