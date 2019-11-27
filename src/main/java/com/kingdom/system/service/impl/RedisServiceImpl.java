@@ -32,7 +32,7 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public void saveMobile(UserEntity userEntity) {
-        save(StringUtils.concatStringWithSign("_", USER_TOKEN_KEY, userEntity.getKey()), userEntity, managerLoginConstants.getTime(), TimeUnit.MINUTES);
+        save(StringUtils.concatStringWithSign("_", MOBILE_TOKEN_KEY, userEntity.getKey()), userEntity, managerLoginConstants.getTime(), TimeUnit.MINUTES);
     }
 
     @Override
