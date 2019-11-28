@@ -24,7 +24,7 @@ public class OrderExpressDetail implements Serializable {
 	@Null(groups = {OrderExpress.Insert.class})
 	private Long id;
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT-5")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT-6")
 	private Date createTime = new Date();
 
 	private Date lastModified;

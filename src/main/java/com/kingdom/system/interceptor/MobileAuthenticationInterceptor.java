@@ -3,7 +3,6 @@ package com.kingdom.system.interceptor;
 import com.alibaba.fastjson.JSON;
 import com.kingdom.system.data.base.ResponseResult;
 import com.kingdom.system.data.enmus.ErrorInfo;
-import com.kingdom.system.service.ManagerInfoService;
 import com.kingdom.system.service.impl.UserServiceImpl;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Component;

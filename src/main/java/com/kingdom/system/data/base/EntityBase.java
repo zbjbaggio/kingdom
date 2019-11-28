@@ -19,8 +19,8 @@ public class EntityBase implements Serializable {
     @NotNull(groups = {Update.class, Id.class})
     private Long id;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT-5")
-    private Date createTime = new Date();
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT-6")
+    private Date createTime;
 
     private Date lastModified;
 
