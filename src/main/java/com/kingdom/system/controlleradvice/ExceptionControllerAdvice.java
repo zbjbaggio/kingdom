@@ -54,7 +54,7 @@ public class ExceptionControllerAdvice implements ResponseBodyAdvice<Object> {
     @ResponseBody
     public ResponseResult handler(PrivateException e) {
         log.info(e.toString());
-        return ResponseResult.build(e.code, e.msg);
+        return ResponseResult.build(e.getCode(), e.getMsg());
     }
 
     @ExceptionHandler()

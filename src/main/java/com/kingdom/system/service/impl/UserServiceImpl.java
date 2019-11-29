@@ -148,4 +148,8 @@ public class UserServiceImpl {
     public List<UserEntity> listByMemberNo(String memberNo) {
         return userMapper.listByMemberNo("%" + memberNo + "%");
     }
+
+    public List<UserSendAddress> listAddress(Long userId) {
+        return userSendAddressMapper.listByUserId(userId);
+    }
 }

@@ -64,15 +64,18 @@ public class OrderServiceImpl {
     @Inject
     private OrderParentMapper orderParentMapper;
 
+    @Inject
+    private UserSendAddressMapper userSendAddressMapper;
+
     @Transactional
     public OrderDTO insert(OrderDTO orderDTO) {
         //校验同时存入userId
         Map<Long, ProductVO> productNameMap = checkOrder(orderDTO);
         OrderInfo orderInfo = orderDTO.getOrderInfo();
         orderInfo.setStatus(1);
-        orderInfo.setOrderNo(NOUtils.getGeneratorNO());
-        orderInfo.setDate(DateUtil.date());
         int count = orderInfoMapper.insertOrderInfo(orderInfo);
+        orderInfo.setOrderNo(NOUtils.getGeneratorNO(orderInfo.getId()));
+        orderInfoMapper.updateOrderNO(orderInfo.getId(), orderInfo.getOrderNo());
         if (count != 1) {
             log.error("订单保存失败！orderDTO：{}", orderDTO);
             throw new PrivateException(ErrorInfo.SAVE_ERROR);
@@ -160,7 +163,7 @@ public class OrderServiceImpl {
 
     //返回产品名称map
     @Transactional(propagation = Propagation.REQUIRED)
-    private Map<Long, ProductVO> checkOrder(OrderDTO orderDTO) {
+    public Map<Long, ProductVO> checkOrder(OrderDTO orderDTO) {
         //校验下单人
         OrderInfo orderInfo = orderDTO.getOrderInfo();
         if (orderInfo.getUserId() == null) {
@@ -366,6 +369,15 @@ public class OrderServiceImpl {
                 throw new PrivateException(ErrorInfo.PARAMS_ERROR);
             }
         }
+        // 如果没有常用地址id就保存一份新的
+        if (orderExpress.getUserSendAddressId() == null) {
+            UserSendAddress userSendAddress = new UserSendAddress();
+            userSendAddress.setAddress(orderExpress.getExpressAddress());
+            userSendAddress.setUserId(orderExpress.getOrderUserId());
+            userSendAddress.setMobile(orderExpress.getExpressPhone());
+            userSendAddress.setTakedName(orderExpress.getExpressName());
+            userSendAddressMapper.insertUserSendAddress(userSendAddress);
+        }
         orderExpressDetailMapper.insertOrderExpressDetails(orderExpressDetailList);
         //修改商品库存数量
         Map<Long, Integer> productNumberMap = new HashMap<>();
@@ -500,6 +512,19 @@ public class OrderServiceImpl {
 
     @Transactional
     public void doneOrder(OrderParent orderParent) {
+        //校验是否有订货人没有填写会员号
+        List<OrderInfo> list = orderInfoMapper.getCountNoUserId();
+        if (list != null && list.size() > 0) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (OrderInfo orderInfo : list) {
+                stringBuilder.append(orderInfo.getOrderNo()).append(",");
+            }
+            PrivateException exception = new PrivateException();
+            exception.setCode(50002);
+            String msg = stringBuilder.toString();
+            exception.setMsg("以下订单的订货人未填写会员号：" + msg.substring(0, msg.length() -1));
+            throw exception;
+        }
         orderParentSave(orderParent);
         //计算积分
 /*        List<OrderProduct> list = orderProductMapper.selectUserSore();

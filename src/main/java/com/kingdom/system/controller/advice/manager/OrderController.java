@@ -168,4 +168,12 @@ public class OrderController extends BaseController {
         orderServiceImpl.delete(orderId);
     }
 
+    /**
+     * 查询订货人地址
+     */
+    @GetMapping(value = "/listAddress/{userId}")
+    public void listAddress(@PathVariable(value = "userId") Long userId) {
+        userService.listAddress(userId);
+    }
+
 }

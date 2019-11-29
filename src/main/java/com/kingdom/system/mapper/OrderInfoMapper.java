@@ -70,4 +70,8 @@ public interface OrderInfoMapper {
     int updateDetail(@Param(value = "id") Long id, @Param(value = "remark") String remark);
 
     int updateOrderParentId(@Param(value = "orderParentId")Long orderParentId);
+
+    List<OrderInfo> getCountNoUserId();
+
+    int updateOrderNO(@Param(value = "id")Long id, @Param(value = "orderNo")String orderNo);
 }

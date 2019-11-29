@@ -1,5 +1,6 @@
 package com.kingdom.system.util;
 
+import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -12,15 +13,15 @@ public class NOUtils {
 
     private static final String GENERATOR = "10";
 
-    public static String getGeneratorNO() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmm");
+    private static final String NUMBER = "00000";
+
+    public static String getGeneratorNO(Long id) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd");
         Date date = new Date();
-        long time = date.getTime();
         String dateStr = simpleDateFormat.format(date);
-        Random random = new Random();
-        int randNum = random.nextInt(10000);
-        String number = time + randNum + "";
-        return GENERATOR + dateStr + number.substring(number.length()-8);
+        String number = NUMBER + id;
+        number = number.substring(number.length() -  NUMBER.length());
+        return dateStr + number;
     }
 
 }

@@ -50,9 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertUserSendAddress" parameterType="com.kingdom.system.data.entity.UserSendAddress" useGeneratedKeys="true" keyProperty="id">
         insert into t_user_send_address
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">id,</if>
-			<if test="createTime != null  ">create_time,</if>
-			<if test="lastModified != null  ">last_modified,</if>
+            create_time,
 			<if test="address != null  and address != ''  ">address,</if>
 			<if test="common != null  ">common,</if>
 			<if test="dr != null  ">dr,</if>
@@ -62,9 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="userId != null  ">user_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="id != null  ">#{id},</if>
-			<if test="createTime != null  ">#{createTime},</if>
-			<if test="lastModified != null  ">#{lastModified},</if>
+			NOW(),
 			<if test="address != null  and address != ''  ">#{address},</if>
 			<if test="common != null  ">#{common},</if>
 			<if test="dr != null  ">#{dr},</if>

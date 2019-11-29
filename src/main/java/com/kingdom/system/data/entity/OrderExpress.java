@@ -23,6 +23,8 @@ public class OrderExpress extends EntityBase implements Serializable {
 	@NotNull(groups = {Insert.class, Update.class})
 	private Long orderId;
 
+	private Long userSendAddressId;
+
 	/** 订货人id */
 	@NotNull(groups = {Insert.class, Update.class})
 	private Long orderUserId;
