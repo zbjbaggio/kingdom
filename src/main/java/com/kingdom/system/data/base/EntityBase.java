@@ -1,6 +1,7 @@
 package com.kingdom.system.data.base;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.kingdom.system.constant.TimeZoneConstant;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -19,7 +20,7 @@ public class EntityBase implements Serializable {
     @NotNull(groups = {Update.class, Id.class})
     private Long id;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT-6")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = TimeZoneConstant.DEFAULT)
     private Date createTime;
 
     private Date lastModified;

@@ -59,7 +59,7 @@ public interface ProductRemarkMapper
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-	public int deleteProductRemarkByIds(String[] ids);
+	public int deleteProductRemarkByIds(Long[] ids);
 
 	List<ProductRemark> listProductRemark(@Param(value = "search") String search);
 }

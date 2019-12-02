@@ -1,6 +1,7 @@
 package com.kingdom.system.data.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.kingdom.system.constant.TimeZoneConstant;
 import com.kingdom.system.data.base.EntityBase;
 import lombok.Data;
 import lombok.ToString;
@@ -24,7 +25,7 @@ public class OrderExpressDetail implements Serializable {
 	@Null(groups = {OrderExpress.Insert.class})
 	private Long id;
 
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT-6")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = TimeZoneConstant.DEFAULT)
 	private Date createTime = new Date();
 
 	private Date lastModified;

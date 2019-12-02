@@ -42,6 +42,12 @@ public class ProductRemarkController extends BaseController {
         return productRemarkService.updateProductRemark(productRemark);
     }
 
+    @PostMapping("/remove")
+    public void remove(@RequestParam Long[] ids) {
+        productRemarkService.remove(ids);
+    }
+
+
     @GetMapping("/productList")
     public List<Product> productList() {
         return productService.productList();
