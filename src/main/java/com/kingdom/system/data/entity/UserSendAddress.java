@@ -28,9 +28,6 @@ public class UserSendAddress extends EntityBase implements Serializable {
 	@NotNull(groups = SaveBaseInfo.class)
 	private int common;
 
-	/** dr状态,1删除，0留用 */
-	private Integer dr;
-
 	/** 电话 */
 	@NotNull(groups = SaveBaseInfo.class)
 	private String mobile;

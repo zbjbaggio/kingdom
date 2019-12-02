@@ -10,7 +10,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="lastModified"    column="last_modified"    />
         <result property="address"    column="address"    />
         <result property="common"    column="common"    />
-        <result property="dr"    column="dr"    />
         <result property="mobile"    column="mobile"    />
         <result property="remark"    column="remark"    />
         <result property="takedName"    column="taked_name"    />
@@ -18,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectUserSendAddressVo">
-        select id, create_time, last_modified, address, common, dr, mobile, remark, taked_name, user_id from t_user_send_address
+        select id, create_time, last_modified, address, common, mobile, remark, taked_name, user_id from t_user_send_address
     </sql>
 	
     <select id="selectUserSendAddressList" parameterType="com.kingdom.system.data.entity.UserSendAddress" resultMap="UserSendAddressResult">
@@ -29,7 +28,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="lastModified != null "> and last_modified = #{lastModified}</if>
              <if test="address != null  and address != '' "> and address = #{address}</if>
              <if test="common != null "> and common = #{common}</if>
-             <if test="dr != null "> and dr = #{dr}</if>
              <if test="mobile != null  and mobile != '' "> and mobile = #{mobile}</if>
              <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
              <if test="takedName != null  and takedName != '' "> and taked_name = #{takedName}</if>
@@ -53,7 +51,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             create_time,
 			<if test="address != null  and address != ''  ">address,</if>
 			<if test="common != null  ">common,</if>
-			<if test="dr != null  ">dr,</if>
 			<if test="mobile != null  and mobile != ''  ">mobile,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
 			<if test="takedName != null  and takedName != ''  ">taked_name,</if>
@@ -63,7 +60,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			NOW(),
 			<if test="address != null  and address != ''  ">#{address},</if>
 			<if test="common != null  ">#{common},</if>
-			<if test="dr != null  ">#{dr},</if>
 			<if test="mobile != null  and mobile != ''  ">#{mobile},</if>
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
 			<if test="takedName != null  and takedName != ''  ">#{takedName},</if>
@@ -78,7 +74,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="lastModified != null  ">last_modified = #{lastModified},</if>
             <if test="address != null  and address != ''  ">address = #{address},</if>
             <if test="common != null  ">common = #{common},</if>
-            <if test="dr != null  ">dr = #{dr},</if>
             <if test="mobile != null  and mobile != ''  ">mobile = #{mobile},</if>
             <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
             <if test="takedName != null  and takedName != ''  ">taked_name = #{takedName},</if>

@@ -167,4 +167,8 @@ public class ProductServiceImpl {
         Product olderProduct = productMapper.selectProductById(product.getId());
         productMapper.updateStock(product.getId(), product.getStock(), olderProduct.getStock());
     }
+
+    public List<Product> productList() {
+        return productMapper.listAll("");
+    }
 }

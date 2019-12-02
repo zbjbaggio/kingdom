@@ -78,7 +78,7 @@ public interface ProductMapper {
 
     List<Product> listAllProduct(@Param(value = "search") String productName);
 
-    int updateNumber(Map<Long, Integer> productNumberMap);
+    int updateNumber(@Param(value = "map") Map<Long, Integer> productNumberMap);
 
     int updateStock(@Param(value = "productId") Long id, @Param(value = "stock") Integer stock, @Param(value = "oldStock") Integer oldStock);
 }

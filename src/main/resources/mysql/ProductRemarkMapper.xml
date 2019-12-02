@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kingdom.system.mapper.ProductRemarkMapper">
+    
+    <resultMap type="com.kingdom.system.data.entity.ProductRemark" id="ProductRemarkResult">
+        <result property="id"    column="id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="productName"    column="product_name"    />
+        <result property="number"    column="number"    />
+        <result property="remark"    column="remark"    />
+        <result property="date"    column="date"    />
+    </resultMap>
+	
+	<sql id="selectProductRemarkVo">
+        select id, product_id, product_name, number, remark, date from t_product_remark
+    </sql>
+	
+    <select id="selectProductRemarkList" parameterType="com.kingdom.system.data.entity.ProductRemark" resultMap="ProductRemarkResult">
+        <include refid="selectProductRemarkVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="date != null "> and date = #{date}</if>
+             <if test="productId != null "> and product_id = #{productId}</if>
+             <if test="productName != null  and productName != '' "> and product_name = #{productName}</if>
+             <if test="number != null "> and number = #{number}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+         </where>
+    </select>
+    
+    <select id="selectProductRemarkById" parameterType="Long" resultMap="ProductRemarkResult">
+        <include refid="selectProductRemarkVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="listProductRemark" resultMap="ProductRemarkResult">
+        <include refid="selectProductRemarkVo"/>
+        WHERE 1 = 1
+        <if test=" search != '' "> AND product_name LIKE #{search}</if>
+        ORDER BY id DESC;
+    </select>
+
+    <insert id="insertProductRemark" parameterType="com.kingdom.system.data.entity.ProductRemark" useGeneratedKeys="true" keyProperty="id">
+        insert into t_product_remark
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            create_time,
+			<if test="productId != null  ">product_id,</if>
+			<if test="productName != null  and productName != ''  ">product_name,</if>
+			<if test="number != null  ">number,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="date != null  and date != ''  ">date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            NOW(),
+			<if test="productId != null  ">#{productId},</if>
+			<if test="productName != null  and productName != ''  ">#{productName},</if>
+			<if test="number != null  ">#{number},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="date != null  and date != ''  ">#{date},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateProductRemark" parameterType="com.kingdom.system.data.entity.ProductRemark">
+        update t_product_remark
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productId != null  ">product_id = #{productId},</if>
+            <if test="productName != null  and productName != ''  ">product_name = #{productName},</if>
+            <if test="number != null  ">number = #{number},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="date != null  and date != ''  ">date = #{date},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteProductRemarkById" parameterType="Long">
+        delete from t_product_remark where id = #{id}
+    </delete>
+	
+    <delete id="deleteProductRemarkByIds" parameterType="String">
+        delete from t_product_remark where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

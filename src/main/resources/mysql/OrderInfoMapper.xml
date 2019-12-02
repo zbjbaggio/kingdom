@@ -31,10 +31,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         sum(b.cny_amount) cny_amount, sum(b.hk_amount) hk_amount
         from t_order_info a join t_order_product b on a.id = b.order_id
         <if test=" startDate != '' and endDate != '' ">  join t_order_parent f on a.parent_id = f.id and (f.date <![CDATA[ >= ]]> #{startDate} and f.date <![CDATA[ <= ]]> #{endDate} )</if>
-        <if test=" express != ''  ">  join t_order_express e on a.id = e.order_id and (e.express_name like #{express} or e.express_phone like #{express} )</if>
-        <if test=" orderUser != ''  "> join t_order_user d on a.id = d.order_id  and (d.user_name like #{orderUser} or d.user_no like #{orderUser} ) </if>
+        <if test=" express != '' ">  join t_order_express e on a.id = e.order_id and (e.express_name like #{express} or e.express_phone like #{express} )</if>
+        <if test=" orderUser != '' "> join t_order_user d on a.id = d.order_id  and (d.user_name like #{orderUser} or d.user_no like #{orderUser} ) </if>
         where 1 = 1
-        <if test=" payUser != ''  "> and (a.order_username like #{payUser} or a.order_phone like #{payUser} )</if>
+        <if test=" payUser != '' "> and (a.order_username like #{payUser} or a.order_phone like #{payUser} )</if>
         group by a.id
         order by a.id desc
     </select>

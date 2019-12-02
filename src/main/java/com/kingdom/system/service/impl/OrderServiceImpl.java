@@ -12,7 +12,6 @@ import com.kingdom.system.data.vo.ProductPackageVO;
 import com.kingdom.system.data.vo.ProductVO;
 import com.kingdom.system.mapper.*;
 import com.kingdom.system.util.BigDecimalUtils;
-import com.kingdom.system.util.DateUtil;
 import com.kingdom.system.util.NOUtils;
 import com.kingdom.system.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -370,7 +369,7 @@ public class OrderServiceImpl {
             }
         }
         // 如果没有常用地址id就保存一份新的
-        if (orderExpress.getUserSendAddressId() == null) {
+        if (orderExpress.getUserSendAddressId() == null || orderExpress.getUserSendAddressId() == 0L) {
             UserSendAddress userSendAddress = new UserSendAddress();
             userSendAddress.setAddress(orderExpress.getExpressAddress());
             userSendAddress.setUserId(orderExpress.getOrderUserId());

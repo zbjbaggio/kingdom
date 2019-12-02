@@ -159,7 +159,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <foreach collection="map.entrySet()" index="key" item="value">
             update t_product
             set stock = stock + #{value}
-            when id = #{key};
+            where id = #{key};
         </foreach>
     </update>
 

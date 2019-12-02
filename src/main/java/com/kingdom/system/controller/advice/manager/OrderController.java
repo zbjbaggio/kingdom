@@ -172,8 +172,8 @@ public class OrderController extends BaseController {
      * 查询订货人地址
      */
     @GetMapping(value = "/listAddress/{userId}")
-    public void listAddress(@PathVariable(value = "userId") Long userId) {
-        userService.listAddress(userId);
+    public List<UserSendAddress> listAddress(@PathVariable(value = "userId") Long userId) {
+        return userService.listAddress(userId);
     }
 
 }
