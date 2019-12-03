@@ -338,11 +338,13 @@ public class OrderServiceImpl {
             result.add(orderDetailVO);
             productMap.put(key, result);
         }
+        Map<Long, Integer> productNumberMap = new HashMap<>();
         for (OrderExpressDetail orderExpressDetail : orderExpressDetailList) {
             orderExpressDetail.setOrderExpressId(orderExpress.getId());
             orderExpressDetail.setOrderUserId(orderExpress.getOrderUserId());
             orderExpressDetail.setOrderId(orderExpress.getOrderId());
             List<OrderDetailVO> result = productMap.get(orderExpressDetail.getProductId());
+            productNumberMap.put(orderExpressDetail.getProductId(), orderExpressDetail.getNumber());
             int expressNumber = orderExpressDetail.getNumber();
             if (result != null) {
                 orderExpressDetail.setProductName(result.get(0).getProductName());
@@ -368,6 +370,14 @@ public class OrderServiceImpl {
                 throw new PrivateException(ErrorInfo.PARAMS_ERROR);
             }
         }
+        saveExpress(orderExpress);
+        orderExpressDetailMapper.insertOrderExpressDetails(orderExpressDetailList);
+        //修改商品库存数量
+        modifyProductNumber(productNumberMap);
+        return orderExpressDTO;
+    }
+
+    private void saveExpress(OrderExpress orderExpress) {
         // 如果没有常用地址id就保存一份新的
         if (orderExpress.getUserSendAddressId() == null || orderExpress.getUserSendAddressId() == 0L) {
             UserSendAddress userSendAddress = new UserSendAddress();
@@ -377,19 +387,6 @@ public class OrderServiceImpl {
             userSendAddress.setTakedName(orderExpress.getExpressName());
             userSendAddressMapper.insertUserSendAddress(userSendAddress);
         }
-        orderExpressDetailMapper.insertOrderExpressDetails(orderExpressDetailList);
-        //修改商品库存数量
-        Map<Long, Integer> productNumberMap = new HashMap<>();
-        for (Map.Entry<Long, List<OrderDetailVO>> entry : productMap.entrySet()) {
-            List<OrderDetailVO> result = productMap.get(entry.getKey());
-            Integer number = 0;
-            for (OrderDetailVO orderDetailVO : result) {
-                number += orderDetailVO.getNumber();
-            }
-            productNumberMap.put(entry.getKey(), number);
-        }
-        modifyProductNumber(productNumberMap);
-        return orderExpressDTO;
     }
 
     private void modifyProductNumber(Map<Long, Integer> productNumberMap) {
@@ -468,14 +465,17 @@ public class OrderServiceImpl {
                 }
             }
         }
+        Map<Long, Integer> productNumberMap = new HashMap<>();
         for (OrderExpressDetail orderExpressDetail : orderExpressDetailList) {
             orderExpressDetail.setOrderExpressId(orderExpress.getId());
             List<OrderDetailVO> result = productMap.get(orderExpressDetail.getProductId());
             orderExpressDetail.setProductName(result.get(0).getProductName());
             orderExpressDetail.setOrderUserId(orderExpress.getOrderUserId());
             orderExpressDetail.setOrderId(orderExpress.getOrderId());
+            productNumberMap.put(orderExpressDetail.getProductId(), orderExpressDetail.getNumber());
         }
         modifyProductNumber(map);
+        saveExpress(orderExpress);
         orderExpressDetailMapper.deleteOrderExpressDetailByExpressId(orderExpress.getId());
         orderExpressDetailMapper.insertOrderExpressDetails(orderExpressDetailList);
         return null;
