@@ -86,7 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="expressNo != null  and expressNo != ''  ">express_no = #{expressNo},</if>
             <if test="printNumber != null  ">print_number = #{printNumber},</if>
             <if test="remark != null  ">remark = #{remark},</if>
-            <if test="express_phone != null  ">express_phone = #{expressPhone},</if>
+            <if test="expressPhone != null  ">express_phone = #{expressPhone},</if>
         </trim>
         where id = #{id}
     </update>

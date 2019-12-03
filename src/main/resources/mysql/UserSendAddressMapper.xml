@@ -40,7 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
-    <select id="listByUserId" resultType="com.kingdom.system.data.entity.UserSendAddress">
+    <select id="listByUserId" resultMap="UserSendAddressResult">
         <include refid="selectUserSendAddressVo"/>
         where user_id = #{userId}
     </select>
