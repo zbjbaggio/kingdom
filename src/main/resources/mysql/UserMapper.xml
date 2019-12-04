@@ -89,7 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertUser" parameterType="com.kingdom.system.data.entity.UserEntity" useGeneratedKeys="true" keyProperty="id">
         insert into t_user
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="createTime != null  ">create_time,</if>
+			create_time,
 			<if test="mobile != null  and mobile != ''  ">mobile,</if>
 			<if test="realName != null  and realName != ''  ">real_name,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
@@ -103,7 +103,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="password != null  and password != ''  ">password,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="createTime != null  ">#{createTime},</if>
+			NOW(),
 			<if test="mobile != null  and mobile != ''  ">#{mobile},</if>
 			<if test="realName != null  and realName != ''  ">#{realName},</if>
 			<if test="remark != null  and remark != ''  ">#{remark},</if>

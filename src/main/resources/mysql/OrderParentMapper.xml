@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectOrderParentVo">
-        select id, create_time, last_modified, name, operation_id, date, t_order_parentcol from t_order_parent
+        select id, create_time, last_modified, name, operation_id, date  from t_order_parent
     </sql>
 	
     <select id="selectOrderParentList" parameterType="com.kingdom.system.data.entity.OrderParent" resultMap="OrderParentResult">
@@ -38,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectOrderParentListByName" resultType="com.kingdom.system.data.entity.OrderParent">
         <include refid="selectOrderParentVo"/>
         where 1 = 1
-        <if test="name != '' "> and (name like #{name} or date like #{name}) </if>
+        <if test="name != '' "> and (name like binary #{name} or date like binary #{name}) </if>
     </select>
 
     <insert id="insertOrderParent" parameterType="com.kingdom.system.data.entity.OrderParent" useGeneratedKeys="true" keyProperty="id">
