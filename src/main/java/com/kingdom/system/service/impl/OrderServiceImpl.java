@@ -411,6 +411,7 @@ public class OrderServiceImpl {
         }
         List<OrderExpressDetail> orderExpressDetailList = orderExpressDTO.getExpressDetails();
         orderExpressMapper.updateOrderExpress(orderExpress);
+        //查询数据将数量转为负值
         List<OrderExpressDetail> orderExpressDetailListOld = orderExpressDetailMapper.selectOrderExpressDetailListByExpressId(orderExpress.getId());
         orderExpressDetailListOld.addAll(orderExpressDTO.getExpressDetails());
         Map<Long, Integer> map = new HashMap<>();
@@ -422,7 +423,6 @@ public class OrderServiceImpl {
             number += orderExpressDetail.getNumber();
             map.put(orderExpressDetail.getProductId(), number);
         }
-
         Map<Long, List<OrderDetailVO>> productMap = new HashMap<>();
         for (OrderDetailVO orderDetailVO : orderDetailVOS) {
             Long key = orderDetailVO.getProductId();
