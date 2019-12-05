@@ -63,4 +63,6 @@ public interface OrderParentMapper
 	public int deleteOrderParentByIds(String[] ids);
 
     List<OrderParent> selectOrderParentListByName(@Param(value = "name") String name);
+
+    OrderParent selectOrderParentByDate(@Param(value = "now")String now);
 }

@@ -12,6 +12,7 @@ import com.kingdom.system.data.vo.ProductPackageVO;
 import com.kingdom.system.data.vo.ProductVO;
 import com.kingdom.system.mapper.*;
 import com.kingdom.system.util.BigDecimalUtils;
+import com.kingdom.system.util.DateUtil;
 import com.kingdom.system.util.NOUtils;
 import com.kingdom.system.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -552,6 +553,11 @@ public class OrderServiceImpl {
             map.put(orderDetailVO.getProductId(), sum + orderDetailVO.getNumber());
         }
         modifyProductNumber(map);
+    }
+
+    public OrderParent getOrderParent() {
+        String now = DateUtil.formatDate();
+        return orderParentMapper.selectOrderParentByDate(now);
     }
 
 /*    private void checkProductExpress(List<OrderDetail> orderDetails, List<OrderExpress> orderExpresses) {

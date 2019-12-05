@@ -35,10 +35,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
-    <select id="selectOrderParentListByName" resultType="com.kingdom.system.data.entity.OrderParent">
+    <select id="selectOrderParentListByName" resultMap="OrderParentResult">
         <include refid="selectOrderParentVo"/>
         where 1 = 1
         <if test="name != '' "> and (name like binary #{name} or date like binary #{name}) </if>
+    </select>
+
+    <select id="selectOrderParentByDate" resultMap="OrderParentResult">
+        <include refid="selectOrderParentVo"/>
+        where date = #{now} order by id desc  limit 1
     </select>
 
     <insert id="insertOrderParent" parameterType="com.kingdom.system.data.entity.OrderParent" useGeneratedKeys="true" keyProperty="id">

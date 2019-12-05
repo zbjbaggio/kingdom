@@ -176,4 +176,9 @@ public class OrderController extends BaseController {
         return userService.listAddress(userId);
     }
 
+    @GetMapping(value = "/getOrderParent")
+    public OrderParent getOrderParent() {
+        return orderServiceImpl.getOrderParent();
+    }
+
 }
