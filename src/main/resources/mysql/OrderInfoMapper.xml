@@ -20,6 +20,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="express"    column="express"    />
         <result property="cnyAmount"    column="cny_amount"    />
         <result property="hkAmount"    column="hk_amount"    />
+        <result property="score"    column="score"    />
+        <result property="hkCostAmount"    column="hk_cost_amount"    />
     </resultMap>
 	
 	<sql id="selectOrderInfoVo">
@@ -57,6 +59,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from t_order_info a
         join t_order_user b on a.id = b.order_id
         where b.user_id = -1 and a.parent_order_id = -1;
+    </select>
+
+    <select id="getOrderParentSum" resultMap="OrderInfoResult">
+        select a.date,sum(score) score,sum(hk_cost_amount) hk_cost_amount
+        from t_order_info a
+        join t_order_product b on a.id = b.order_id
+        where  a.parent_order_id = -1
+        group by a.date;
     </select>
 
     <insert id="insertOrderInfo" parameterType="com.kingdom.system.data.entity.OrderInfo" useGeneratedKeys="true" keyProperty="id">

@@ -181,4 +181,9 @@ public class OrderController extends BaseController {
         return orderServiceImpl.getOrderParent();
     }
 
+    @GetMapping(value = "/getOrderParentSum")
+    public List<OrderInfo> getOrderParentSum() {
+        return orderServiceImpl.getOrderParentSum();
+    }
+
 }

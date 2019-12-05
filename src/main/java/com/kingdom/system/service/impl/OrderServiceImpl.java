@@ -560,6 +560,10 @@ public class OrderServiceImpl {
         return orderParentMapper.selectOrderParentByDate(now);
     }
 
+    public List<OrderInfo> getOrderParentSum() {
+        return orderInfoMapper.getOrderParentSum();
+    }
+
 /*    private void checkProductExpress(List<OrderDetail> orderDetails, List<OrderExpress> orderExpresses) {
         for () {
         }

@@ -74,4 +74,7 @@ public interface OrderInfoMapper {
     List<OrderInfo> getCountNoUserId();
 
     int updateOrderNO(@Param(value = "id")Long id, @Param(value = "orderNo")String orderNo);
+
+    List<OrderInfo> getOrderParentSum();
+
 }

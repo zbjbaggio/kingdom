@@ -1,5 +1,7 @@
 package com.kingdom.system.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.kingdom.system.constant.TimeZoneConstant;
 import com.kingdom.system.data.base.EntityBase;
 import com.kingdom.system.data.vo.OrderDetailVO;
 import lombok.Data;
@@ -46,6 +48,7 @@ public class OrderInfo extends EntityBase implements Serializable {
 	private String orderPhone;
 
 	/** 下单日期 */
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = TimeZoneConstant.DEFAULT)
 	private Date date;
 
 	private Long userId;
@@ -66,5 +69,7 @@ public class OrderInfo extends EntityBase implements Serializable {
 	private List<OrderDetailVO> orderDetailVOS;
 
 	private List<OrderPayment> orderPayments;
+
+	private  BigDecimal hkCostAmount;
 
 }
