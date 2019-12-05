@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectOrderExpressDetailVo">
-        select id, create_time, last_modified, order_id, order_express_id, product_id, product_name, number from t_order_express_detail
+        select id, create_time, order_id, order_express_id, product_id, product_name, number from t_order_express_detail
     </sql>
 
     <sql id="selectOrderExpressDetailNumberVo">

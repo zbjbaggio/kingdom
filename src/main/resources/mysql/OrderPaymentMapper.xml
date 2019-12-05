@@ -15,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectOrderPaymentVo">
-        select id, create_time, last_modified, pay_type, pay_amount, pay_no, order_id from t_order_payment
+        select id, create_time, pay_type, pay_amount, pay_no, order_id from t_order_payment
     </sql>
 	
     <select id="selectOrderPaymentList" parameterType="com.kingdom.system.data.entity.OrderPayment" resultMap="OrderPaymentResult">

@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectOrderParentVo">
-        select id, create_time, last_modified, name, operation_id, date  from t_order_parent
+        select id, create_time, name, operation_id, date  from t_order_parent
     </sql>
 	
     <select id="selectOrderParentList" parameterType="com.kingdom.system.data.entity.OrderParent" resultMap="OrderParentResult">

@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectOrderDetailVo">
-        select id, create_time, last_modified, order_id, order_product_id, product_id, number, express_number, product_package_id, product_name from t_order_detail
+        select id, create_time, order_id, order_product_id, product_id, number, express_number, product_package_id, product_name from t_order_detail
     </sql>
 
     <sql id="selectOrderDetailGroupByProductIdVo">
