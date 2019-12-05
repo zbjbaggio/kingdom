@@ -2,6 +2,7 @@ package com.kingdom.system.mapper;
 
 
 import com.kingdom.system.data.entity.OrderParent;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -61,5 +62,5 @@ public interface OrderParentMapper
      */
 	public int deleteOrderParentByIds(String[] ids);
 
-    List<OrderParent> selectOrderParentListByName(String name);
+    List<OrderParent> selectOrderParentListByName(@Param(value = "name") String name);
 }

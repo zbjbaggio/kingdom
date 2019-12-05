@@ -106,8 +106,8 @@ public class OrderServiceImpl {
                 orderProduct.setExchangeRateId(exchangeRateRecord.getId());
                 orderProduct.setHkCostPrice(productVO.getCostPrice());
                 orderProduct.setHkSellingPrice(productVO.getSellingPrice());
-                orderProduct.setHkCostAmount(BigDecimalUtils.multiply(productVO.getSellingPrice(), orderProduct.getNumber()));
-                orderProduct.setHkAmount(BigDecimalUtils.multiply(productVO.getCostPrice(), orderProduct.getNumber()));
+                orderProduct.setHkCostAmount(BigDecimalUtils.multiply(productVO.getCostPrice(), orderProduct.getNumber()));
+                orderProduct.setHkAmount(BigDecimalUtils.multiply(productVO.getSellingPrice(), orderProduct.getNumber()));
                 orderProduct.setCnyCostPrice(productVO.getCostPrice().multiply(rate));
                 orderProduct.setCnySellingPrice(productVO.getSellingPrice().multiply(rate));
                 orderProduct.setCnyCostAmount(BigDecimalUtils.multiply(productVO.getCostPrice(), orderProduct.getNumber()).multiply(rate));
