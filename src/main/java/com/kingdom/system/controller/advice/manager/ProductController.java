@@ -1,6 +1,7 @@
 package com.kingdom.system.controller.advice.manager;
 
 
+import com.kingdom.system.ann.RequiresPermissions;
 import com.kingdom.system.controller.advice.BaseController;
 import com.kingdom.system.data.base.TableDataInfo;
 import com.kingdom.system.data.entity.Product;
@@ -19,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/manage/user/product")
 @Slf4j
+@RequiresPermissions("/manage/user/product")
 public class ProductController extends BaseController {
 
     @Autowired

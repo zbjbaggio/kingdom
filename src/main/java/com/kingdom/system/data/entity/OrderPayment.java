@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -28,6 +29,7 @@ public class OrderPayment extends EntityBase implements Serializable {
 
 	/** 付款金额 */
 	@Min(value = 0, groups = {Insert.class, Update.class})
+	@NotNull
 	private BigDecimal payAmount;
 
 	/** 付款码 */

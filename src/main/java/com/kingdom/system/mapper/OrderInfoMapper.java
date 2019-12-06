@@ -65,7 +65,7 @@ public interface OrderInfoMapper {
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-    public int deleteOrderInfoByIds(String[] ids);
+    int deleteOrderInfoByIds(String[] ids);
 
     int updateDetail(@Param(value = "id") Long id, @Param(value = "remark") String remark);
 
@@ -77,4 +77,5 @@ public interface OrderInfoMapper {
 
     List<OrderInfo> getOrderParentSum();
 
+    int updateSend(@Param(value = "send") int send, @Param(value = "orderId")Long orderId);
 }

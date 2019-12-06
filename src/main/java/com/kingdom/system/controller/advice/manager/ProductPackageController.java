@@ -1,6 +1,7 @@
 package com.kingdom.system.controller.advice.manager;
 
 
+import com.kingdom.system.ann.RequiresPermissions;
 import com.kingdom.system.controller.advice.BaseController;
 import com.kingdom.system.data.base.TableDataInfo;
 import com.kingdom.system.data.dto.ProductDTO;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/manage/user/productPackage")
 @Slf4j
+@RequiresPermissions("/manage/user/productPackage")
 public class ProductPackageController extends BaseController {
 
     @Autowired

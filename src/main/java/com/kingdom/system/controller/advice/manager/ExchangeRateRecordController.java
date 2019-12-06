@@ -1,5 +1,6 @@
 package com.kingdom.system.controller.advice.manager;
 
+import com.kingdom.system.ann.RequiresPermissions;
 import com.kingdom.system.controller.advice.BaseController;
 import com.kingdom.system.data.base.TableDataInfo;
 import com.kingdom.system.data.entity.ExchangeRateRecord;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Controller
 @RequestMapping("/manage/user/exchangeRateRecord")
+@RequiresPermissions("/manage/user/exchangeRateRecord")
 public class ExchangeRateRecordController extends BaseController {
 
     @Autowired

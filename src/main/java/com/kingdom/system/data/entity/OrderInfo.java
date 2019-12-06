@@ -58,13 +58,17 @@ public class OrderInfo extends EntityBase implements Serializable {
 	/**
 	 * 是否有快递 0 没有 1 有
 	 */
-	private Integer express;
+	private Integer send;
 
 	private Integer score;
 
 	private BigDecimal cnyAmount;
 
 	private BigDecimal hkAmount;
+
+	private String parentOrderName;
+
+	private String parentOrderDate;
 
 	private List<OrderDetailVO> orderDetailVOS;
 

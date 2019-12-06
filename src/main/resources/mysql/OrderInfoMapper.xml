@@ -17,11 +17,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="orderPhone"    column="order_phone"    />
         <result property="userId"    column="user_id"    />
         <result property="date"    column="date"    />
-        <result property="express"    column="express"    />
+        <result property="send"    column="send"    />
         <result property="cnyAmount"    column="cny_amount"    />
         <result property="hkAmount"    column="hk_amount"    />
         <result property="score"    column="score"    />
         <result property="hkCostAmount"    column="hk_cost_amount"    />
+        <result property="parentOrderName"    column="parentOrderName"    />
+        <result property="parentOrderDate"    column="parentOrderDate"    />
     </resultMap>
 	
 	<sql id="selectOrderInfoVo">
@@ -29,7 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 	
     <select id="selectOrderInfoList" resultMap="OrderInfoResult">
-        select a.id, a.create_time, a.status, a.express, a.remark, a.order_no, a.dr, a.parent_order_id, a.order_phone, a.order_username, a.user_id, a.date,
+        select a.id, a.create_time, a.status, a.send, a.remark, a.order_no, a.dr, a.parent_order_id, a.order_phone, a.order_username, a.user_id, a.date,
         sum(b.cny_amount) cny_amount, sum(b.hk_amount) hk_amount
         from t_order_info a join t_order_product b on a.id = b.order_id
         <if test=" startDate != '' and endDate != '' ">  join t_order_parent f on a.parent_order_id = f.id and (f.date <![CDATA[ >= ]]> #{startDate} and f.date <![CDATA[ <= ]]> #{endDate} )</if>
@@ -47,11 +49,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectOrderDetailInfoById" parameterType="Long" resultMap="OrderInfoResult">
-       select a.id, a.create_time, a.last_modified, a.status, a.express, a.remark, a.order_no, a.dr, a.parent_order_id, a.order_phone, a.order_username, a.user_id, a.date,
-        sum(b.score) score
+       select a.id, a.create_time, a.last_modified, a.status, a.send, a.remark, a.order_no, a.dr, a.parent_order_id,
+        a.order_phone, a.order_username, a.user_id, a.date, sum(b.score) score, sum(hk_amount) hk_amount, sum(cny_amount)  cny_amount,c.name parentOrderName,c.date parentOrderDate
         from t_order_info a
+		left join t_order_parent c on a.parent_order_id = c.id
         join t_order_product b on a.id = b.order_id
         where a.id = #{id}
+        group by a.id
     </select>
 
     <select id="getCountNoUserId" resultMap="OrderInfoResult">
@@ -73,7 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into t_order_info
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null  ">id,</if>
-			create_time,express,date,
+			create_time,send,date,
 			<if test="status != null  ">status,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
 			<if test="orderNo != null  and orderNo != ''  ">order_no,</if>
@@ -119,6 +123,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <update id="updateOrderNO">
         update t_order_info set order_no = #{orderNo} where id = #{id}
+    </update>
+
+    <update id="updateSend">
+         update t_order_info set send = #{send} where id = #{orderIds}
     </update>
 
     <delete id="deleteOrderInfoById" parameterType="Long">

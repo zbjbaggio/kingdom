@@ -1,5 +1,6 @@
 package com.kingdom.system.controller.advice.manager;
 
+import com.kingdom.system.ann.RequiresPermissions;
 import com.kingdom.system.controller.advice.BaseController;
 import com.kingdom.system.data.base.TableDataInfo;
 import com.kingdom.system.data.dto.OrderDTO;
@@ -27,6 +28,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/manage/user/order")
 @Slf4j
+@RequiresPermissions("/manage/user/order")
 public class OrderController extends BaseController {
 
     @Autowired

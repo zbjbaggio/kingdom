@@ -39,6 +39,7 @@ public class OrderProduct extends EntityBase implements Serializable {
 	/** 数量 */
 
 	@Min(value = 1, groups = {Insert.class, Update.class})
+	@NotNull(groups = {Insert.class, Update.class})
 	private Integer number;
 	/** 产品销售港币单价 */
 	private BigDecimal hkSellingPrice;

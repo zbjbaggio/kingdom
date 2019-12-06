@@ -1,5 +1,6 @@
 package com.kingdom.system.controller.advice.manager;
 
+import com.kingdom.system.ann.RequiresPermissions;
 import com.kingdom.system.data.base.Page;
 import com.kingdom.system.data.entity.ManagerRole;
 import com.kingdom.system.data.entity.RoleInfo;
@@ -23,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/manage/user/role")
 @Slf4j
+@RequiresPermissions("/manage/user/role")
 public class RoleController {
 
     @Inject

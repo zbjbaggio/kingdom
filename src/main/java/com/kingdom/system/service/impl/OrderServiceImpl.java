@@ -293,11 +293,7 @@ public class OrderServiceImpl {
     }
 
     public OrderDTO update(OrderDTO orderDTO) {
-        OrderInfo oldOrderDTO = orderInfoMapper.selectOrderInfoById(orderDTO.getOrderInfo().getId());
-        if (oldOrderDTO.getExpress() != 0) {
-            log.error("订单已经有快递信息不能修改！orderDTO：{}", orderDTO);
-            throw new PrivateException(ErrorInfo.ORDER_UPDATE_ERROR);
-        }
+        checkOrderExpress(orderDTO.getOrderInfo().getId());
         Map<Long, ProductVO> productNameMap = checkOrder(orderDTO);
         OrderInfo orderInfo = orderDTO.getOrderInfo();
         int count = orderInfoMapper.updateOrderInfo(orderInfo);
@@ -316,6 +312,14 @@ public class OrderServiceImpl {
         orderPaymentMapper.deleteOrderPaymentByOrderId(orderId);
         orderPaymentMapper.insertOrderPayments(orderPayments);
         return orderDTO;
+    }
+
+    private void checkOrderExpress(Long orderId) {
+        OrderInfo oldOrderDTO = orderInfoMapper.selectOrderInfoById(orderId);
+        if (oldOrderDTO.getSend() != 0) {
+            log.error("订单已经有快递信息不能修改！orderID：{}", orderId);
+            throw new PrivateException(ErrorInfo.ORDER_UPDATE_ERROR);
+        }
     }
 
     @Transactional
@@ -371,6 +375,7 @@ public class OrderServiceImpl {
                 throw new PrivateException(ErrorInfo.PARAMS_ERROR);
             }
         }
+        orderInfoMapper.updateSend(1, orderExpress.getOrderId());
         saveExpress(orderExpress);
         orderExpressDetailMapper.insertOrderExpressDetails(orderExpressDetailList);
         //修改商品库存数量
@@ -538,21 +543,11 @@ public class OrderServiceImpl {
 
     @Transactional
     public void delete(Long orderId) {
-        List<OrderDetailVO> orderDetailVOS = orderDetailMapper.selectOrderDetailListByOrderId(orderId);
+        checkOrderExpress(orderId);
         orderInfoMapper.deleteOrderInfoById(orderId);
         orderUserMapper.deleteOrderUserByOrderId(orderId);
         orderProductMapper.deleteOrderProductByOrderId(orderId);
         orderDetailMapper.deleteOrderDetailByOrderId(orderId);
-        //返回库存
-        Map<Long, Integer> map = new HashMap<>();
-        for (OrderDetailVO orderDetailVO : orderDetailVOS) {
-            Integer sum = map.get(orderDetailVO.getProductId());
-            if (sum == null) {
-                sum = 0;
-            }
-            map.put(orderDetailVO.getProductId(), sum + orderDetailVO.getNumber());
-        }
-        modifyProductNumber(map);
     }
 
     public OrderParent getOrderParent() {

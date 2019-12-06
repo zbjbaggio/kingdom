@@ -1,5 +1,6 @@
 package com.kingdom.system.controller.advice.manager;
 
+import com.kingdom.system.ann.RequiresPermissions;
 import com.kingdom.system.data.base.Page;
 import com.kingdom.system.data.dto.PermissionDTO;
 import com.kingdom.system.data.enmus.ErrorInfo;
@@ -23,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/manage/user/menu")
 @Slf4j
+@RequiresPermissions("/manage/user/menu")
 public class MenuController {
 
     @Inject

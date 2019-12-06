@@ -1,5 +1,6 @@
 package com.kingdom.system.controller.advice.manager;
 
+import com.kingdom.system.ann.RequiresPermissions;
 import com.kingdom.system.constant.DrConstants;
 import com.kingdom.system.controller.advice.BaseController;
 import com.kingdom.system.data.base.TableDataInfo;
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 @RestController
 @RequestMapping("/manage/user/user")
 @Slf4j
+@RequiresPermissions("/manage/user/user")
 public class UserController extends BaseController {
 
     @Inject
