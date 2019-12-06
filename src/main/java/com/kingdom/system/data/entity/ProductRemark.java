@@ -25,9 +25,11 @@ public class ProductRemark extends EntityBase implements Serializable {
     private String productName;
 
     @NotNull(groups = BaseInfo.class)
-    private Long number;
+    private Integer number;
 
     private String remark;
+
+    private Integer olderNumber;
 
     public interface BaseInfo {
 

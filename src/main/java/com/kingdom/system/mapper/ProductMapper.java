@@ -83,4 +83,5 @@ public interface ProductMapper {
     int updateStock(@Param(value = "productId") Long id, @Param(value = "stock") Integer stock, @Param(value = "oldStock") Integer oldStock);
 
     Product getProductById(@Param(value = "productId")Long productId);
+
 }

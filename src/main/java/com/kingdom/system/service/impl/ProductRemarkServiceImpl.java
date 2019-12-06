@@ -9,6 +9,7 @@ import com.kingdom.system.mapper.ProductRemarkMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,11 +27,18 @@ public class ProductRemarkServiceImpl {
         return productRemarkMapper.listProductRemark(search);
     }
 
+    @Transactional
     public ProductRemark insertProductRemark(ProductRemark productRemark) {
         setProductName(productRemark);
         int count = productRemarkMapper.insertProductRemark(productRemark);
         if (count != 1) {
             log.error("产品备注保存报错！product：{}", productRemark);
+            throw new PrivateException(ErrorInfo.SAVE_ERROR);
+        }
+        //修改商品库存
+        count = productMapper.updateStock(productRemark.getProductId(), productRemark.getNumber(), productRemark.getOlderNumber());
+        if (count != 1) {
+            log.error("修改库存失败！product：{}", productRemark);
             throw new PrivateException(ErrorInfo.SAVE_ERROR);
         }
         return productRemark;
@@ -43,6 +51,7 @@ public class ProductRemarkServiceImpl {
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
         productRemark.setProductName(product.getName());
+        productRemark.setOlderNumber(product.getStock());
     }
 
     public ProductRemark updateProductRemark(ProductRemark productRemark) {

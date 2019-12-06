@@ -37,7 +37,7 @@ public class ProductRemarkController extends BaseController {
         return productRemarkService.insertProductRemark(productRemark);
     }
 
-    @PostMapping("/update")
+    /*@PostMapping("/update")
     public ProductRemark update(@RequestBody @Validated({ProductRemark.Update.class, ProductRemark.BaseInfo.class}) ProductRemark productRemark, BindingResult bindingResult) {
         return productRemarkService.updateProductRemark(productRemark);
     }
@@ -45,7 +45,7 @@ public class ProductRemarkController extends BaseController {
     @PostMapping("/remove")
     public void remove(@RequestParam Long[] ids) {
         productRemarkService.remove(ids);
-    }
+    }*/
 
 
     @GetMapping("/productList")
