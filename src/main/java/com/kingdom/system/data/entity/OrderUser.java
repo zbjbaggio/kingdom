@@ -1,6 +1,7 @@
 package com.kingdom.system.data.entity;
 
 import com.kingdom.system.data.base.EntityBase;
+import com.kingdom.system.data.dto.OrderDTO;
 import com.kingdom.system.data.vo.OrderDetailVO;
 import lombok.Data;
 import lombok.ToString;
@@ -29,14 +30,14 @@ public class OrderUser extends EntityBase implements Serializable {
 	/** 下单人id */
 	private Long userId;
 	/** 下单人姓名 */
-	@NotEmpty(groups = {OrderInfo.Insert.class})
+	@NotEmpty(groups = {OrderInfo.Insert.class, OrderDTO.BASE.class})
 	private String userName;
 	/** 下单人会员号 */
 	private String userNo;
 
 	@Valid
-	@NotNull(groups = OrderInfo.Insert.class)
-	@Size(groups = OrderInfo.Insert.class, min = 1)
+	@NotNull(groups = {OrderInfo.Insert.class, OrderDTO.BASE.class})
+	@Size(groups = {OrderInfo.Insert.class, OrderDTO.BASE.class}, min = 1)
 	private List<OrderProduct> orderProducts;
 
 	private List<OrderDetailVO> orderDetailVOs;

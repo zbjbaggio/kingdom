@@ -2,6 +2,7 @@ package com.kingdom.system.data.entity;
 
 import com.kingdom.system.ann.AllowableValue;
 import com.kingdom.system.data.base.EntityBase;
+import com.kingdom.system.data.dto.OrderDTO;
 import lombok.Data;
 import lombok.ToString;
 
@@ -24,12 +25,12 @@ import java.util.Date;
 public class OrderPayment extends EntityBase implements Serializable {
 
 	/** 支付方式 0 港币划卡 1 微信 2  支付宝 3 银行转账 */
-	@AllowableValue(intValues = {0, 1, 2, 3}, groups = {Insert.class, Update.class})
+	@AllowableValue(intValues = {0, 1, 2, 3}, groups = {Insert.class, OrderDTO.BASE.class})
 	private Integer payType;
 
 	/** 付款金额 */
-	@Min(value = 0, groups = {Insert.class, Update.class})
-	@NotNull
+	@Min(value = 0, groups = {Insert.class, OrderDTO.BASE.class})
+	@NotNull(groups = {Insert.class, OrderDTO.BASE.class})
 	private BigDecimal payAmount;
 
 	/** 付款码 */

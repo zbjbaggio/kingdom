@@ -292,7 +292,12 @@ public class OrderServiceImpl {
         orderVO.setOrderExpresses(orderExpresses);
     }
 
+    @Transactional
     public OrderDTO update(OrderDTO orderDTO) {
+        if (orderDTO.getOrderInfo().getId() == null) {
+            log.info("订单修改id不能为空！");
+            throw new PrivateException(ErrorInfo.PARAMS_ERROR);
+        }
         checkOrderExpress(orderDTO.getOrderInfo().getId());
         Map<Long, ProductVO> productNameMap = checkOrder(orderDTO);
         OrderInfo orderInfo = orderDTO.getOrderInfo();

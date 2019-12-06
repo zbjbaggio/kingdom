@@ -95,7 +95,7 @@ public class OrderController extends BaseController {
     }
 
     @PostMapping(value = "/update")
-    public OrderDTO update(@RequestBody @Validated(OrderInfo.Update.class) OrderDTO orderDTO, BindingResult bindingResult) {
+    public OrderDTO update(@RequestBody @Validated(OrderDTO.BASE.class) OrderDTO orderDTO, BindingResult bindingResult) {
         return orderServiceImpl.update(orderDTO);
     }
 

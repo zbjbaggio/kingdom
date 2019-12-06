@@ -3,6 +3,7 @@ package com.kingdom.system.data.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kingdom.system.constant.TimeZoneConstant;
 import com.kingdom.system.data.base.EntityBase;
+import com.kingdom.system.data.dto.OrderDTO;
 import com.kingdom.system.data.vo.OrderDetailVO;
 import lombok.Data;
 import lombok.ToString;
@@ -37,14 +38,14 @@ public class OrderInfo extends EntityBase implements Serializable {
 	private Long parentOrderId;
 
 	/** 下单人姓名 */
-	@NotEmpty(groups = {Insert.class, Update.class})
+	@NotEmpty(groups = {Insert.class, OrderDTO.BASE.class})
 	private String orderUsername;
 
-	@NotEmpty(groups = {Insert.class, Update.class})
+	@NotEmpty(groups = {Insert.class, OrderDTO.BASE.class})
 	private String memberNo;
 
 	/** 下单人电话 */
-	@NotEmpty(groups = {Insert.class, Update.class})
+	@NotEmpty(groups = {Insert.class, OrderDTO.BASE.class})
 	private String orderPhone;
 
 	/** 下单日期 */
@@ -74,6 +75,6 @@ public class OrderInfo extends EntityBase implements Serializable {
 
 	private List<OrderPayment> orderPayments;
 
-	private  BigDecimal hkCostAmount;
+	private BigDecimal hkCostAmount;
 
 }

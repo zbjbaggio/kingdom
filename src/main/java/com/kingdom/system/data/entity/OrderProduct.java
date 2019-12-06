@@ -1,6 +1,7 @@
 package com.kingdom.system.data.entity;
 
 import com.kingdom.system.data.base.EntityBase;
+import com.kingdom.system.data.dto.OrderDTO;
 import com.kingdom.system.data.vo.OrderDetailVO;
 import lombok.Data;
 import lombok.ToString;
@@ -31,15 +32,15 @@ public class OrderProduct extends EntityBase implements Serializable {
 	private Long orderUserId;
 
 	/** 产品id */
-	@NotNull(groups = {Insert.class, Update.class})
+	@NotNull(groups = {Insert.class, OrderDTO.BASE.class})
 	private Long productId;
 	/** 产品名称 */
 
 	private String productName;
 	/** 数量 */
 
-	@Min(value = 1, groups = {Insert.class, Update.class})
-	@NotNull(groups = {Insert.class, Update.class})
+	@Min(value = 1, groups = {Insert.class, OrderDTO.BASE.class})
+	@NotNull(groups = {Insert.class, OrderDTO.BASE.class})
 	private Integer number;
 	/** 产品销售港币单价 */
 	private BigDecimal hkSellingPrice;

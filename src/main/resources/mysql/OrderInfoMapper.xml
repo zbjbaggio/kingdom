@@ -27,7 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectOrderInfoVo">
-        select id, create_time, status, express, remark, order_no, dr, parent_order_id, order_phone, order_username, user_id, date from t_order_info
+        select id, create_time, status, send, remark, order_no, dr, parent_order_id, order_phone, order_username, user_id, date from t_order_info
     </sql>
 	
     <select id="selectOrderInfoList" resultMap="OrderInfoResult">

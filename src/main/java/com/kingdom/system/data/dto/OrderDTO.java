@@ -16,17 +16,21 @@ import java.util.List;
 public class OrderDTO {
 
     @Valid
-    @NotNull(groups = OrderInfo.Insert.class)
+    @NotNull(groups = {OrderInfo.Insert.class, BASE.class})
     private OrderInfo orderInfo;
 
     @Valid
-    @NotNull(groups = OrderInfo.Insert.class)
-    @Size(groups = OrderInfo.Insert.class, min = 1)
+    @NotNull(groups = {OrderInfo.Insert.class, BASE.class})
+    @Size(groups = {OrderInfo.Insert.class, BASE.class}, min = 1)
     private List<OrderPayment> orderPayments;
 
     @Valid
-    @NotNull(groups = OrderInfo.Insert.class)
-    @Size(groups = OrderInfo.Insert.class, min = 1)
+    @NotNull(groups = {OrderInfo.Insert.class, BASE.class})
+    @Size(groups ={ OrderInfo.Insert.class, BASE.class}, min = 1)
     private List<OrderUser> orderUsers;
+
+    public interface BASE {
+    }
+
 
 }
