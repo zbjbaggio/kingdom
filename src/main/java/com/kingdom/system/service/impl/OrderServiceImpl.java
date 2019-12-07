@@ -307,6 +307,7 @@ public class OrderServiceImpl {
             throw new PrivateException(ErrorInfo.UPDATE_ERROR);
         }
         Long orderId = orderInfo.getId();
+        orderUserMapper.deleteOrderUserByOrderId(orderId);
         orderProductMapper.deleteOrderProductByOrderId(orderId);
         orderDetailMapper.deleteOrderDetailByOrderId(orderId);
         saveOrderProduct(orderDTO.getOrderUsers(), orderId, productNameMap);

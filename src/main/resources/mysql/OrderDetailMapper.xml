@@ -71,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectExpressByOrderIdExpress" resultMap="OrderDetailVOResult">
         <include refid="selectOrderDetailVo"/>
-        where order_id = #{orderId} and order_user_id = #{orderUserId} and  express_number <![CDATA[ < ]]> number
+        where order_id = #{orderId} and order_user_id = #{orderUserId} and  express_number <![CDATA[ <= ]]> number
     </select>
 
     <select id="listProductByIds" resultMap="OrderDetailVOResult" parameterType="java.util.List">

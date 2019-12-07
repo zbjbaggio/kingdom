@@ -45,7 +45,7 @@ public class OrderInfo extends EntityBase implements Serializable {
 	private String memberNo;
 
 	/** 下单人电话 */
-	@NotEmpty(groups = {Insert.class, OrderDTO.BASE.class})
+	//@NotEmpty(groups = {Insert.class, OrderDTO.BASE.class})
 	private String orderPhone;
 
 	/** 下单日期 */
