@@ -55,7 +55,7 @@ public class ProductPackageController extends BaseController {
      * @param bindingResult 检查结果
      */
     @PostMapping("/update")
-    public ProductDTO update(@RequestBody @Validated({Product.Update.class}) ProductDTO product, BindingResult bindingResult) {
+    public ProductDTO update(@RequestBody @Validated({ProductDTO.UpdateCheck.class}) ProductDTO product, BindingResult bindingResult) {
         return productService.updateProductPackage(product);
     }
 

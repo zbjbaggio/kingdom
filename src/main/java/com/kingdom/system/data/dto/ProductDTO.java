@@ -23,13 +23,17 @@ public class ProductDTO implements Serializable {
 
     private static final long serialVersionUID = 1015716591405659486L;
 
-    @NotNull(groups = {Product.Insert.class, Product.Update.class})
+    @NotNull(groups = {Product.Insert.class, UpdateCheck.class})
     @Valid
     private Product product;
 
-    @NotNull(groups = {Product.Insert.class, Product.Update.class})
-    @Size(min = 1, groups = {Product.Insert.class, Product.Update.class})
+    @NotNull(groups = {Product.Insert.class, UpdateCheck.class})
+    @Size(min = 1, groups = {Product.Insert.class, UpdateCheck.class})
     @Valid
     private List<ProductPackage> productPackageList;
+
+    public interface UpdateCheck {
+
+    }
 
 }

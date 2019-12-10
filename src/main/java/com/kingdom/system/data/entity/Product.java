@@ -2,6 +2,7 @@ package com.kingdom.system.data.entity;
 
 import com.kingdom.system.ann.AllowableValue;
 import com.kingdom.system.data.base.EntityBase;
+import com.kingdom.system.data.dto.ProductDTO;
 import com.kingdom.system.util.excel.ExcelExport;
 import lombok.Data;
 import lombok.ToString;
@@ -28,15 +29,15 @@ public class Product extends EntityBase implements Serializable {
     /**
      * 产品编号
      */
-    @NotEmpty(groups = {Insert.class, Update.class})
-    @Length(max = 50, groups = {Insert.class, Update.class})
+    @NotEmpty(groups = {Insert.class, ProductDTO.UpdateCheck.class})
+    @Length(max = 50, groups = {Insert.class, ProductDTO.UpdateCheck.class})
     private String code;
 
     /**
      * 产品名称
      */
-    @NotEmpty(groups = {Insert.class, Update.class})
-    @Length(max = 50, groups = {Insert.class, Update.class})
+    @NotEmpty(groups = {Insert.class, ProductDTO.UpdateCheck.class})
+    @Length(max = 50, groups = {Insert.class, ProductDTO.UpdateCheck.class})
     @ExcelExport(name = "名字")
     private String name;
 
@@ -44,7 +45,7 @@ public class Product extends EntityBase implements Serializable {
      * 状态 0 下架  1 上架
      */
     @NotNull
-    @AllowableValue(intValues = {0, 1}, groups = {Insert.class, Update.class}, message = "产品状态不正确！")
+    @AllowableValue(intValues = {0, 1}, groups = {Insert.class, ProductDTO.UpdateCheck.class}, message = "产品状态不正确！")
     private Integer status;
 
     /**
@@ -72,22 +73,22 @@ public class Product extends EntityBase implements Serializable {
     /**
      * 成本价格 港币
      */
-    @NotNull(groups = {Insert.class, Update.class})
-    @Min(value = 0, groups = {Insert.class, Update.class})
+    @NotNull(groups = {Insert.class, ProductDTO.UpdateCheck.class})
+    @Min(value = 0, groups = {Insert.class, ProductDTO.UpdateCheck.class})
     private BigDecimal costPrice;
 
     /**
      * 销售价格 港币
      */
-    @NotNull(groups = {Insert.class, Update.class})
-    @Min(value = 0, groups = {Insert.class, Update.class})
+    @NotNull(groups = {Insert.class, ProductDTO.UpdateCheck.class})
+    @Min(value = 0, groups = {Insert.class, ProductDTO.UpdateCheck.class})
     private BigDecimal sellingPrice;
 
     /**
      * 积分
      */
-    @NotNull(groups = {Insert.class, Update.class})
-    @Min(value = 0, groups = {Insert.class, Update.class})
+    @NotNull(groups = {Insert.class, ProductDTO.UpdateCheck.class})
+    @Min(value = 0, groups = {Insert.class, ProductDTO.UpdateCheck.class})
     private Integer score;
 
     /**

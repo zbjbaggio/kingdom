@@ -105,7 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteProductPackageByProductId" parameterType="Long">
-        delete from t_product_package where productId = #{productId}
+        delete from t_product_package where product_id = #{productId}
     </delete>
 
 </mapper>
