@@ -88,7 +88,7 @@ public class Application implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 	    //TODO 上线前关掉
-		//registry.addInterceptor(authenticationInterceptor).addPathPatterns("/manage/user/**");
+		registry.addInterceptor(authenticationInterceptor).addPathPatterns("/manage/user/**");
 		//registry.addInterceptor(mobileAuthenticationInterceptor).addPathPatterns("/web/user/**");
 	}
 

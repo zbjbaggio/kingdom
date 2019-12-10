@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kingdom.system.constant.RegularExpressionConstant;
 import com.kingdom.system.data.base.EntityBase;
+import com.kingdom.system.data.vo.RoleVO;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -58,6 +60,10 @@ public class ManagerInfo extends EntityBase implements Serializable {
     private int passwordNumber;//密码猜测次数
 
     private Set<String> permissionSet;
+
+    private List<RoleVO> roleInfos;
+
+    private int superAdmin;
 
     public interface LoginGroup {
     }

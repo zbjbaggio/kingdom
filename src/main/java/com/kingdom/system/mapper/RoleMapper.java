@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 描述：角色dao
@@ -33,4 +34,7 @@ public interface RoleMapper {
 
     @Select("select a.id,a.name,b.manager_id managerId from t_role_info a left join t_manager_role b on a.id = b.role_id and b.manager_id = #{param1} ")
     List<RoleVO> listAllByUserId(Long userIdHolder);
+
+    @Select("select a.id,a.name,b.manager_id managerId from t_role_info a join t_manager_role b on a.id = b.role_id and b.manager_id = #{param1} ")
+    List<RoleVO> listByUserId(Long userIdHolder);
 }

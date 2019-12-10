@@ -38,7 +38,6 @@ public class OrderController extends BaseController {
     private UserServiceImpl userService;
 
     @GetMapping(value = "/list")
-    @RequiresPermissions("/list")
     public TableDataInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
                               @RequestParam(defaultValue = "") String payUser, @RequestParam(defaultValue = "") String orderUser,
                               @RequestParam(defaultValue = "") String express, @RequestParam(defaultValue = "") String startDate,
@@ -86,31 +85,26 @@ public class OrderController extends BaseController {
     }
 
     @GetMapping(value = "/detail/{orderId}")
-    @RequiresPermissions("/detail")
     public OrderVO detail(@PathVariable(value = "orderId") Long orderId) {
         return orderServiceImpl.detail(orderId);
     }
 
     @PostMapping(value = "/insert")
-    @RequiresPermissions("/insert")
     public OrderDTO insert(@RequestBody @Validated(OrderInfo.Insert.class) OrderDTO orderDTO, BindingResult bindingResult) {
         return orderServiceImpl.insert(orderDTO);
     }
 
     @PostMapping(value = "/update")
-    @RequiresPermissions("/update")
     public OrderDTO update(@RequestBody @Validated(OrderDTO.BASE.class) OrderDTO orderDTO, BindingResult bindingResult) {
         return orderServiceImpl.update(orderDTO);
     }
 
     @PostMapping(value = "/insertExpress")
-    @RequiresPermissions("/insertExpress")
     public OrderExpressDTO insertExpress(@RequestBody @Validated(OrderExpress.Insert.class) OrderExpressDTO orderExpressDTO, BindingResult bindingResult) {
         return orderServiceImpl.insertExpress(orderExpressDTO);
     }
 
     @PostMapping(value = "/updateExpress")
-    @RequiresPermissions("/updateExpress")
     public OrderExpressDTO updateExpress(@RequestBody @Validated(OrderExpress.Update.class) OrderExpressDTO orderExpressDTO, BindingResult bindingResult) {
         return orderServiceImpl.updateExpress(orderExpressDTO);
     }
@@ -120,7 +114,6 @@ public class OrderController extends BaseController {
      * @param orderExpressId
      */
     @PostMapping(value = "/printNumber/{orderExpressId}")
-    @RequiresPermissions("/printNumber")
     public void printNumber(@PathVariable(value = "orderExpressId") Long orderExpressId) {
         orderServiceImpl.printNumber(orderExpressId);
     }
@@ -131,7 +124,6 @@ public class OrderController extends BaseController {
      * @param bindingResult
      */
     @PostMapping(value = "/updateDetail")
-    @RequiresPermissions("/updateDetail")
     public void updateDetail(@RequestBody @Validated OrderDetailDTO orderDetailDTO, BindingResult bindingResult) {
         orderServiceImpl.updateDetail(orderDetailDTO);
     }
@@ -142,7 +134,6 @@ public class OrderController extends BaseController {
      * @param bindingResult
      */
     @PostMapping(value = "/saveOrderParent")
-    @RequiresPermissions("/saveOrderParent")
     public void saveOrderParent(@RequestBody @Validated OrderParent orderParent, BindingResult bindingResult) {
         orderServiceImpl.orderParentSave(orderParent);
     }
@@ -167,7 +158,6 @@ public class OrderController extends BaseController {
      * @param bindingResult
      */
     @PostMapping(value = "/doneOrder")
-    @RequiresPermissions("/doneOrder")
     public void doneOrder(@RequestBody @Validated OrderParent orderParent, BindingResult bindingResult) {
         orderServiceImpl.doneOrder(orderParent);
     }
@@ -176,7 +166,6 @@ public class OrderController extends BaseController {
      * 删除
      */
     @PostMapping(value = "/delete/{orderId}")
-    @RequiresPermissions("/delete")
     public void delete(@PathVariable(value = "orderId") Long orderId) {
         orderServiceImpl.delete(orderId);
     }

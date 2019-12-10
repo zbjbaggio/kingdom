@@ -1,10 +1,7 @@
 package com.kingdom.system.service.impl;
 
-import com.kingdom.system.constant.ManagerLoginConstants;
-import com.kingdom.system.service.ManagerInfoService;
-import com.kingdom.system.service.PermissionInfoService;
-import com.kingdom.system.service.RedisService;
 import com.kingdom.system.ann.RequiresPermissions;
+import com.kingdom.system.constant.ManagerLoginConstants;
 import com.kingdom.system.data.base.Page;
 import com.kingdom.system.data.dto.MenuAndButtonDTO;
 import com.kingdom.system.data.dto.PasswordDTO;
@@ -13,7 +10,12 @@ import com.kingdom.system.data.enmus.UserStatus;
 import com.kingdom.system.data.entity.ManagerInfo;
 import com.kingdom.system.data.exception.PrivateException;
 import com.kingdom.system.data.vo.ManagerVO;
+import com.kingdom.system.data.vo.RoleVO;
 import com.kingdom.system.mapper.ManagerInfoMapper;
+import com.kingdom.system.mapper.RoleMapper;
+import com.kingdom.system.service.ManagerInfoService;
+import com.kingdom.system.service.PermissionInfoService;
+import com.kingdom.system.service.RedisService;
 import com.kingdom.system.util.PasswordUtil;
 import com.kingdom.system.util.TokenUtils;
 import com.kingdom.system.util.ValueHolder;
@@ -42,6 +44,9 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
     private ManagerInfoMapper managerInfoMapper;
 
     @Inject
+    private RoleMapper roleMapper;
+
+    @Inject
     private ManagerLoginConstants managerLoginConstants;
 
     @Inject
@@ -65,6 +70,15 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
         redisService.removeUserPasswordNumberByKey(newManagerInfo.getUsername());
         MenuAndButtonDTO menuAndButtonDTO = permissionInfoService.getMenu(newManagerInfo.getId());
         newManagerInfo.setPermissionSet(menuAndButtonDTO.getPermissionSet());
+        List<RoleVO> roleVOS = roleMapper.listByUserId(newManagerInfo.getId());
+        int isSuperAdmin = 1;
+        for (RoleVO roleVO : roleVOS) {
+            if (roleVO.getId() == 1L) {
+                isSuperAdmin = 0;
+            }
+        }
+        newManagerInfo.setRoleInfos(roleVOS);
+        newManagerInfo.setSuperAdmin(isSuperAdmin);
         saveRedis(newManagerInfo);
         ManagerVO managerVO = new ManagerVO();
         BeanUtils.copyProperties(newManagerInfo, managerVO);
@@ -82,7 +96,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
         }
         ManagerInfo managerInfo = redisService.getUserInfoByKey(key);
         if (managerInfo != null && token.equals(managerInfo.getToken()) && checkPermission(handler, managerInfo)) {
-            valueHolder.setUserIdHolder(managerInfo.getId());
+            valueHolder.setUserIdHolder(managerInfo);
             redisService.saveUser(managerInfo);
             return true;
         }
@@ -157,15 +171,15 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
 
     @Override
     public void loginOut() throws Exception {
-        ManagerInfo user = managerInfoMapper.getById(valueHolder.getUserIdHolder());
+        ManagerInfo user = managerInfoMapper.getById(valueHolder.getUserIdHolder().getId());
         redisService.removeUserTokenByKey(TokenUtils.getKey(user));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updatePassword(PasswordDTO passwordDTO) throws Exception {
-        Long userIdHolder = valueHolder.getUserIdHolder();
-        ManagerInfo user = managerInfoMapper.getById(userIdHolder);
+        ManagerInfo userIdHolder = valueHolder.getUserIdHolder();
+        ManagerInfo user = managerInfoMapper.getById(userIdHolder.getId());
         if (user == null) {
             log.error("userId未能查询出用户数据！userId:{}", userIdHolder);
             throw new PrivateException(ErrorInfo.ERROR);
@@ -178,7 +192,7 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
         UUID uuid = UUID.randomUUID();
         String salt = uuid.toString();
         password = PasswordUtil.getPassword(passwordDTO.getNewPassword(), salt);
-        int count = managerInfoMapper.updatePassword(userIdHolder, password, salt);
+        int count = managerInfoMapper.updatePassword(userIdHolder.getId(), password, salt);
         if (count <= 0) {
             throw new PrivateException(ErrorInfo.UPDATE_ERROR);
         }
@@ -202,8 +216,8 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
             managerInfo.setSalt(salt);
             managerInfo.setPassword(PasswordUtil.getPassword(managerInfo.getPassword(), salt));
             managerInfo.setStatus(UserStatus.DEFAULT.getIndex());
-            Long userIdHolder = valueHolder.getUserIdHolder();
-            managerInfo.setOperatorId(userIdHolder);
+            ManagerInfo userIdHolder = valueHolder.getUserIdHolder();
+            managerInfo.setOperatorId(userIdHolder.getId());
             count = managerInfoMapper.save(managerInfo);
         } else {
             count = managerInfoMapper.update(managerInfo);

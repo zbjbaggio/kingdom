@@ -84,4 +84,11 @@ public interface ProductMapper {
 
     Product getProductById(@Param(value = "productId")Long productId);
 
+    List<ProductVO> listProductNoCost(String search, String sendDateStart, String sendDateEnd);
+
+    Product selectProductNoCostById(Long productId);
+
+    List<ProductVO> listProductPackageNoCost(@Param(value = "search") String search);
+
+
 }

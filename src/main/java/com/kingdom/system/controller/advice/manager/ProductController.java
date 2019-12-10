@@ -34,7 +34,6 @@ public class ProductController extends BaseController {
      * @return 分页对象
      */
     @GetMapping("/list")
-    @RequiresPermissions("/list")
     public TableDataInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
                               @RequestParam(defaultValue = "") String search, @RequestParam String sendDateStart, @RequestParam String sendDateEnd) {
         startPage();
@@ -42,7 +41,6 @@ public class ProductController extends BaseController {
     }
 
     @GetMapping("/detail/{productId}")
-    @RequiresPermissions("/detail")
     public Product detail(@PathVariable(value = "productId") Long productId) {
         return productService.getDetail(productId);
     }
@@ -63,7 +61,6 @@ public class ProductController extends BaseController {
      * @param bindingResult 检查结果
      */
     @PostMapping("/insert")
-    @RequiresPermissions("/insert")
     public Product insert(@RequestBody @Validated({Product.Insert.class}) Product product, BindingResult bindingResult) {
         return productService.insert(product);
     }
@@ -74,7 +71,6 @@ public class ProductController extends BaseController {
      * @param bindingResult 检查结果
      */
     @PostMapping("/update")
-    @RequiresPermissions("/update")
     public Product update(@RequestBody @Validated({Product.Update.class}) Product product, BindingResult bindingResult) {
         return productService.update(product);
     }

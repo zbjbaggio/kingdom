@@ -2,6 +2,8 @@ package com.kingdom.system.service.impl;
 
 import com.kingdom.system.data.dto.ProductDTO;
 import com.kingdom.system.data.enmus.ErrorInfo;
+import com.kingdom.system.data.entity.ManagerInfo;
+import com.kingdom.system.data.entity.ManagerRole;
 import com.kingdom.system.data.entity.Product;
 import com.kingdom.system.data.entity.ProductPackage;
 import com.kingdom.system.data.exception.PrivateException;
@@ -9,6 +11,7 @@ import com.kingdom.system.data.vo.ProductPackageVO;
 import com.kingdom.system.data.vo.ProductVO;
 import com.kingdom.system.mapper.ProductMapper;
 import com.kingdom.system.mapper.ProductPackageMapper;
+import com.kingdom.system.util.ValueHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,13 +29,29 @@ public class ProductServiceImpl {
     @Autowired
     private ProductPackageMapper productPackageMapper;
 
+    @Autowired
+    private ValueHolder valueHolder;
+
     public List<ProductVO> listProduct(String search, String sendDateStart, String sendDateEnd) {
-        return productMapper.listProduct(search, sendDateStart, sendDateEnd);
+        ManagerInfo managerInfo = valueHolder.getUserIdHolder();
+        if (managerInfo.getSuperAdmin() == 0) {
+            return productMapper.listProduct(search, sendDateStart, sendDateEnd);
+        } else {
+            return productMapper.listProductNoCost(search, sendDateStart, sendDateEnd);
+        }
     }
 
     public List<ProductVO> listProductPackage(String search) {
-        List<ProductVO> productVOList = productMapper.listProductPackage(search);
-        getPackage(productVOList);
+        ManagerInfo managerInfo = valueHolder.getUserIdHolder();
+        List<ProductVO> productVOList;
+        if (managerInfo.getSuperAdmin() == 0) {
+            productVOList = productMapper.listProductPackage(search);
+        } else {
+            productVOList = productMapper.listProductPackageNoCost(search);
+        }
+        if (productVOList != null && productVOList.size() > 0) {
+            getPackage(productVOList);
+        }
         return productVOList;
     }
 
@@ -156,7 +175,12 @@ public class ProductServiceImpl {
     }
 
     public Product getDetail(Long productId) {
-        return productMapper.selectProductById(productId);
+        ManagerInfo managerInfo = valueHolder.getUserIdHolder();
+        if (managerInfo.getSuperAdmin() == 0) {
+            return productMapper.selectProductById(productId);
+        } else {
+            return productMapper.selectProductNoCostById(productId);
+        }
     }
 
     public List<Product> listAllProduct(String productName) {

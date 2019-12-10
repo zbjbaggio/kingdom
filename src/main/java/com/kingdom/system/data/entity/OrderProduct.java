@@ -1,5 +1,7 @@
 package com.kingdom.system.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kingdom.system.data.base.EntityBase;
 import com.kingdom.system.data.dto.OrderDTO;
 import com.kingdom.system.data.vo.OrderDetailVO;
@@ -45,18 +47,22 @@ public class OrderProduct extends EntityBase implements Serializable {
 	/** 产品销售港币单价 */
 	private BigDecimal hkSellingPrice;
 	/** 产品成本港币单价 */
+	@JsonIgnore
 	private BigDecimal hkCostPrice;
 	/** 该产品港币销售总额 */
 	private BigDecimal hkAmount;
 	/** 该产品港币成本总额 */
+	@JsonIgnore
 	private BigDecimal hkCostAmount;
 	/** 产品销售人民币单价 */
 	private BigDecimal cnySellingPrice;
 	/** 产品成本人民币单价 */
+	@JsonIgnore
 	private BigDecimal cnyCostPrice;
 	/** 该产品人民币销售总额 */
 	private BigDecimal cnyAmount;
 	/** 该产品人民币成本总额 */
+	@JsonIgnore
 	private BigDecimal cnyCostAmount;
 	/**  汇率*/
 	private BigDecimal exchangeRate;

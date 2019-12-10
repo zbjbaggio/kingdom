@@ -48,7 +48,6 @@ public class ManagerInfoController {
      * @return
      */
     @GetMapping(value = "/list")
-    @RequiresPermissions("/list")
     public Page list(@RequestParam(value = "limit", defaultValue = "10") int limit,
                      @RequestParam(value = "offset", defaultValue = "0") int offset,
                      @RequestParam(value = "searchStr", defaultValue = "-1") String searchStr,
@@ -65,7 +64,6 @@ public class ManagerInfoController {
      * @return
      */
     @PostMapping(value = "/save")
-    @RequiresPermissions("/save")
     public ManagerInfo save(@RequestBody @Validated(ManagerInfo.BaseInfo.class) ManagerInfo managerInfo, BindingResult bindingResult) throws Exception {
         if (managerInfo.getId() == null && managerInfo.getPassword() == null) {
             log.info("新增是密码没给, managerInfo:{}", managerInfo);
@@ -81,7 +79,6 @@ public class ManagerInfoController {
      * @return
      */
     @GetMapping(value = "/getDetail")
-    @RequiresPermissions("/getDetail")
     public ManagerVO getDetail(@RequestParam(value = "userId") Long userId) {
         return managerInfoService.getDetail(userId);
     }
@@ -93,7 +90,6 @@ public class ManagerInfoController {
      * @throws Exception
      */
     @PostMapping(value = "/updateFreeze")
-    @RequiresPermissions("/updateFreeze")
     public void updateFreeze(@RequestParam Long userId) throws Exception {
         if (userId == null) {
             log.info("userId为空！");
@@ -109,7 +105,6 @@ public class ManagerInfoController {
      * @throws Exception
      */
     @PostMapping(value = "/unlocked")
-    @RequiresPermissions("/unlocked")
     public void unlocked(@RequestParam Long userId) throws Exception {
         if (userId == null) {
             log.info("userId为空！");
@@ -125,7 +120,6 @@ public class ManagerInfoController {
      * @throws Exception
      */
     @PostMapping(value = "/remove")
-    @RequiresPermissions("/remove")
     public void remove(@RequestParam Long[] userIds) throws Exception {
         if (userIds == null || userIds.length <= 0) {
             log.info("userIds为空！");
@@ -135,13 +129,11 @@ public class ManagerInfoController {
     }
 
     @GetMapping(value = "/listRole")
-    @RequiresPermissions("/listRole")
     public List<RoleVO> listRole(@RequestParam Long userId) {
         return roleService.listAllByUserId(userId);
     }
 
     @PostMapping(value = "/saveRoles")
-    @RequiresPermissions("/saveRoles")
     public void saveRoles(@RequestBody @Validated(value = ManagerRole.Manager.class) ManagerRole managerInfo, BindingResult bindingResult) throws Exception {
         managerRoleService.saves(managerInfo);
     }

@@ -1,5 +1,6 @@
 package com.kingdom.system.util;
 
+import com.kingdom.system.data.entity.ManagerInfo;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Component;
 
@@ -14,15 +15,15 @@ import javax.inject.Singleton;
 @Log4j
 public class ValueHolder {
 
-    private ThreadLocal<Long> userIdHolder = new ThreadLocal<>();
+    private ThreadLocal<ManagerInfo> userIdHolder = new ThreadLocal<>();
 
     private ThreadLocal<Long> mobileUserHolder = new ThreadLocal<>();
 
-    public Long getUserIdHolder() {
+    public ManagerInfo getUserIdHolder() {
         return userIdHolder.get();
     }
 
-    public void setUserIdHolder(Long userIdHolder) {
+    public void setUserIdHolder(ManagerInfo userIdHolder) {
         this.userIdHolder.set(userIdHolder);
     }
 
