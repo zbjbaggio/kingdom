@@ -301,6 +301,8 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
         annotation = method.getAnnotation(RequiresPermissions.class);
         if (annotation != null) {
             value = value + annotation.value();
+        } else {
+            value = "";
         }
         if (value.length() > 0) {
             Set<String> requestUrls = managerInfo.getPermissionSet();
