@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kingdom.system.mapper.NoticeMapper">
+    
+    <resultMap type="com.kingdom.system.data.entity.Notice" id="NoticeResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="title"    column="title"    />
+        <result property="text"    column="text"    />
+    </resultMap>
+	
+	<sql id="selectNoticeVo">
+        select id, create_time, title, text from t_notice
+    </sql>
+    
+    <select id="selectNotice" parameterType="Long" resultMap="NoticeResult">
+        <include refid="selectNoticeVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="listNotice" resultMap="NoticeResult">
+        <include refid="selectNoticeVo"/>
+        WHERE 1 = 1
+        <if test=" search != '' "> AND title LIKE #{search}</if>
+        ORDER BY id DESC
+    </select>
+
+    <insert id="insertNotice" parameterType="com.kingdom.system.data.entity.Notice" useGeneratedKeys="true" keyProperty="id">
+        insert into t_notice
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            create_time,
+			<if test="title != null and title != '' ">title,</if>
+			<if test="text != null  and text != ''  ">text,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            NOW(),
+			<if test="title != null and title != '' ">#{title},</if>
+			<if test="text != null  and text != ''  ">#{text},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateNotice" parameterType="com.kingdom.system.data.entity.Notice">
+        update t_notice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''  ">title = #{title},</if>
+            <if test="text != null  and text != ''  ">text = #{text},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteNoticeById" parameterType="Long">
+        delete from t_notice where id = #{id}
+    </delete>
+
+    
+</mapper>
