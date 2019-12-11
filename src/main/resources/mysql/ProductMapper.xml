@@ -68,28 +68,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectProductVo"/>
         where type = 0
         <if test="search != null  and search != '' "> and (code LIKE #{search} or name LIKE #{search}) </if>
-        order by id desc
+        order by code desc
     </select>
 
     <select id="listAll" resultMap="ProductResult">
         <include refid="selectProductVoNoCost"/>
         where type = 0
         <if test="search != null  and search != '' "> AND (code LIKE #{search} OR name LIKE #{search}) </if>
-        order by id desc
+        order by code desc
     </select>
 
     <select id="listProductPackage" resultMap="ProductVOResult">
         <include refid="selectProductVo"/>
         where type = 1
         <if test="search != null and search != '' "> and (code LIKE #{search} OR name LIKE #{search}) </if>
-        order by id desc
+        order by code desc
     </select>
 
     <select id="listProductPackageNoCost" resultMap="ProductVOResult">
         <include refid="selectProductVoNoCost"/>
         where type = 1
         <if test="search != null and search != '' "> and (code LIKE #{search} OR name LIKE #{search}) </if>
-        order by id desc
+        order by code desc
     </select>
 
     <select id="listByCode" resultType="java.lang.Integer">
@@ -112,7 +112,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectProductVoNoCost"/>
         where status = 1
         <if test="search != null  and search != '' "> AND (code LIKE #{search} OR name LIKE #{search}) </if>
-        order by id desc
+        order by code desc
     </select>
 
     <select id="getProductById" resultMap="ProductResult">
@@ -124,7 +124,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectProductVoNoCost"/>
         where type = 0
         <if test="search != null  and search != '' "> and (code LIKE #{search} or name LIKE #{search}) </if>
-        order by id desc
+        order by code desc
     </select>
 
 
