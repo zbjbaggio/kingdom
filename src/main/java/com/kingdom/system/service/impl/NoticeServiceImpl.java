@@ -26,7 +26,11 @@ public class NoticeServiceImpl {
     }
 
     public Notice update(Notice notice) {
-        return null;
+        int count = noProductMapper.updateNotice(notice);
+        if (count != 1) {
+            throw new PrivateException(ErrorInfo.UPDATE_ERROR);
+        }
+        return notice;
     }
 
     public Notice insert(Notice notice) {
@@ -38,6 +42,6 @@ public class NoticeServiceImpl {
     }
 
     public int delete(Long id) {
-        return 0;
+        return noProductMapper.deleteNoticeById(id);
     }
 }
