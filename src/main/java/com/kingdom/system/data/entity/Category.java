@@ -13,6 +13,8 @@ public class Category extends EntityBase {
     @NotNull(groups = Category.BaseInfo.class)
     private String value;
 
+    private String remark;
+
     public interface BaseInfo {
 
     }

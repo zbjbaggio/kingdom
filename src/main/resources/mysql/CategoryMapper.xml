@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kingdom.system.mapper.CategoryMapper">
+    
+    <resultMap type="com.kingdom.system.data.entity.Category" id="CategoryResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="value"    column="value"    />
+    </resultMap>
+	
+	<sql id="selectCategoryVo">
+        select id, name, value, create_time, last_modified, remark from t_category
+    </sql>
+	
+    <select id="selectCategoryList" parameterType="com.kingdom.system.data.entity.Category" resultMap="CategoryResult">
+        <include refid="selectCategoryVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="value != null  and value != '' "> and value = #{value}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="lastModified != null "> and last_modified = #{lastModified}</if>
+         </where>
+    </select>
+    
+    <select id="selectCategoryById" parameterType="Long" resultMap="CategoryResult">
+        <include refid="selectCategoryVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCategory" parameterType="com.kingdom.system.data.entity.Category" useGeneratedKeys="true" keyProperty="id">
+        insert into t_category
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="value != null  and value != ''  ">value,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="lastModified != null  ">last_modified,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="value != null  and value != ''  ">#{value},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="lastModified != null  ">#{lastModified},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCategory" parameterType="com.kingdom.system.data.entity.Category">
+        update t_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="value != null  and value != ''  ">value = #{value},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCategoryById" parameterType="Long">
+        delete from t_category where id = #{id}
+    </delete>
+	
+    <delete id="deleteCategoryByIds" parameterType="String">
+        delete from t_category where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
