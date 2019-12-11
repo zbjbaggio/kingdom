@@ -67,6 +67,9 @@ public class OrderServiceImpl {
     @Inject
     private UserSendAddressMapper userSendAddressMapper;
 
+    @Inject
+    private CategoryMapper categoryMapper;
+
     @Transactional
     public OrderDTO insert(OrderDTO orderDTO) {
         //校验同时存入userId
@@ -563,6 +566,10 @@ public class OrderServiceImpl {
 
     public List<OrderInfo> getOrderParentSum() {
         return orderInfoMapper.getOrderParentSum();
+    }
+
+    public List<OrderInfo> listByUserId() {
+        return null;
     }
 
 /*    private void checkProductExpress(List<OrderDetail> orderDetails, List<OrderExpress> orderExpresses) {

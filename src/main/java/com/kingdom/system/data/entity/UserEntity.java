@@ -56,6 +56,8 @@ public class UserEntity extends EntityBase implements Serializable {
 
     private Long score;
 
+    private int showOrder;
+
     public interface BaseInfoSave {
     }
 

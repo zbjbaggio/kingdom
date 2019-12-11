@@ -9,6 +9,7 @@ import com.kingdom.system.data.dto.OrderExpressDTO;
 import com.kingdom.system.data.entity.*;
 import com.kingdom.system.data.vo.OrderDetailVO;
 import com.kingdom.system.data.vo.OrderVO;
+import com.kingdom.system.service.impl.ExchangeRateRecordServiceImpl;
 import com.kingdom.system.service.impl.OrderServiceImpl;
 import com.kingdom.system.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,9 @@ public class OrderController extends BaseController {
 
     @Autowired
     private UserServiceImpl userService;
+
+    @Autowired
+    private ExchangeRateRecordServiceImpl exchangeRateRecordService;
 
     @GetMapping(value = "/list")
     public TableDataInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
@@ -186,6 +190,11 @@ public class OrderController extends BaseController {
     @GetMapping(value = "/getOrderParentSum")
     public List<OrderInfo> getOrderParentSum() {
         return orderServiceImpl.getOrderParentSum();
+    }
+
+    @PostMapping("/exchangeRate")
+    public ExchangeRateRecord exchangeRate() {
+        return exchangeRateRecordService.selectDefault();
     }
 
 }

@@ -22,4 +22,8 @@ public class CategoryServiceImpl {
     public void update(Category category) {
         categoryMapper.updateCategory(category);
     }
+
+    public Category selectCategoryById(Long id) {
+        return categoryMapper.selectCategoryById(id);
+    }
 }

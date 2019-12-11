@@ -1,10 +1,12 @@
 package com.kingdom.system.service.impl;
 
 import com.kingdom.system.data.enmus.ErrorInfo;
+import com.kingdom.system.data.entity.Category;
 import com.kingdom.system.data.entity.UserEntity;
 import com.kingdom.system.data.entity.UserSendAddress;
 import com.kingdom.system.data.exception.PrivateException;
 import com.kingdom.system.data.vo.UserVO;
+import com.kingdom.system.mapper.CategoryMapper;
 import com.kingdom.system.mapper.UserMapper;
 import com.kingdom.system.mapper.UserSendAddressMapper;
 import com.kingdom.system.service.RedisService;
@@ -37,6 +39,9 @@ public class UserServiceImpl {
 
     @Inject
     private RedisService redisService;
+
+    @Inject
+    private CategoryMapper categoryMapper;
 
     public List<UserEntity> list(String search) {
         return userMapper.list(search);
@@ -126,6 +131,8 @@ public class UserServiceImpl {
         userData.setPassword(null);
         userData.setToken(TokenUtils.getToken(userData));
         userData.setKey(TokenUtils.getKey(userEntity));
+        Category category = categoryMapper.selectCategoryById(1L);
+        userData.setShowName(category.getValue());
         redisService.saveMobile(userData);
         return userData;
     }

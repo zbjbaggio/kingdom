@@ -35,4 +35,8 @@ public class ExchangeRateRecordServiceImpl {
         }
         return exchangeRateRecord;
     }
+
+    public ExchangeRateRecord selectDefault() {
+        return exchangeRateRecordMapper.selectDefault();
+    }
 }

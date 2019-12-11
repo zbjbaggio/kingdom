@@ -44,4 +44,5 @@ public class NoticeServiceImpl {
     public int delete(Long id) {
         return noProductMapper.deleteNoticeById(id);
     }
+
 }
