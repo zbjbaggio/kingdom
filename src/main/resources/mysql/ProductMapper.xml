@@ -101,7 +101,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="listProductByIds" resultMap="ProductVOResult">
-        <include refid="selectProductVoNoCost"/>
+        <include refid="selectProductVo"/>
         where id in
         <foreach item="id" collection="collection" open="(" separator="," close=")">
             #{id}
