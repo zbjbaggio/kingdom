@@ -62,4 +62,6 @@ public interface ProductRemarkMapper
 	public int deleteProductRemarkByIds(Long[] ids);
 
 	List<ProductRemark> listProductRemark(@Param(value = "search") String search);
+
+	int insertProductRemarks(List<ProductRemark> productRemarks);
 }

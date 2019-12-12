@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/web/user")
 @Slf4j
-public class UserController extends BaseController {
+public class WebUserController extends BaseController {
 
     @Autowired
     private NoticeServiceImpl noticeService;

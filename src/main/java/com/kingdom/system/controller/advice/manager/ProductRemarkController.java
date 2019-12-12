@@ -35,8 +35,8 @@ public class ProductRemarkController extends BaseController {
     }
 
     @PostMapping("/insert")
-    public ProductRemark insert(@RequestBody @Validated({ProductRemark.Insert.class, ProductRemark.BaseInfo.class}) ProductRemark productRemark, BindingResult bindingResult) {
-        return productRemarkService.insertProductRemark(productRemark);
+    public void insert(@RequestBody @Validated({ProductRemark.Insert.class, ProductRemark.BaseInfo.class})List<ProductRemark> productRemarks, BindingResult bindingResult) {
+        productRemarkService.insertProductRemarks(productRemarks);
     }
 
     /*@PostMapping("/update")

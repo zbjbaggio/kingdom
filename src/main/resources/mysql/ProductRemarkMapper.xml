@@ -60,7 +60,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="date != null  ">#{date},</if>
          </trim>
     </insert>
-	 
+
+
+
+    <insert id="insertProductRemarks" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into t_product_remark
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            create_time, product_id, product_name, number, number, remark, date
+        </trim>
+        values
+        <foreach collection="list" item="item" index= "index" separator =",">
+            (
+            NOW(), #{item.productId}, #{item.productName}, #{item.number}, #{item.remark}, #{item.date}
+            )
+        </foreach>
+    </insert>
+
+
+
+
+
+
+
     <update id="updateProductRemark" parameterType="com.kingdom.system.data.entity.ProductRemark">
         update t_product_remark
         <trim prefix="SET" suffixOverrides=",">
