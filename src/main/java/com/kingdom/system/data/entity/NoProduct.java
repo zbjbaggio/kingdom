@@ -14,21 +14,19 @@ import java.util.Date;
 @ToString(callSuper = true)
 public class NoProduct extends EntityBase implements Serializable {
 
-    @NotNull(groups = BaseInfo.class)
+    @NotNull(groups = NoProductParent.BaseInfo.class)
     private Long productId;
-
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = TimeZoneConstant.DEFAULT)
-    @NotNull(groups = BaseInfo.class)
-    private Date date;
 
     private String productName;
 
-    @NotNull(groups = BaseInfo.class)
+    @NotNull(groups = NoProductParent.BaseInfo.class)
     private Integer number;
 
     private String remark;
 
     private Integer olderNumber;
+
+    private Long noProductParentId;
 
     public interface BaseInfo {
 

@@ -3,13 +3,12 @@ package com.kingdom.system.controller.advice.manager;
 import com.kingdom.system.ann.RequiresPermissions;
 import com.kingdom.system.controller.advice.BaseController;
 import com.kingdom.system.data.base.TableDataInfo;
+import com.kingdom.system.data.entity.NoProductDetail;
+import com.kingdom.system.data.entity.NoProductParent;
 import com.kingdom.system.data.entity.Product;
-import com.kingdom.system.data.entity.ProductRemark;
 import com.kingdom.system.service.impl.NoProductServiceImpl;
 import com.kingdom.system.service.impl.ProductServiceImpl;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -29,14 +28,24 @@ public class NoProductController extends BaseController {
 
     @GetMapping("/list")
     public TableDataInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
-                              @RequestParam(defaultValue = "") String search) {
+                              @RequestParam(defaultValue = "") String date) {
         startPage();
-        return getDataTable(noProductService.listNoProduct("".equals(search) ? "" : "%" + search + "%"));
+        return getDataTable(noProductService.listNoProduct(date));
     }
 
     @PostMapping("/insert")
-    public ProductRemark insert(@RequestBody @Validated({ProductRemark.Insert.class, ProductRemark.BaseInfo.class}) ProductRemark productRemark, BindingResult bindingResult) {
-        return noProductService.insertNoProduct(productRemark);
+    public void insert(@RequestBody @Validated({NoProductParent.Insert.class, NoProductParent.BaseInfo.class}) NoProductParent noProductParent, BindingResult bindingResult) {
+        noProductService.insertNoProduct(noProductParent);
+    }
+
+    @PostMapping("/insertDetail")
+    public void insertDetail(@RequestBody @Validated({NoProductDetail.Insert.class, NoProductDetail.BaseInfo.class}) NoProductDetail noProductDetail, BindingResult bindingResult) {
+        noProductService.insertNoProductDetail(noProductDetail);
+    }
+
+    @GetMapping("/listDetail/{noProductId}")
+    public List<NoProductDetail> listDetail(@PathVariable(value = "noProductId") Long noProductId) {
+        return noProductService.listDetail(noProductId);
     }
 
     /*@PostMapping("/update")

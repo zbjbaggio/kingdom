@@ -23,6 +23,10 @@ public class ValueHolder {
         return userIdHolder.get();
     }
 
+    public Long getMobileUserHolder() {
+        return mobileUserHolder.get();
+    }
+
     public void setUserIdHolder(ManagerInfo userIdHolder) {
         this.userIdHolder.set(userIdHolder);
     }

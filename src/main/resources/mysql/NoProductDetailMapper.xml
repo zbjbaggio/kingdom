@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kingdom.system.mapper.NoProductDetailMapper">
+    
+    <resultMap type="com.kingdom.system.data.entity.NoProductDetail" id="NoProductDetailResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="lastModified"    column="last_modified"    />
+        <result property="productId"    column="product_id"    />
+        <result property="number"    column="number"    />
+        <result property="noProductParentId"    column="no_product_parent_id"    />
+        <result property="noProductId"    column="no_product_id"    />
+        <result property="productName"    column="product_name"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+	
+	<sql id="selectNoProductDetailVo">
+        select id, create_time, last_modified, product_id, number, no_product_parent_id, no_product_id, product_name, remark from t_no_product_detail
+    </sql>
+	
+    <select id="selectNoProductDetailList" parameterType="com.kingdom.system.data.entity.NoProductDetail" resultMap="NoProductDetailResult">
+        <include refid="selectNoProductDetailVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="lastModified != null "> and last_modified = #{lastModified}</if>
+             <if test="productId != null "> and product_id = #{productId}</if>
+             <if test="number != null "> and number = #{number}</if>
+             <if test="noProductParentId != null "> and no_product_parent_id = #{noProductParentId}</if>
+             <if test="noProductId != null "> and no_product_id = #{noProductId}</if>
+         </where>
+    </select>
+    
+    <select id="selectNoProductDetailById" parameterType="Long" resultMap="NoProductDetailResult">
+        <include refid="selectNoProductDetailVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectNoProductDetailByNoProductId" resultMap="NoProductDetailResult">
+        <include refid="selectNoProductDetailVo"/>
+        where no_product_id = #{noProductId}
+    </select>
+
+    <insert id="insertNoProductDetail" parameterType="com.kingdom.system.data.entity.NoProductDetail">
+        insert into t_no_product_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            create_time,
+			<if test="productId != null  ">product_id,</if>
+			<if test="number != null  ">number,</if>
+			<if test="noProductParentId != null  ">no_product_parent_id,</if>
+			<if test="noProductId != null  ">no_product_id,</if>
+			<if test="productName != null  ">product_name,</if>
+			<if test="remark != null  ">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+		    NOW(),
+			<if test="lastModified != null  ">#{lastModified},</if>
+			<if test="productId != null  ">#{productId},</if>
+			<if test="number != null  ">#{number},</if>
+			<if test="noProductParentId != null  ">#{noProductParentId},</if>
+			<if test="noProductId != null  ">#{noProductId},</if>
+			<if test="productName != null  ">#{productName},</if>
+			<if test="remark != null  ">#{remark},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateNoProductDetail" parameterType="com.kingdom.system.data.entity.NoProductDetail">
+        update t_no_product_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="lastModified != null  ">last_modified = #{lastModified},</if>
+            <if test="productId != null  ">product_id = #{productId},</if>
+            <if test="number != null  ">number = #{number},</if>
+            <if test="noProductParentId != null  ">no_product_parent_id = #{noProductParentId},</if>
+            <if test="noProductId != null  ">no_product_id = #{noProductId},</if>
+            <if test="productName != null  ">product_name = #{productName},</if>
+            <if test="remark != null  ">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteNoProductDetailById" parameterType="Long">
+        delete from t_no_product_detail where id = #{id}
+    </delete>
+	
+    <delete id="deleteNoProductDetailByIds" parameterType="String">
+        delete from t_no_product_detail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

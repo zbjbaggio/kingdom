@@ -43,6 +43,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         group by a.id
         order by a.id desc
     </select>
+
+    <select id="selectOrderInfoListByUserId" resultMap="OrderInfoResult">
+        select a.id, a.create_time, a.status, a.send, a.remark, a.order_no, a.dr, a.parent_order_id, a.member_no, a.order_username, a.user_id, a.date,
+        sum(b.cny_amount) cny_amount, sum(b.hk_amount) hk_amount
+        from t_order_info a join t_order_product b on a.id = b.order_id
+        join t_order_user d on a.id = d.order_id and d.user_id = #{userId}
+        where 1 = 1
+        group by a.id
+        order by a.id desc
+    </select>
+
     
     <select id="selectOrderInfoById" parameterType="Long" resultMap="OrderInfoResult">
         <include refid="selectOrderInfoVo"/>

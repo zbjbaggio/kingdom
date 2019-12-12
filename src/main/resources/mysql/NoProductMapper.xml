@@ -10,18 +10,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="productName"    column="product_name"    />
         <result property="number"    column="number"    />
         <result property="remark"    column="remark"    />
-        <result property="date"    column="date"    />
+        <result property="noProductParentId"    column="no_product_parent_id"    />
     </resultMap>
 	
 	<sql id="selectNoProductVo">
-        select id, product_id, product_name, number, remark, date from t_no_product
+        select id, product_id, product_name, number, remark,no_product_parent_id from t_no_product
     </sql>
 	
     <select id="selectNoProductList" parameterType="com.kingdom.system.data.entity.NoProduct" resultMap="NoProductResult">
         <include refid="selectNoProductVo"/>
         <where>  
             <if test="id != null "> and id = #{id}</if>
-            <if test="date != null "> and date = #{date}</if>
              <if test="productId != null "> and product_id = #{productId}</if>
              <if test="productName != null  and productName != '' "> and product_name = #{productName}</if>
              <if test="number != null "> and number = #{number}</if>
@@ -41,6 +40,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ORDER BY id DESC
     </select>
 
+    <select id="listNoProductByIds" resultMap="NoProductResult" parameterType="collection">
+        <include refid="selectNoProductVo"/>
+        WHERE no_product_parent_id IN
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectProductByParentId" resultMap="NoProductResult">
+        <include refid="selectNoProductVo"/>
+        WHERE id = #{noProductId} and no_product_parent_id = #{noProductParentId}
+    </select>
+
     <insert id="insertNoProduct" parameterType="com.kingdom.system.data.entity.NoProduct" useGeneratedKeys="true" keyProperty="id">
         insert into t_no_product
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -49,7 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="productName != null  and productName != ''  ">product_name,</if>
 			<if test="number != null  ">number,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
-			<if test="date != null ">date,</if>
+			<if test="noProductParentId != null  ">no_product_parent_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             NOW(),
@@ -57,7 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="productName != null  and productName != ''  ">#{productName},</if>
 			<if test="number != null  ">#{number},</if>
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
-			<if test="date != null  ">#{date},</if>
+			<if test="noProductParentId != null    ">#{noProductParentId},</if>
          </trim>
     </insert>
 	 
@@ -68,12 +80,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="productName != null  and productName != ''  ">product_name = #{productName},</if>
             <if test="number != null  ">number = #{number},</if>
             <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
-            <if test="date != null  ">date = #{date},</if>
         </trim>
         where id = #{id}
     </update>
 
-	<delete id="deleteNoProductById" parameterType="Long">
+    <update id="updateNumber">
+        update t_no_product SET number = number + #{number} WHERE id = #{noProductId} and number = #{oldNumber}
+    </update>
+
+    <delete id="deleteNoProductById" parameterType="Long">
         delete from t_no_product where id = #{id}
     </delete>
 	

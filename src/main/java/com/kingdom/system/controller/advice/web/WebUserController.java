@@ -2,9 +2,8 @@ package com.kingdom.system.controller.advice.web;
 
 import com.kingdom.system.controller.advice.BaseController;
 import com.kingdom.system.data.base.TableDataInfo;
-import com.kingdom.system.data.entity.Category;
-import com.kingdom.system.data.entity.ExchangeRateRecord;
-import com.kingdom.system.data.entity.Product;
+import com.kingdom.system.data.entity.*;
+import com.kingdom.system.data.vo.OrderDetailVO;
 import com.kingdom.system.service.impl.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/web/user")
@@ -46,7 +48,38 @@ public class WebUserController extends BaseController {
         Category category = categoryService.selectCategoryById(1L);
         if ("0".equals(category.getValue())) {
             startPage();
-            return getDataTable(orderService.listByUserId());
+            TableDataInfo dataTable = getDataTable(orderService.listByUserId());
+            List<OrderInfo> rows = (List<OrderInfo>) dataTable.getRows();
+            if (rows != null && rows.size() > 0) {
+                List<Long> orderIds = new ArrayList<>();
+                for (OrderInfo row : rows) {
+                    orderIds.add(row.getId());
+                }
+                List<OrderDetailVO> orderProducts = orderService.listProductByIds(orderIds);
+                Map<Long, List<OrderDetailVO>> orderProductMap = new HashMap<>();
+                for (OrderDetailVO orderProduct : orderProducts) {
+                    List<OrderDetailVO> orderDetailVOS = orderProductMap.get(orderProduct.getOrderId());
+                    if (orderDetailVOS == null) {
+                        orderDetailVOS = new ArrayList<>();
+                    }
+                    orderDetailVOS.add(orderProduct);
+                    orderProductMap.put(orderProduct.getOrderId(), orderDetailVOS);
+                }
+                List<OrderPayment> orderPayments = orderService.listOrderPaymentByIds(orderIds);
+                Map<Long, List<OrderPayment>> orderPaymentMap = new HashMap<>();
+                for (OrderPayment orderPayment : orderPayments) {
+                    List<OrderPayment> orderPaymentList = orderPaymentMap.get(orderPayment.getOrderId());
+                    if (orderPaymentList == null) {
+                        orderPaymentList = new ArrayList<>();
+                    }
+                    orderPaymentList.add(orderPayment);
+                    orderPaymentMap.put(orderPayment.getOrderId(), orderPaymentList);
+                }
+                for (OrderInfo row : rows) {
+                    row.setOrderDetailVOS(orderProductMap.get(row.getId()));
+                    row.setOrderPayments(orderPaymentMap.get(row.getId()));
+                }
+            }
         }
         return null;
     }

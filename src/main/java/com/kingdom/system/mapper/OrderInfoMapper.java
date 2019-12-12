@@ -78,4 +78,6 @@ public interface OrderInfoMapper {
     List<OrderInfo> getOrderParentSum();
 
     int updateSend(@Param(value = "send") int send, @Param(value = "orderId")Long orderId);
+
+    List<OrderInfo> selectOrderInfoListByUserId(Long userId);
 }

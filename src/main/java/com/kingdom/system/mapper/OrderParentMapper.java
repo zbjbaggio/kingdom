@@ -1,6 +1,7 @@
 package com.kingdom.system.mapper;
 
 
+import com.kingdom.system.data.entity.OrderInfo;
 import com.kingdom.system.data.entity.OrderParent;
 import org.apache.ibatis.annotations.Param;
 

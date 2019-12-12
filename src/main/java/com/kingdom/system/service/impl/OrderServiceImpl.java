@@ -11,10 +11,7 @@ import com.kingdom.system.data.vo.OrderVO;
 import com.kingdom.system.data.vo.ProductPackageVO;
 import com.kingdom.system.data.vo.ProductVO;
 import com.kingdom.system.mapper.*;
-import com.kingdom.system.util.BigDecimalUtils;
-import com.kingdom.system.util.DateUtil;
-import com.kingdom.system.util.NOUtils;
-import com.kingdom.system.util.StringUtils;
+import com.kingdom.system.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -68,7 +65,7 @@ public class OrderServiceImpl {
     private UserSendAddressMapper userSendAddressMapper;
 
     @Inject
-    private CategoryMapper categoryMapper;
+    private ValueHolder valueHolder;
 
     @Transactional
     public OrderDTO insert(OrderDTO orderDTO) {
@@ -569,7 +566,8 @@ public class OrderServiceImpl {
     }
 
     public List<OrderInfo> listByUserId() {
-        return null;
+        Long userId = valueHolder.getMobileUserHolder();
+        return orderInfoMapper.selectOrderInfoListByUserId(userId);
     }
 
 /*    private void checkProductExpress(List<OrderDetail> orderDetails, List<OrderExpress> orderExpresses) {

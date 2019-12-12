@@ -90,5 +90,4 @@ public interface ProductMapper {
 
     List<ProductVO> listProductPackageNoCost(@Param(value = "search") String search);
 
-
 }
