@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "manager.login")
 public class ManagerLoginConstants {
 
-    private int time = 20;//用户登录后存入redis的时长30分钟
+    private int time = 30;//用户登录后存入redis的时长30分钟
 
     private int verifiedTime = 60;//用户猜密码次数存入redis的时长60分钟，即锁定时间
 
