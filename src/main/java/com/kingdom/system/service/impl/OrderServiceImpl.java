@@ -570,6 +570,10 @@ public class OrderServiceImpl {
         return orderInfoMapper.selectOrderInfoListByUserId(userId);
     }
 
+    public List<OrderInfo> detailByParentOrderId(Long parentOrderId) {
+        return null;
+    }
+
 /*    private void checkProductExpress(List<OrderDetail> orderDetails, List<OrderExpress> orderExpresses) {
         for () {
         }

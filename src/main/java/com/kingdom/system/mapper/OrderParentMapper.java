@@ -66,4 +66,7 @@ public interface OrderParentMapper
     List<OrderParent> selectOrderParentListByName(@Param(value = "name") String name);
 
     OrderParent selectOrderParentByDate(@Param(value = "now")String now);
+
+    List<OrderParent> list(@Param(value = "name")String name, @Param(value = "startDate")String startDate,
+						   @Param(value = "endDate")String endDate);
 }

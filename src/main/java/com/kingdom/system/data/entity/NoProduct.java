@@ -1,14 +1,11 @@
 package com.kingdom.system.data.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.kingdom.system.constant.TimeZoneConstant;
 import com.kingdom.system.data.base.EntityBase;
 import lombok.Data;
 import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
 
 @Data
 @ToString(callSuper = true)

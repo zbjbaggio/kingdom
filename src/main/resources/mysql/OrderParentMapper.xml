@@ -46,6 +46,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where date = #{now} order by id desc  limit 1
     </select>
 
+    <select id="list" resultMap="OrderParentResult">
+        <include refid="selectOrderParentVo"/>
+        <where>
+            <if test="name != null and name != '' "> and name LIKE #{name}</if>
+            <if test="startDate != null and startDate != '' "> and date <![CDATA[ >= ]]> #{startDate}</if>
+            <if test="endDate != null and endDate != '' "> and date <![CDATA[ <= ]]> #{endDate}</if>
+        </where>
+        order by id desc
+    </select>
+
     <insert id="insertOrderParent" parameterType="com.kingdom.system.data.entity.OrderParent" useGeneratedKeys="true" keyProperty="id">
         insert into t_order_parent
 		<trim prefix="(" suffix=")" suffixOverrides=",">
