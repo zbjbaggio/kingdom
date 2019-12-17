@@ -63,4 +63,6 @@ public interface OrderExpressMapper
 	List<OrderExpress> selectOrderExpressListByOrderId(Long orderId);
 
 	void updatePrintNumber(Long orderExpressId);
+
+    List<OrderExpress> selectOrderExpressListByOrderIds(List<Long> orderIds);
 }

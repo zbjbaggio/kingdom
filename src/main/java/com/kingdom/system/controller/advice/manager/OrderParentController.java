@@ -28,7 +28,7 @@ import java.util.Map;
  * 订单信息
  */
 @RestController
-@RequestMapping("/manage/user/orderParent")
+@RequestMapping("/manage/user/orderParent/")
 @Slf4j
 @RequiresPermissions("/manage/user/orderParent")
 public class OrderParentController extends BaseController {

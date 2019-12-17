@@ -75,6 +75,8 @@ public class OrderInfo extends EntityBase implements Serializable {
 
 	private List<OrderPayment> orderPayments;
 
+	private List<OrderExpress> orderExpresses;
+
 	private BigDecimal hkCostAmount;
 
 }

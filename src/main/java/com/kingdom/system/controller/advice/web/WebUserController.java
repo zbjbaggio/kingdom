@@ -2,6 +2,7 @@ package com.kingdom.system.controller.advice.web;
 
 import com.kingdom.system.controller.advice.BaseController;
 import com.kingdom.system.data.base.TableDataInfo;
+import com.kingdom.system.data.dto.OrderExpressDTO;
 import com.kingdom.system.data.entity.*;
 import com.kingdom.system.data.vo.OrderDetailVO;
 import com.kingdom.system.service.impl.*;
@@ -75,10 +76,36 @@ public class WebUserController extends BaseController {
                     orderPaymentList.add(orderPayment);
                     orderPaymentMap.put(orderPayment.getOrderId(), orderPaymentList);
                 }
+                List<OrderExpress> orderExpressList = orderService.listExpressByIds(orderIds);
+                List<OrderExpressDetail> orderExpressDetailList = orderService.listExpressDetialByIds(orderIds);
+                Map<Long, List<OrderExpressDetail>> orderExpressDetailMap = new HashMap<>();
+                if (orderExpressDetailList != null && orderExpressDetailList.size() > 0) {
+                    orderExpressDetailList.forEach(orderExpressDetail -> {
+                        List<OrderExpressDetail> orderExpressDetailList1 = orderExpressDetailMap.get(orderExpressDetail.getOrderExpressId());
+                        if (orderExpressDetailList1 == null) {
+                            orderExpressDetailList1 = new ArrayList<>();
+                        }
+                        orderExpressDetailList1.add(orderExpressDetail);
+                        orderExpressDetailMap.put(orderExpressDetail.getOrderExpressId(), orderExpressDetailList1);
+                    });
+                }
+                Map<Long, List<OrderExpress>> orderExpressMap = new HashMap<>();
+                orderExpressList.forEach(orderExpress -> {
+                    orderExpress.setOrderExpressDetails(orderExpressDetailMap.get(orderExpress.getId()));
+                    List<OrderExpress> orderExpresses = orderExpressMap.get(orderExpress.getOrderId());
+                    if (orderExpresses == null) {
+                        orderExpresses = new ArrayList<>();
+                    }
+                    orderExpresses.add(orderExpress);
+                    orderExpressMap.put(orderExpress.getOrderId(), orderExpresses);
+                });
+
                 for (OrderInfo row : rows) {
                     row.setOrderDetailVOS(orderProductMap.get(row.getId()));
                     row.setOrderPayments(orderPaymentMap.get(row.getId()));
+                    row.setOrderExpresses(orderExpressMap.get(row.getId()));
                 }
+                return dataTable;
             }
         }
         return null;

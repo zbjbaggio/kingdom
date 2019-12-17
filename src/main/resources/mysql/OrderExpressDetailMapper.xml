@@ -58,6 +58,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where order_express_id = #{orderExpressId}
     </select>
 
+    <select id="selectOrderExpressDetailListByOrderIds"  resultMap="OrderExpressDetailResult"  parameterType="java.util.List">
+        <include refid="selectOrderExpressDetailVo"/>
+        where order_id in
+        <foreach item="orderIds" collection="list" open="(" separator="," close=")">
+            #{orderIds}
+        </foreach>
+    </select>
+
 
     <insert id="insertOrderExpressDetail" parameterType="com.kingdom.system.data.entity.OrderExpressDetail" useGeneratedKeys="true" keyProperty="id">
         insert into t_order_express_detail

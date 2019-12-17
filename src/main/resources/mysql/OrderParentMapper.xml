@@ -53,7 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="startDate != null and startDate != '' "> and date <![CDATA[ >= ]]> #{startDate}</if>
             <if test="endDate != null and endDate != '' "> and date <![CDATA[ <= ]]> #{endDate}</if>
         </where>
-        order by id desc
+        order by date desc
     </select>
 
     <insert id="insertOrderParent" parameterType="com.kingdom.system.data.entity.OrderParent" useGeneratedKeys="true" keyProperty="id">

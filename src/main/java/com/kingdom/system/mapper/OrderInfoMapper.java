@@ -80,4 +80,6 @@ public interface OrderInfoMapper {
     int updateSend(@Param(value = "send") int send, @Param(value = "orderId")Long orderId);
 
     List<OrderInfo> selectOrderInfoListByUserId(Long userId);
+
+    List<OrderInfo> selectOrderInfoListByParentId(Long parentOrderId);
 }

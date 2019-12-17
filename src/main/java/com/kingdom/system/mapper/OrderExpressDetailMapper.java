@@ -1,5 +1,6 @@
 package com.kingdom.system.mapper;
 
+import com.kingdom.system.data.dto.OrderExpressDTO;
 import com.kingdom.system.data.entity.OrderExpressDetail;
 
 import java.util.List;
@@ -66,4 +67,6 @@ public interface OrderExpressDetailMapper {
     List<OrderExpressDetail> selectOrderExpressDetailListByExpressId(Long orderExpressId);
 
     int deleteOrderExpressDetailByExpressId(Long orderExpressId);
+
+    List<OrderExpressDetail> selectOrderExpressDetailListByOrderIds(List<Long> orderIds);
 }

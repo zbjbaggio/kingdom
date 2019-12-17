@@ -571,7 +571,46 @@ public class OrderServiceImpl {
     }
 
     public List<OrderInfo> detailByParentOrderId(Long parentOrderId) {
-        return null;
+        List<OrderInfo> list = orderInfoMapper.selectOrderInfoListByParentId(parentOrderId);
+        if (list != null && list.size() > 0) {
+            List<Long> orderIds = new ArrayList<>();
+            for (OrderInfo row : list) {
+                orderIds.add(row.getId());
+            }
+            List<OrderDetailVO> orderProducts = listProductByIds(orderIds);
+            Map<Long, List<OrderDetailVO>> orderProductMap = new HashMap<>();
+            for (OrderDetailVO orderProduct : orderProducts) {
+                List<OrderDetailVO> orderDetailVOS = orderProductMap.get(orderProduct.getOrderId());
+                if (orderDetailVOS == null) {
+                    orderDetailVOS = new ArrayList<>();
+                }
+                orderDetailVOS.add(orderProduct);
+                orderProductMap.put(orderProduct.getOrderId(), orderDetailVOS);
+            }
+            List<OrderPayment> orderPayments = listOrderPaymentByIds(orderIds);
+            Map<Long, List<OrderPayment>> orderPaymentMap = new HashMap<>();
+            for (OrderPayment orderPayment : orderPayments) {
+                List<OrderPayment> orderPaymentList = orderPaymentMap.get(orderPayment.getOrderId());
+                if (orderPaymentList == null) {
+                    orderPaymentList = new ArrayList<>();
+                }
+                orderPaymentList.add(orderPayment);
+                orderPaymentMap.put(orderPayment.getOrderId(), orderPaymentList);
+            }
+            for (OrderInfo row : list) {
+                row.setOrderDetailVOS(orderProductMap.get(row.getId()));
+                row.setOrderPayments(orderPaymentMap.get(row.getId()));
+            }
+        }
+        return list;
+    }
+
+    public List<OrderExpress> listExpressByIds(List<Long> orderIds) {
+        return orderExpressMapper.selectOrderExpressListByOrderIds(orderIds);
+    }
+
+    public List<OrderExpressDetail> listExpressDetialByIds(List<Long> orderIds) {
+        return orderExpressDetailMapper.selectOrderExpressDetailListByOrderIds(orderIds);
     }
 
 /*    private void checkProductExpress(List<OrderDetail> orderDetails, List<OrderExpress> orderExpresses) {
