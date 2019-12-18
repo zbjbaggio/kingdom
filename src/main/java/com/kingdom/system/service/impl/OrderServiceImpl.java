@@ -1,8 +1,6 @@
 package com.kingdom.system.service.impl;
 
-import com.kingdom.system.data.dto.OrderDTO;
-import com.kingdom.system.data.dto.OrderDetailDTO;
-import com.kingdom.system.data.dto.OrderExpressDTO;
+import com.kingdom.system.data.dto.*;
 import com.kingdom.system.data.enmus.ErrorInfo;
 import com.kingdom.system.data.entity.*;
 import com.kingdom.system.data.exception.PrivateException;
@@ -611,6 +609,19 @@ public class OrderServiceImpl {
 
     public List<OrderExpressDetail> listExpressDetialByIds(List<Long> orderIds) {
         return orderExpressDetailMapper.selectOrderExpressDetailListByOrderIds(orderIds);
+    }
+
+    public List<OrderExcelDTO> listOrderExcel(Long orderParentId) {
+        List<OrderExcelDTO> list = orderInfoMapper.selectExcel(orderParentId);
+        List<OrderDetailExcelDTO> orderDetailExcelDTOS = orderInfoMapper.selectOrderDetailExcel(orderParentId);
+        if (list != null && list.size() > 0) {
+            Set<Long> ids = new HashSet<>();
+            list.forEach(orderExcelDTO -> {
+                ids.add(null);
+            });
+        }
+
+        return list;
     }
 
 /*    private void checkProductExpress(List<OrderDetail> orderDetails, List<OrderExpress> orderExpresses) {

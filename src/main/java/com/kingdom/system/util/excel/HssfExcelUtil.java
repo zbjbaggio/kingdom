@@ -1,10 +1,15 @@
 package com.kingdom.system.util.excel;
 
+import com.google.common.collect.ImmutableMap;
 import com.kingdom.system.util.ChanelContext;
 import com.kingdom.system.util.ReflectUtil;
-import com.kingdom.system.util.StringUtils;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -26,6 +31,7 @@ import java.util.*;
 /**
  * 功能：用于97-2003之间（.xls）
  */
+@Slf4j
 public class HssfExcelUtil extends ExcelUtil {
 
     private final static String FILE_TYPE = ".xls" ;
@@ -43,13 +49,22 @@ public class HssfExcelUtil extends ExcelUtil {
 
     private final static String MESSAGE = "请选择或输入有效的选项！" ;
 
+    private final static boolean HAD_COL = false;
+
     // 列数
     private int columnCount;
 
     // 行数
     private int rowCount;
 
+    private int maxLayer;
+
     HSSFWorkbook workbook;
+
+    private Map<String, Boolean> checkColumnMarkMap;
+
+    //正表各层合并信息
+    private Map<Integer, ExcelLayerMerge> layerMergeMap;
 
     public HssfExcelUtil(InputStream inputStream) {
         this.inputStream = inputStream;
@@ -59,6 +74,9 @@ public class HssfExcelUtil extends ExcelUtil {
         columnCount = 0;
         rowCount = 0;
         workbook = new HSSFWorkbook();
+        layerMergeMap = new HashMap<>();
+        checkColumnMarkMap = new HashMap<>();
+        maxLayer = 1;
     }
 
     public <T> List<T> readExcel(Class<T> clazz, int sheetNo, boolean hasTitle) throws Exception {
@@ -151,8 +169,9 @@ public class HssfExcelUtil extends ExcelUtil {
         contentStyleDefault = null;
         contentStyleDate = null;
         contentStyleDouble = null;
-        List<Object> fields = new ArrayList<>();
-        boolean isLock = getHeadName(list.get(0).getClass(), fields, groupName);
+        List<FieldParent> fields = new ArrayList<>();
+        Map<String, Object> respMap = getHeadName(list.get(0).getClass(), fields, groupName, 0, HAD_COL, 1);
+        boolean isLock = (boolean) respMap.get("isLock");
         setSheet(sheetName, list, fields, isLock);
         if (!StringUtils.isEmpty(password)) {
             Biff8EncryptionKey.setCurrentUserPassword(password);
@@ -167,7 +186,19 @@ public class HssfExcelUtil extends ExcelUtil {
         }
     }
 
-    private <T> void setSheet(String sheetName, List<T> list, List<Object> fields, boolean isLock) throws Exception {
+    public <T> Workbook writeExcel(String filename, String sheetName, List<T> list) throws Exception {
+        // 声明一个工作薄
+        contentStyleDefault = null;
+        contentStyleDate = null;
+        contentStyleDouble = null;
+        List<FieldParent> fields = new ArrayList<>();
+        Map<String, Object> respMap = getHeadName(list.get(0).getClass(), fields, null, 0 ,HAD_COL, 1);
+        boolean isLock = (boolean) respMap.get("isLock");
+        setSheet(sheetName, list, fields, isLock);
+        return workbook;
+    }
+
+    private <T> void setSheet(String sheetName, List<T> list, List<FieldParent> fields, boolean isLock) throws Exception {
         // 生成一个表格
         HSSFSheet sheet = workbook.createSheet(sheetName);
         // 表头样式
@@ -180,7 +211,8 @@ public class HssfExcelUtil extends ExcelUtil {
         Map<String, List<String>> parentMap = new HashMap<>();
         setName(workbook, fields, sheet, headerStyle, row, parentMap);
         rowCount++;
-        getList(list, fields, sheet, 0, null, true);
+        //getList(list, fields, sheet, 0, null, true);
+        setSheetData(list, fields, sheet);
         //目前只展示第一个sheet
         int sheetCount = workbook.getNumberOfSheets();
         for (int i = 1; i < sheetCount; i++) {
@@ -190,32 +222,181 @@ public class HssfExcelUtil extends ExcelUtil {
         }
     }
 
-    private void setName(HSSFWorkbook workbook, List<Object> fields, HSSFSheet sheet, HSSFCellStyle headerStyle, HSSFRow row,
+    private <T> void setSheetData(List<T> list, List<FieldParent> fields, HSSFSheet sheet) {
+        //初始化合并Map
+        initLayerMerMap();
+        setRowData(list, fields, rowCount, sheet, 1);
+    }
+
+    //初始化合并Map信息
+    private void initLayerMerMap() {
+        if (maxLayer > 1) {
+            for (int i=1; i<maxLayer; i++) {
+                layerMergeMap.put(i, new ExcelLayerMerge());
+            }
+        }
+    }
+
+    private <T> RespRowColumn setRowData(List<T> list, List<FieldParent> fields, int rowIndex, HSSFSheet sheet, int layerIndex) {
+        for (int i=0; i<list.size(); i++) {
+            T t = list.get(i);
+            HSSFRow row = sheet.getRow(rowIndex);
+            if (row == null) {
+                row = sheet.createRow(rowIndex);
+            }
+            RespRowColumn respRowColumn = setColumnsData(t, fields, sheet, row, layerIndex, i);
+            //处理当前层当前序的合并
+            if (layerIndex < maxLayer) {
+                ExcelLayerMerge layerMerge = layerMergeMap.get(layerIndex);
+                ExcelLayerMerge.RowMerge rowMerge = layerMerge.getMergeMap().get(i);
+                for (Integer columnIndex : layerMerge.getColumnList()) {
+                    CellRangeAddress region = new CellRangeAddress(rowMerge.getFirstRow(), rowMerge.getLastRow(), columnIndex, columnIndex);
+                    sheet.addMergedRegion(region);
+                    //打印
+                    //System.out.println("处理合并--" + rowMerge.getFirstRow() + "," + rowMerge.getLastRow() + "," + columnIndex + "," + columnIndex);
+                }
+                respRowColumn.setRowIndex(rowMerge.getLastRow());
+                //清空当前列标list
+                layerMerge.getColumnList().clear();
+                //最外层，清空所有层合并信息
+                if (layerIndex == 1) {
+                    initLayerMerMap();
+                }
+            }
+            //刷新该层下一循环列的row值
+            rowIndex = respRowColumn.getRowIndex();
+            rowIndex++;
+        }
+        return new RespRowColumn(0, rowIndex - 1, null, null);
+    }
+
+
+    /**
+     * 处理单行逐列单元格
+     *
+     * @param dataObj 数据实体
+     * @param fields  数据实体字段信息
+     * @param row 行row
+     */
+    private RespRowColumn setColumnsData(Object dataObj, List<FieldParent> fields, HSSFSheet sheet, HSSFRow row, int layerIndex, int serial) {
+        Class<?> c = dataObj.getClass();
+        Object value;
+        PropertyDescriptor pd;
+        int maxRow = row.getRowNum();
+        //该层其实列标
+        //处理字段-Excel逐列
+        for (int i = 0; i < fields.size(); i++) {
+            try {
+                Object field = fields.get(i);
+                //基础类型字段
+                if (field instanceof FieldObject) {
+                    //创建cell
+                    FieldObject filedObject = (FieldObject) field;
+                    int columnIndex = filedObject.getColumnIndex();
+                    HSSFCell cell = row.createCell(columnIndex);
+                    pd = new PropertyDescriptor(filedObject.getName(), c);
+                    Method getMethod = pd.getReadMethod();// 获得get方法
+                    //获取cell值
+                    value = getMethod.invoke(dataObj);
+                    //打印
+                    //System.out.println(value.toString()+"--"+ columnIndex +"--"+row.getRowNum()+"--"+layerIndex);
+                    //set值
+                    if (value instanceof Double) {
+                        cell.setCellValue((Double) value);
+                    } else if (value instanceof Date) {
+                        cell.setCellValue((Date) value);
+                    } else {
+                        cell.setCellValue(value == null ? "" : value.toString());
+                    }
+                    //封装merge的列号信息
+                    if (layerIndex < maxLayer) {
+                        ExcelLayerMerge layerMerge = layerMergeMap.get(layerIndex);
+                        layerMerge.getColumnList().add(columnIndex);
+                    }
+                //list类型字段
+                } else if (field instanceof FieldList) {
+                    FieldList fieldObject = (FieldList) field;
+                    pd = new PropertyDescriptor(fieldObject.getName(), c);
+                    Method getMethod = pd.getReadMethod();// 获得get方法
+                    List valueList = (List)getMethod.invoke(dataObj);
+                    //递归处理
+                    //返回 rowIndex
+                    RespRowColumn respRowColumn = setRowData(valueList, fieldObject.getFields(), row.getRowNum(), sheet, layerIndex + 1);
+                    //设定合并信息
+                    ExcelLayerMerge layerMerge = layerMergeMap.get(layerIndex);
+                    Map<Integer, ExcelLayerMerge.RowMerge> mergeMap = layerMerge.getMergeMap();
+                    ExcelLayerMerge.RowMerge rowMerge = mergeMap.get(serial);
+                    maxRow = respRowColumn.getRowIndex();
+                    if (rowMerge == null) {
+                        mergeMap.put(serial, new ExcelLayerMerge.RowMerge(row.getRowNum(), respRowColumn.getRowIndex(), fieldObject.getName()));
+                    } else if (rowMerge.getFirstRow() != row.getRowNum()) {
+                        throw new Exception("合并同层同序，起始列标不同");
+                    } else if (rowMerge.getLastRow() != respRowColumn.getRowIndex()) {
+                        log.error("【同层数据行数必须一致！】【行号:{}, 层数:{}, 序号:{},当前字段:{}  长度:{}, 与字段:{}  长度:{} 不一致】", row.getRowNum(), layerIndex, serial, fieldObject.getName(), respRowColumn.getRowIndex(), rowMerge.getSourceName(), rowMerge.getLastRow());
+                        throw new Exception();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return new RespRowColumn(-1, maxRow, null, null);
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    class RespRowColumn {
+
+        private int columnIndex;
+
+        private int rowIndex;
+
+        private HSSFRow row;
+
+        private List<RespMerge> mergeList;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    class RespMerge {
+
+        private int firstCol;
+
+        private int lastCol;
+
+        private int firstRow;
+
+        private int lastRow;
+    }
+
+    private void setName(HSSFWorkbook workbook, List<FieldParent> fields, HSSFSheet sheet, HSSFCellStyle headerStyle, HSSFRow row,
                          Map<String, List<String>> parentMap) throws Exception {
         HSSFDataFormat format = workbook.createDataFormat();
         HSSFRichTextString text;
         for (Object object : fields) {
             if (object instanceof FieldObject) {
                 FieldObject fieldObject = (FieldObject) object;
-                HSSFCell cell = row.createCell(columnCount);
+                int columnIndex = fieldObject.getColumnIndex();
+                HSSFCell cell = row.createCell(columnIndex);
                 cell.setCellStyle(headerStyle);
                 text = new HSSFRichTextString(fieldObject.getTitle());
                 cell.setCellValue(text);
                 //设置列宽度自适应
                 if (fieldObject.getWidth() == 0) {
-                    sheet.setColumnWidth(columnCount, fieldObject.getTitle().getBytes().length * 700);
+                    sheet.setColumnWidth(columnIndex, fieldObject.getTitle().getBytes().length * 700);
                 } else {
-                    sheet.setColumnWidth(columnCount, fieldObject.getWidth());
+                    sheet.setColumnWidth(columnIndex, fieldObject.getWidth());
                 }
-                sheet.setDefaultColumnStyle(columnCount, getCellStyle(workbook, sheet, format, fieldObject, parentMap));
-                columnCount++;
+                sheet.setDefaultColumnStyle(columnIndex, getCellStyle(workbook, sheet, format, fieldObject, parentMap));
             } else if (object instanceof FieldList) {
                 setName(workbook, ((FieldList) object).getFields(), sheet, headerStyle, row, parentMap);
             }
         }
     }
 
-    private <T> void getList(List<T> list, List<Object> fields, HSSFSheet sheet, int columnCount, HSSFRow row, boolean isMerge) {
+    private <T> void getList(List<T> list, List<FieldParent> fields, HSSFSheet sheet, int columnCount, HSSFRow row, boolean isMerge) {
         for (T t : list) {
             // 正文内容样式
 //            HSSFCell cell = row.createCell(rowCount);
@@ -241,7 +422,7 @@ public class HssfExcelUtil extends ExcelUtil {
     }
 
     // 填写sheet的每行的值
-    private int setRowValue(HSSFSheet sheet, Object obj, List<Object> fields, int columnCount, HSSFRow row) {
+    private int setRowValue(HSSFSheet sheet, Object obj, List<FieldParent> fields, int columnCount, HSSFRow row) {
         int firstCol = 0;
         if (row == null) {
             row = sheet.createRow(rowCount);
@@ -428,7 +609,7 @@ public class HssfExcelUtil extends ExcelUtil {
 
         // 设置数据有效性加载在哪个单元格上。
         // 四个参数分别是：起始行、终止行、起始列、终止列
-        CellRangeAddressList regions = new CellRangeAddressList(1, XLS_MAX_ROW, fileObject.getIndex(), fileObject.getIndex());
+        CellRangeAddressList regions = new CellRangeAddressList(1, XLS_MAX_ROW, fileObject.getColumnIndex(), fileObject.getColumnIndex());
         // 数据有效性对象
         DataValidation dataValidationList = new HSSFDataValidation(regions, constraint);
         dataValidationList.createErrorBox("Error", MESSAGE);
@@ -476,10 +657,10 @@ public class HssfExcelUtil extends ExcelUtil {
     }
 
     // 获取标有excel注解的属性, 得到字段的中文和字段名称,返回是否需要锁定
-    private boolean getHeadName(Class<?> c, List<Object> fields, String groupName) {
+    private Map<String, Object> getHeadName(Class<?> c, List<FieldParent> fields, String groupName, int index, boolean hadCol, int layerIndex) throws Exception {
         boolean isLock = false;
         Field[] allFields = c.getDeclaredFields();
-        int index = 0;
+        int hadMaxLayer = layerIndex;
         for (Field field : allFields) {
             if (!field.isAnnotationPresent(ExcelExport.class)) {
                 continue;
@@ -495,15 +676,40 @@ public class HssfExcelUtil extends ExcelUtil {
                     Type genericType = field.getGenericType();
                     ParameterizedType pt = (ParameterizedType) genericType;
                     Class<?> actualTypeArgument = (Class<?>) pt.getActualTypeArguments()[0];
-                    List<Object> childFields = new ArrayList<>();
-                    getHeadName(actualTypeArgument, childFields, groupName);
+                    List<FieldParent> childFields = new ArrayList<>();
+                    if (maxLayer < layerIndex + 1) {
+                        maxLayer = layerIndex + 1;
+                    }
+                    Map<String, Object> respMap = getHeadName(actualTypeArgument, childFields, groupName, index, HAD_COL, layerIndex + 1);
+                    index = (Integer) respMap.get("index");
+                    hadMaxLayer = (int) respMap.get("hadMaxLayer");
                     FieldList fieldList = new FieldList();
                     fieldList.setName(field.getName());
                     fieldList.setFields(childFields);
+                    fieldList.setMaxLayer(hadMaxLayer);
                     fields.add(fieldList);
                     continue;
                 }
-                fieldObject.setIndex(index++);
+                int fieldIndex = -1;
+                if (index == 0 && StringUtils.isNotBlank(excel.columnMark())) {
+                    hadCol = true;
+                }
+                String columnMark = excel.columnMark();
+                if (hadCol) {
+                    if (StringUtils.isBlank(columnMark)) {
+                        throw new Exception("注解ExcelExport.columnMark应：全不设置或全设置。ERROR：" + field.getName());
+                    }
+                    if (checkColumnMarkMap.get(columnMark) != null) {
+                        throw new Exception("注解ExcelExport.columnMark存在相同列标。ERROR：" + field.getName());
+                    }
+                    fieldIndex = ExcelColumnIndexUtil.getColumnIndex(excel.columnMark());
+                } else {
+                    if (StringUtils.isNotBlank(columnMark)) {
+                        throw new Exception("注解ExcelExport.columnMark应：全不设置或全设置！ERROR：" + field.getName());
+                    }
+                    fieldIndex = index++;
+                }
+                fieldObject.setIndex(fieldIndex);
                 fieldObject.setLockBoolean(excel.lockBoolean());
                 fieldObject.setName(field.getName());
                 fieldObject.setFormat(excel.format());
@@ -514,9 +720,18 @@ public class HssfExcelUtil extends ExcelUtil {
                 fieldObject.setPointOut(excel.pointOut());
                 fieldObject.setWidth(excel.width());
                 fieldObject.setTitle(excel.name());
+                fieldObject.setColumnIndex(fieldIndex);
+                fieldObject.setMaxLayer(layerIndex);
                 fields.add(fieldObject);
             }
         }
-        return isLock;
+        //将每层的最深层字段排序到最前位置
+        fields.sort(new Comparator<FieldParent>() {
+            @Override
+            public int compare(FieldParent fp1, FieldParent fp2) {
+                return fp2.getMaxLayer() - fp1.getMaxLayer();
+            }
+        });
+        return ImmutableMap.of("isLock", isLock, "index", index, "hadMaxLayer", hadMaxLayer);
     }
 }

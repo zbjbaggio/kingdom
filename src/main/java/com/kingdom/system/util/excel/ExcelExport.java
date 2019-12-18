@@ -1,6 +1,5 @@
 package com.kingdom.system.util.excel;
 
-
 import java.lang.annotation.*;
 
 /*
@@ -75,6 +74,10 @@ public @interface ExcelExport {
      */
     String pointOut() default "";
 
+    /**
+     * 列标，即Excel的A列、B列、C列、D列...
+     */
+    String columnMark() default "";
 
     /**
      * 当format=ExcelDataEnums.SELECT时，当constant为空时取该属性，值为ExcelSelectAbstractClass的子类，必须实现returnSelectData方法

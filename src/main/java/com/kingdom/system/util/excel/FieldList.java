@@ -5,11 +5,11 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class FieldList {
+public class FieldList extends FieldParent {
 
     private String name;
 
     private String title;
 
-    private List<Object> fields;
+    private List<FieldParent> fields;
 }

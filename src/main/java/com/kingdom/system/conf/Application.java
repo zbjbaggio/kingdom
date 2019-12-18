@@ -1,5 +1,6 @@
 package com.kingdom.system.conf;
 
+import com.kingdom.system.filter.CORSFilter;
 import com.kingdom.system.interceptor.AuthenticationInterceptor;
 import com.kingdom.system.interceptor.MobileAuthenticationInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import javax.inject.Inject;
+import javax.servlet.Filter;
 import java.util.Locale;
 
 /**
@@ -89,6 +91,11 @@ public class Application implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(authenticationInterceptor).addPathPatterns("/manage/user/**");
 		registry.addInterceptor(mobileAuthenticationInterceptor).addPathPatterns("/web/user/**");
+	}
+
+	@Bean(name = "corsFilter")
+	public Filter corsFilter() {
+		return new CORSFilter();
 	}
 
 /*	@Bean

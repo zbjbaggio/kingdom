@@ -59,9 +59,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         PrintWriter out = null;
         try {
             out = response.getWriter();
+            log.info("--------------------------------{}" + json);
             out.append(json);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e);
         } finally {
             if (out != null) {
                 out.close();

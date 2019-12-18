@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by jay on 2017-9-18.
  */
 @Data
-public class FieldObject {
+public class FieldObject extends FieldParent {
 
     private int index;
 
@@ -35,6 +35,9 @@ public class FieldObject {
     }
 
     private ExcelDataEnums format;
+
+    //列标
+    private int columnIndex;
 
     private Class<? extends ExcelSelectInterface> returnSelectDataClass;
 
