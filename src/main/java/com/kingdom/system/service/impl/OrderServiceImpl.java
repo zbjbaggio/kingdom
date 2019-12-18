@@ -613,14 +613,21 @@ public class OrderServiceImpl {
 
     public List<OrderExcelDTO> listOrderExcel(Long orderParentId) {
         List<OrderExcelDTO> list = orderInfoMapper.selectExcel(orderParentId);
-        List<OrderDetailExcelDTO> orderDetailExcelDTOS = orderInfoMapper.selectOrderDetailExcel(orderParentId);
         if (list != null && list.size() > 0) {
-            Set<Long> ids = new HashSet<>();
+            List<OrderDetailExcelDTO> orderDetailExcelDTOS = orderInfoMapper.selectOrderDetailExcel(orderParentId);
+            Map<Long, List<OrderDetailExcelDTO>> map = new HashMap<>();
+            orderDetailExcelDTOS.forEach(orderDetailExcelDTO -> {
+                List<OrderDetailExcelDTO> orderDetailExcelDTOs = map.get(orderDetailExcelDTO.getOrderId());
+                if (orderDetailExcelDTOs == null) {
+                    orderDetailExcelDTOs = new ArrayList<>();
+                }
+                orderDetailExcelDTOs.add(orderDetailExcelDTO);
+                map.put(orderDetailExcelDTO.getOrderId(), orderDetailExcelDTOs);
+            });
             list.forEach(orderExcelDTO -> {
-                ids.add(null);
+                orderExcelDTO.setOrderDetailExcelDTOList(map.get(orderExcelDTO.getId()));
             });
         }
-
         return list;
     }
 

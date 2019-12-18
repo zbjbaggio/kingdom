@@ -56,7 +56,7 @@ public class OrderParentController extends BaseController {
         return orderService.detailByParentOrderId(parentOrderId);
     }
 
-    @RequestMapping(value = "excelExportOrder", method = RequestMethod.GET)
+    @GetMapping(value = "excelExportOrder")
     public void excelExport(HttpServletResponse response, @RequestParam(value = "orderParentId") Long orderParentId) throws Exception {
         List<OrderExcelDTO> orderExcelDTOS = orderService.listOrderExcel(orderParentId);
         if (orderExcelDTOS != null && orderExcelDTOS.size() > 0) {

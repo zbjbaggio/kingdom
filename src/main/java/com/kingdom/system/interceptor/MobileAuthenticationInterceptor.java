@@ -38,11 +38,8 @@ public class MobileAuthenticationInterceptor implements HandlerInterceptor {
         try {
             String token = request.getHeader("token");
             String key = request.getHeader("key");
-            log.error("000000000000000000000000000000");
             boolean isSuccess = userService.checkToken(token, key, (HandlerMethod) handler);
-            log.error("11111111111111111111111");
             if (!isSuccess) {
-                log.error("22222222222222222222222222");
                 getFail(response);
             }
             return isSuccess;
@@ -57,13 +54,11 @@ public class MobileAuthenticationInterceptor implements HandlerInterceptor {
     private void getFail(HttpServletResponse response) {
         //将实体对象转换为JSON Object转换
         String json = JSON.toJSONString(ResponseResult.build(ErrorInfo.NO_AUTHORITY));
-        log.info("44444444444444444444444444444444444444");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = null;
         try {
             out = response.getWriter();
-            log.info("--------------------------------{}" + json);
             out.append(json);
         } catch (IOException e) {
             e.printStackTrace();

@@ -33,8 +33,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="memberNo"    column="member_no"    />
         <result property="orderUsername"    column="order_username"    />
         <result property="remark"    column="remark"    />
-        <result property="statusString"    column="statusString"    />
     </resultMap>
+
+    <resultMap type="com.kingdom.system.data.dto.OrderDetailExcelDTO" id="OrderDetailExcelResult">
+        <result property="orderId"    column="order_id"    />
+        <result property="userNo"    column="user_no"    />
+        <result property="username"    column="user_name"    />
+        <result property="productName"    column="product_name"    />
+        <result property="number"    column="number"    />
+        <result property="score"    column="score"    />
+    </resultMap>
+
 	
 	<sql id="selectOrderInfoVo">
         select id, create_time, status, send, remark, order_no, dr, parent_order_id, member_no, order_username, user_id, date from t_order_info
@@ -54,8 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectExcel" resultMap="OrderExcelResult">
-        select a.id, a.order_no,a.member_no, order_username, a.remark,case when sum(b.express_number) is null then '未发货' when sum(b.express_number) = 0 then '已发货' else '部分发货' end statusString from t_order_info a
-        left join t_order_detail b on a.id = b.order_id and b.express_number != b.number
+        select a.id, a.order_no,a.member_no, order_username, a.remark from t_order_info a
         where a.parent_order_id = #{parentOrderId}
         group by a.id
         order by a.id desc
@@ -112,8 +120,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by a.id desc
     </select>
 
-    <select id="selectOrderDetailExcel" resultType="com.kingdom.system.data.dto.OrderDetailExcelDTO">
-
+    <select id="selectOrderDetailExcel" resultMap="OrderDetailExcelResult">
+      select b.order_id,b.user_name,b.user_no,c.product_name,c.number,c.score
+        from t_order_info a
+        join t_order_user b on a.id = b.order_id
+        join t_order_product c on a.id = c.order_id  and c.order_user_id = b.id
+        where a.parent_order_id = #{parentOrderId}
+        order by a.id,b.id desc
     </select>
 
     <insert id="insertOrderInfo" parameterType="com.kingdom.system.data.entity.OrderInfo" useGeneratedKeys="true" keyProperty="id">

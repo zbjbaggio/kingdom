@@ -13,18 +13,16 @@ public class OrderExcelDTO {
     @ExcelExport(name = "订单编号")
     private String orderNo;
 
-    @ExcelExport(name = "会员号")
+    @ExcelExport(name = "付款会员号")
     private String memberNo;
 
-    @ExcelExport(name = "会员姓名")
+    @ExcelExport(name = "付款人姓名")
     private String orderUsername;
-
-    @ExcelExport(name = "状态")
-    private String statusString;
 
     @ExcelExport(name = "备注")
     private String remark;
 
+    @ExcelExport
     private List<OrderDetailExcelDTO> orderDetailExcelDTOList;
 
 }
