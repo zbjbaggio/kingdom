@@ -61,4 +61,6 @@ public interface NoProductDetailMapper
 	public int deleteNoProductDetailByIds(String[] ids);
 
 	List<NoProductDetail> selectNoProductDetailByNoProductId(Long noProductId);
+
+    int deleteNoProductDetailByProductParentId(Long id);
 }

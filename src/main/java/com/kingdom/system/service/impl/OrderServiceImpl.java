@@ -465,7 +465,7 @@ public class OrderServiceImpl {
                             break;
                         } else {
                             updateNumber(orderDetailVO, orderDetailVO.getExpressNumber());
-                            expressNumber = expressNumber +  orderDetailVO.getExpressNumber();
+                            expressNumber = expressNumber + orderDetailVO.getExpressNumber();
                         }
                     }
                 }
@@ -531,7 +531,7 @@ public class OrderServiceImpl {
             PrivateException exception = new PrivateException();
             exception.setCode(50002);
             String msg = stringBuilder.toString();
-            exception.setMsg("以下订单的订货人未填写会员号：" + msg.substring(0, msg.length() -1));
+            exception.setMsg("以下订单的订货人未填写会员号：" + msg.substring(0, msg.length() - 1));
             throw exception;
         }
         orderParentSave(orderParent);
@@ -629,6 +629,52 @@ public class OrderServiceImpl {
             });
         }
         return list;
+    }
+
+    public List<OrderUser> listOrderUser(List<Long> orderIds) {
+        return orderUserMapper.listUserByIds(orderIds);
+    }
+
+    public List<OrderProduct> listOrderProductByIds(List<Long> orderIds) {
+        return orderProductMapper.listProductByIds(orderIds);
+    }
+
+    public List<OrderExcelPayDTO> listOrderPayExcel(Long orderParentId) {
+        List<OrderExcelPayDTO> list = orderInfoMapper.selectPayExcel(orderParentId);
+        if (list != null) {
+            List<OrderPayment> orderPayments = orderPaymentMapper.selectOrderPaymentListByOrderParentId(orderParentId);
+            Map<Long, List<OrderPayment>> map = new HashMap<>();
+            orderPayments.forEach(orderPayment -> {
+                switch (orderPayment.getPayType()) {
+                    case 0:
+                        orderPayment.setPayTypeString("港币划卡");
+                        break;
+                    case 1:
+                        orderPayment.setPayTypeString("微信");
+                        break;
+                    case 2:
+                        orderPayment.setPayTypeString("支付宝");
+                        break;
+                    case 3:
+                        orderPayment.setPayTypeString("银行转账");
+                        break;
+                    default:
+                        break;
+
+                }
+                List<OrderPayment> orderPayments1 = map.get(orderPayment.getOrderId());
+                if (orderPayments1 == null) {
+                    orderPayments1 = new ArrayList<>();
+                }
+                orderPayments1.add(orderPayment);
+                map.put(orderPayment.getOrderId(), orderPayments1);
+            });
+            for (OrderExcelPayDTO aaa : list) {
+                aaa.setOrderPayments(map.get(aaa.getId()));
+            }
+            return list;
+        }
+        return null;
     }
 
 /*    private void checkProductExpress(List<OrderDetail> orderDetails, List<OrderExpress> orderExpresses) {

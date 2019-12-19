@@ -221,7 +221,7 @@ public class HssfExcelUtil extends ExcelUtil {
 //            HSSFCell cell = row.createCell(rowCount);
 //            cell.setCellStyle(contentStyle);
             int oldRowCount = setRowValue(sheet, t, fields, columnCount, row);
-            if (isMerge) {
+           /* if (isMerge) {
                 int lastFileListIndex = 0;
                 for (int i = fields.size() - 1; i >= 0; i--) {
                     if (fields.get(i) instanceof FieldList) {
@@ -233,7 +233,7 @@ public class HssfExcelUtil extends ExcelUtil {
                     CellRangeAddress region = new CellRangeAddress(oldRowCount, rowCount, this.columnCount - lastFileListIndex , this.columnCount -  1);
                     sheet.addMergedRegion(region);
                 }
-            }
+            }*/
             row = null;
             rowCount++;
         }
@@ -241,7 +241,7 @@ public class HssfExcelUtil extends ExcelUtil {
     }
 
     // 填写sheet的每行的值
-    private int setRowValue(HSSFSheet sheet, Object obj, List<Object> fields, int columnCount, HSSFRow row) {
+    private int     setRowValue(HSSFSheet sheet, Object obj, List<Object> fields, int columnCount, HSSFRow row) {
         int firstCol = 0;
         if (row == null) {
             row = sheet.createRow(rowCount);
@@ -278,8 +278,10 @@ public class HssfExcelUtil extends ExcelUtil {
                     columnCount = columnCount + fieldObject.getFields().size() - 1;
                     rowCount--;
                     if (oldRowCount != rowCount) {
-                        CellRangeAddress region = new CellRangeAddress(oldRowCount, rowCount, firstCol, i - 1);
-                        sheet.addMergedRegion(region);
+                        for (int k = firstCol; k <= i - 1; k++) {
+                            CellRangeAddress region = new CellRangeAddress(oldRowCount, rowCount, k, k);
+                            sheet.addMergedRegion(region);
+                        }
                         firstCol = columnCount;
                     }
                     //row = sheet.createRow(rowCount++);

@@ -3,6 +3,7 @@ package com.kingdom.system.mapper;
 
 import com.kingdom.system.data.dto.OrderDetailExcelDTO;
 import com.kingdom.system.data.dto.OrderExcelDTO;
+import com.kingdom.system.data.dto.OrderExcelPayDTO;
 import com.kingdom.system.data.entity.OrderInfo;
 import org.apache.ibatis.annotations.Param;
 
@@ -88,4 +89,6 @@ public interface OrderInfoMapper {
     List<OrderExcelDTO> selectExcel(Long parentOrderId);
 
     List<OrderDetailExcelDTO> selectOrderDetailExcel(Long orderParentId);
+
+    List<OrderExcelPayDTO> selectPayExcel(Long orderParentId);
 }

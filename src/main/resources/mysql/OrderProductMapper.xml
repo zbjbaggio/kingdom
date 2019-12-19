@@ -69,10 +69,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where a.order_id = #{orderId}
     </select>
 
-    <select id="listProductByIds" resultType="com.kingdom.system.data.entity.OrderProduct">
+    <select id="listProductByIds" resultMap="OrderProductResult">
         <include refid="selectOrderProductVo"/>
         where order_id in
-        <foreach item="id" collection="array" open="(" separator="," close=")">
+        <foreach item="orderIds" collection="list" open="(" separator="," close=")">
             #{orderIds}
         </foreach>
     </select>

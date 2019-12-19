@@ -91,8 +91,11 @@ public class NoProductServiceImpl {
         return productRemark;
     }*/
 
-    public void remove(Long[] ids) {
-        noProductMapper.deleteNoProductByIds(ids);
+    @Transactional
+    public void remove(Long id) {
+        noProductParentMapper.deleteNoProductParentById(id);
+        noProductMapper.deleteNoProductByProductParentId(id);
+        noProductDetailMapper.deleteNoProductDetailByProductParentId(id);
     }
 
     @Transactional

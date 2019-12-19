@@ -40,12 +40,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectOrderPaymentVo"/>
         where order_id = #{orderId}
     </select>
+
     <select id="listPaymentByIds" resultMap="OrderPaymentResult">
         <include refid="selectOrderPaymentVo"/>
         where order_id in
         <foreach item="orderIds" collection="list" open="(" separator="," close=")">
             #{orderIds}
         </foreach>
+    </select>
+
+    <select id="selectOrderPaymentListByOrderParentId" resultMap="OrderPaymentResult">
+        select a.id, a.pay_type, a.pay_amount, a.pay_no, a.order_id from t_order_payment a
+        join t_order_info b on a.order_id = b.id
+        where b.parent_order_id = #{orderParentId}
     </select>
 
     <insert id="insertOrderPayment" parameterType="com.kingdom.system.data.entity.OrderPayment" useGeneratedKeys="true" keyProperty="id">

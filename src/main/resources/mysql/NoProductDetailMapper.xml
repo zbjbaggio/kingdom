@@ -91,5 +91,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
-    
+    <delete id="deleteNoProductDetailByProductParentId">
+        delete from t_no_product_detail where no_product_parent_id = #{id}
+    </delete>
+
 </mapper>

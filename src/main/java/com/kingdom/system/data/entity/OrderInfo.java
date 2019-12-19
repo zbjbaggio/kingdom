@@ -73,6 +73,8 @@ public class OrderInfo extends EntityBase implements Serializable {
 
 	private List<OrderDetailVO> orderDetailVOS;
 
+	private List<OrderUser> orderUsers;
+
 	private List<OrderPayment> orderPayments;
 
 	private List<OrderExpress> orderExpresses;

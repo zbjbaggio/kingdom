@@ -56,16 +56,28 @@ public class WebUserController extends BaseController {
                 for (OrderInfo row : rows) {
                     orderIds.add(row.getId());
                 }
-                List<OrderDetailVO> orderProducts = orderService.listProductByIds(orderIds);
-                Map<Long, List<OrderDetailVO>> orderProductMap = new HashMap<>();
-                for (OrderDetailVO orderProduct : orderProducts) {
-                    List<OrderDetailVO> orderDetailVOS = orderProductMap.get(orderProduct.getOrderId());
-                    if (orderDetailVOS == null) {
-                        orderDetailVOS = new ArrayList<>();
+                List<OrderUser> users = orderService.listOrderUser(orderIds);
+                List<OrderProduct> orderProducts = orderService.listOrderProductByIds(orderIds);
+                Map<Long, List<OrderProduct>> orderProductMap = new HashMap<>();
+                orderProducts.forEach(orderProduct -> {
+                    List<OrderProduct> orderProducts1 = orderProductMap.get(orderProduct.getOrderUserId());
+                    if (orderProducts1 == null) {
+                        orderProducts1 = new ArrayList<>();
                     }
-                    orderDetailVOS.add(orderProduct);
-                    orderProductMap.put(orderProduct.getOrderId(), orderDetailVOS);
-                }
+                    orderProducts1.add(orderProduct);
+                    orderProductMap.put(orderProduct.getOrderUserId(), orderProducts1);
+                });
+                Map<Long, List<OrderUser>> orderUserMap = new HashMap<>();
+                users.forEach(user ->{
+                    user.setOrderProducts(orderProductMap.get(user.getId()));
+                    List<OrderUser> orderUsers = orderUserMap.get(user.getOrderId());
+                    if (orderUsers == null) {
+                        orderUsers = new ArrayList<>();
+                    }
+                    orderUsers.add(user);
+                    orderUserMap.put(user.getOrderId(), orderUsers);
+                });
+
                 List<OrderPayment> orderPayments = orderService.listOrderPaymentByIds(orderIds);
                 Map<Long, List<OrderPayment>> orderPaymentMap = new HashMap<>();
                 for (OrderPayment orderPayment : orderPayments) {
@@ -99,9 +111,19 @@ public class WebUserController extends BaseController {
                     orderExpresses.add(orderExpress);
                     orderExpressMap.put(orderExpress.getOrderId(), orderExpresses);
                 });
-
+                List<OrderDetailVO> orderDetailVOs = orderService.listProductByIds(orderIds);
+                Map<Long, List<OrderDetailVO>> detailMap = new HashMap<>();
+                for (OrderDetailVO orderProduct : orderDetailVOs) {
+                    List<OrderDetailVO> orderDetailVOS = detailMap.get(orderProduct.getOrderId());
+                    if (orderDetailVOS == null) {
+                        orderDetailVOS = new ArrayList<>();
+                    }
+                    orderDetailVOS.add(orderProduct);
+                    detailMap.put(orderProduct.getOrderId(), orderDetailVOS);
+                }
                 for (OrderInfo row : rows) {
-                    row.setOrderDetailVOS(orderProductMap.get(row.getId()));
+                    row.setOrderUsers(orderUserMap.get(row.getId()));
+                    row.setOrderDetailVOS(detailMap.get(row.getId()));
                     row.setOrderPayments(orderPaymentMap.get(row.getId()));
                     row.setOrderExpresses(orderExpressMap.get(row.getId()));
                 }

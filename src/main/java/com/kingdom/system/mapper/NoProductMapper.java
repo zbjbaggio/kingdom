@@ -69,4 +69,6 @@ public interface NoProductMapper {
 	NoProduct selectProductByParentId(@Param(value = "noProductParentId")Long noProductParentId,@Param(value = "noProductId") Long noProductId);
 
 	int updateNumber(@Param(value = "number")Integer number, @Param(value = "noProductId")Long noProductId, @Param(value = "oldNumber")Integer oldNumber);
+
+    int deleteNoProductByProductParentId(Long id);
 }

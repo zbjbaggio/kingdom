@@ -51,12 +51,12 @@ public class NoProductController extends BaseController {
     /*@PostMapping("/update")
     public ProductRemark update(@RequestBody @Validated({ProductRemark.Update.class, ProductRemark.BaseInfo.class}) ProductRemark productRemark, BindingResult bindingResult) {
         return productRemarkService.updateProductRemark(productRemark);
-    }
+    }*/
 
     @PostMapping("/remove")
-    public void remove(@RequestParam Long[] ids) {
-        productRemarkService.remove(ids);
-    }*/
+    public void remove(@RequestParam Long id) {
+        noProductService.remove(id);
+    }
 
 
     @GetMapping("/productList")

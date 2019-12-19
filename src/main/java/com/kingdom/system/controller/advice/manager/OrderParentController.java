@@ -3,10 +3,7 @@ package com.kingdom.system.controller.advice.manager;
 import com.kingdom.system.ann.RequiresPermissions;
 import com.kingdom.system.controller.advice.BaseController;
 import com.kingdom.system.data.base.TableDataInfo;
-import com.kingdom.system.data.dto.OrderDTO;
-import com.kingdom.system.data.dto.OrderDetailDTO;
-import com.kingdom.system.data.dto.OrderExcelDTO;
-import com.kingdom.system.data.dto.OrderExpressDTO;
+import com.kingdom.system.data.dto.*;
 import com.kingdom.system.data.entity.*;
 import com.kingdom.system.data.vo.OrderDetailVO;
 import com.kingdom.system.data.vo.OrderVO;
@@ -59,6 +56,15 @@ public class OrderParentController extends BaseController {
     @GetMapping(value = "excelExportOrder")
     public void excelExport(HttpServletResponse response, @RequestParam(value = "orderParentId") Long orderParentId) throws Exception {
         List<OrderExcelDTO> orderExcelDTOS = orderService.listOrderExcel(orderParentId);
+        if (orderExcelDTOS != null && orderExcelDTOS.size() > 0) {
+            ExcelUtil excelUtil = new HssfExcelUtil();
+            excelUtil.writeExcel(response, "订单", "订单", orderExcelDTOS);
+        }
+    }
+
+    @GetMapping(value = "excelExportPay")
+    public void excelExportPay(HttpServletResponse response, @RequestParam(value = "orderParentId") Long orderParentId) throws Exception {
+        List<OrderExcelPayDTO> orderExcelDTOS = orderService.listOrderPayExcel(orderParentId);
         if (orderExcelDTOS != null && orderExcelDTOS.size() > 0) {
             ExcelUtil excelUtil = new HssfExcelUtil();
             excelUtil.writeExcel(response, "订单", "订单", orderExcelDTOS);

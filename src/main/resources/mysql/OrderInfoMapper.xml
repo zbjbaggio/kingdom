@@ -44,6 +44,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="score"    column="score"    />
     </resultMap>
 
+    <resultMap type="com.kingdom.system.data.dto.OrderExcelPayDTO" id="OrderExcelPayDTO">
+        <result property="orderId"    column="orderId"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="memberNo"    column="member_no"    />
+        <result property="orderUsername"    column="order_username"    />
+    </resultMap>
+
 	
 	<sql id="selectOrderInfoVo">
         select id, create_time, status, send, remark, order_no, dr, parent_order_id, member_no, order_username, user_id, date from t_order_info
@@ -57,7 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test=" express != '' ">  join t_order_express e on a.id = e.order_id and (e.express_name like #{express} or e.express_phone like #{express} )</if>
         <if test=" orderUser != '' "> join t_order_user d on a.id = d.order_id  and (d.user_name like #{orderUser} or d.user_no like #{orderUser} ) </if>
         where 1 = 1
-        <if test=" payUser != '' "> and (a.order_username like #{payUser} or a.order_phone like #{payUser} )</if>
+        <if test=" payUser != '' "> and (a.order_username like #{payUser} or a.member_no like #{payUser} )</if>
         group by a.id
         order by a.id desc
     </select>
@@ -127,6 +134,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         join t_order_product c on a.id = c.order_id  and c.order_user_id = b.id
         where a.parent_order_id = #{parentOrderId}
         order by a.id,b.id desc
+    </select>
+
+    <select id="selectPayExcel" resultMap="OrderExcelPayDTO">
+        select id, create_time, status, send, remark, order_no, dr, parent_order_id, member_no, order_username, user_id, date from t_order_info a
+        where a.parent_order_id = #{parentOrderId}
+        order by a.id desc
     </select>
 
     <insert id="insertOrderInfo" parameterType="com.kingdom.system.data.entity.OrderInfo" useGeneratedKeys="true" keyProperty="id">
