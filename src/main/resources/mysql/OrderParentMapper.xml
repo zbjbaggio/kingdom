@@ -11,12 +11,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="name"    column="name"    />
         <result property="operationId"    column="operation_id"    />
         <result property="date"    column="date"    />
+        <result property="orderUserId"    column="orderUserId"    />
     </resultMap>
 	
 	<sql id="selectOrderParentVo">
         select id, create_time, name, operation_id, date  from t_order_parent
     </sql>
-	
+
+
+    <sql id="join">
+        select a.id, a.create_time, a.name, a.operation_id, a.date,b.id orderUserId  from t_order_parent a
+    </sql>
+
     <select id="selectOrderParentList" parameterType="com.kingdom.system.data.entity.OrderParent" resultMap="OrderParentResult">
         <include refid="selectOrderParentVo"/>
         <where>  
@@ -47,13 +53,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="list" resultMap="OrderParentResult">
-        <include refid="selectOrderParentVo"/>
+        <include refid="join"/>
+        LEFT JOIN t_order_info b ON b.parent_order_id = a.id
         <where>
-            <if test="name != null and name != '' "> and name LIKE #{name}</if>
-            <if test="startDate != null and startDate != '' "> and date <![CDATA[ >= ]]> #{startDate}</if>
-            <if test="endDate != null and endDate != '' "> and date <![CDATA[ <= ]]> #{endDate}</if>
+            <if test="name != null and name != '' "> and a.name LIKE #{name}</if>
+            <if test="startDate != null and startDate != '' "> and a.date <![CDATA[ >= ]]> #{startDate}</if>
+            <if test="endDate != null and endDate != '' "> and a.date <![CDATA[ <= ]]> #{endDate}</if>
         </where>
-        order by date desc
+        group by a.id
+        order by a.date desc
     </select>
 
     <insert id="insertOrderParent" parameterType="com.kingdom.system.data.entity.OrderParent" useGeneratedKeys="true" keyProperty="id">

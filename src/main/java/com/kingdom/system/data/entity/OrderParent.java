@@ -33,5 +33,6 @@ public class OrderParent extends EntityBase implements Serializable {
 	@NotNull
 	private Date date;
 
+	private Long orderUserId;
 
 }
