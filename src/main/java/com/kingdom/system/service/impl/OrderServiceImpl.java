@@ -145,7 +145,7 @@ public class OrderServiceImpl {
         //orderProductMapper.insertOrderProducts(orderProducts);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void setUserId(OrderUser orderUser) {
         if (StringUtils.isNoneEmpty(orderUser.getUserNo())) {
             UserEntity userEntity = userMapper.selectUserByMemberNo(orderUser.getUserNo());
@@ -154,6 +154,10 @@ public class OrderServiceImpl {
                 userEntity.setRealName(orderUser.getUserName());
                 userEntity.setMemberNo(orderUser.getUserNo());
                 userMapper.insertUser(userEntity);
+            } else {
+                if (!userEntity.getRealName().equals(orderUser.getUserName())) {
+                    throw new PrivateException(5004, "订货人" + orderUser.getUserNo() + "的会员号与姓名不一致！");
+                }
             }
             orderUser.setUserId(userEntity.getId());
         }
@@ -167,6 +171,10 @@ public class OrderServiceImpl {
         if (orderInfo.getUserId() == null) {
             UserEntity userEntity = userMapper.selectUserByMemberNo(orderInfo.getMemberNo());
             if (userEntity != null) {
+                if (!userEntity.getRealName().equals(orderInfo.getOrderUsername())) {
+                    log.error("用户名和会员号不一致！orderDTO:{}", orderDTO);
+                    throw new PrivateException(5004, "付款人" + orderInfo.getMemberNo() + "的会员号与姓名不一致！");
+                }
                 orderInfo.setUserId(userEntity.getId());
             } else {
                 UserEntity newUserEntity = new UserEntity();

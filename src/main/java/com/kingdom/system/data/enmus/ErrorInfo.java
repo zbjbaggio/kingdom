@@ -32,6 +32,7 @@ public enum ErrorInfo {
     BUTTON_ERROR(50021, "菜单有子菜单不能有按钮！"),
     MEMBER_NO_ERROR(50022, "会员编号重复！"),
     ORDER_UPDATE_ERROR(50023, "订单已经有快递信息不能修改！"),
+    MEMBER_NO_NAME_ERROR(50024, "用户名和会员号不一致!"),
     ;
 
     private int value;

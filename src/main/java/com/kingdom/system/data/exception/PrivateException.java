@@ -21,6 +21,11 @@ public class PrivateException extends RuntimeException {
         this.msg = errorInfo.getName();
     }
 
+    public PrivateException(int code, String message) {
+        this.code = code;
+        this.msg = message;
+    }
+
     public PrivateException() {
 
     }

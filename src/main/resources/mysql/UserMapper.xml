@@ -82,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="listByMemberNo" resultMap="UserResult">
         <include refid="selectUserVo"/>
-        where dr = 0 and member_no = #{memberNo}
+        where dr = 0 and (member_no like #{memberNo} or real_name like #{memberNo})
         limit 5
     </select>
 
