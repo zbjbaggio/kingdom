@@ -53,22 +53,6 @@ public class OrderParentController extends BaseController {
         return orderService.detailByParentOrderId(parentOrderId);
     }
 
-    @GetMapping(value = "excelExportOrder")
-    public void excelExport(HttpServletResponse response, @RequestParam(value = "orderParentId") Long orderParentId) throws Exception {
-        List<OrderExcelDTO> orderExcelDTOS = orderService.listOrderExcel(orderParentId);
-        if (orderExcelDTOS != null && orderExcelDTOS.size() > 0) {
-            ExcelUtil excelUtil = new HssfExcelUtil();
-            excelUtil.writeExcel(response, "订单", "订单", orderExcelDTOS);
-        }
-    }
 
-    @GetMapping(value = "excelExportPay")
-    public void excelExportPay(HttpServletResponse response, @RequestParam(value = "orderParentId") Long orderParentId) throws Exception {
-        List<OrderExcelPayDTO> orderExcelDTOS = orderService.listOrderPayExcel(orderParentId);
-        if (orderExcelDTOS != null && orderExcelDTOS.size() > 0) {
-            ExcelUtil excelUtil = new HssfExcelUtil();
-            excelUtil.writeExcel(response, "订单", "订单", orderExcelDTOS);
-        }
-    }
 
 }
