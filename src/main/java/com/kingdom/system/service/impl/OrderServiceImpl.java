@@ -685,6 +685,10 @@ public class OrderServiceImpl {
         return null;
     }
 
+    public List<OrderExpress> liseExpress(String startDate, String endDate) {
+        return orderExpressMapper.list(startDate, endDate);
+    }
+
 /*    private void checkProductExpress(List<OrderDetail> orderDetails, List<OrderExpress> orderExpresses) {
         for () {
         }

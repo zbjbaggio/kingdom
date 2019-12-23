@@ -16,6 +16,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="printNumber"    column="print_number"    />
         <result property="remark"    column="remark"    />
         <result property="expressPhone"    column="express_phone"    />
+        <result property="productName"    column="productName"    />
+        <result property="moveType"    column="moveType"    />
+        <result property="payType"    column="payTpe"    />
     </resultMap>
 	
 	<sql id="selectOrderExpressVo">
@@ -57,6 +60,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{orderIds}
         </foreach>
 
+    </select>
+
+    <select id="list" resultMap="OrderExpressResult">
+      select express_name,express_phone,express_address,'大件快递3.60' moveType, '月结' payTpe, '日用品' productName
+      from t_order_express
+      <where>
+        <if test="startDate != null  and startDate != '' "> and create_time <![CDATA[ >= ]]> #{endDate}</if>
+        <if test="endDate != null  and endDate != '' "> and create_time <![CDATA[ >= ]]> #{endDate}</if>
+      </where>
     </select>
 
     <insert id="insertOrderExpress" parameterType="com.kingdom.system.data.entity.OrderExpress" useGeneratedKeys="true" keyProperty="id">

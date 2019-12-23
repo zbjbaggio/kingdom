@@ -1,6 +1,7 @@
 package com.kingdom.system.mapper;
 
 import com.kingdom.system.data.entity.OrderExpress;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -65,4 +66,6 @@ public interface OrderExpressMapper
 	void updatePrintNumber(Long orderExpressId);
 
     List<OrderExpress> selectOrderExpressListByOrderIds(List<Long> orderIds);
+
+	List<OrderExpress> list(@Param(value = "startDate") String startDate, @Param(value = "endDate") String endDate);
 }

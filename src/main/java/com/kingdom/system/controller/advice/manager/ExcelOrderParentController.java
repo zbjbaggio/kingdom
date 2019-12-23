@@ -40,4 +40,13 @@ public class ExcelOrderParentController {
             excelUtil.writeExcel(response, "付款订单", "付款订单", orderExcelDTOS);
         }
     }
+
+    @GetMapping(value = "excelExport")
+    public void excelExport(HttpServletResponse response, @RequestParam(value = "startDate", defaultValue = "")String startDate,
+                            @RequestParam(value = "endDate", defaultValue = "")String endDate) throws Exception {
+        List all = orderService.liseExpress(startDate, endDate);
+        ExcelUtil excelUtil = new HssfExcelUtil();
+        excelUtil.writeExcel(response, "发货订单", "发货订单", all);
+
+    }
 }
