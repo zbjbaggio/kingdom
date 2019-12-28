@@ -92,17 +92,19 @@ public class OrderServiceImpl {
         Set set = new HashSet();
         List list = new ArrayList();
         orderPayments.forEach(orderPayment -> {
-            if (StringUtils.isNoneEmpty(orderPayment.getPayNo())) {
+            if (orderPayment.getPayType() == 0 && StringUtils.isNoneEmpty(orderPayment.getPayNo())) {
                 set.add(orderPayment.getPayNo());
                 list.add(orderPayment.getPayNo());
             }
         });
-        if (list.size() != set.size()) {
-            throw new PrivateException(ErrorInfo.CARD_SAME);
-        }
-        int count = orderPaymentMapper.selectOrderUserListByPayNo(list, orderId);
-        if (count > 0) {
-            throw new PrivateException(ErrorInfo.CARD_SAME2);
+        if (list.size() > 0) {
+            if (list.size() != set.size()) {
+                throw new PrivateException(ErrorInfo.CARD_SAME);
+            }
+            int count = orderPaymentMapper.selectOrderUserListByPayNo(list, orderId);
+            if (count > 0) {
+                throw new PrivateException(ErrorInfo.CARD_SAME2);
+            }
         }
 
     }
