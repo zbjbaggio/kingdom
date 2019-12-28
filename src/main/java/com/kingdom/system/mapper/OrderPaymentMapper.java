@@ -1,6 +1,7 @@
 package com.kingdom.system.mapper;
 
 import com.kingdom.system.data.entity.OrderPayment;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -68,4 +69,6 @@ public interface OrderPaymentMapper {
     List<OrderPayment> listPaymentByIds(List<Long> orderIds);
 
     List<OrderPayment> selectOrderPaymentListByOrderParentId(Long orderParentId);
+
+    int selectOrderUserListByPayNo(@Param(value = "list")List list, @Param(value = "orderId") Long orderId);
 }

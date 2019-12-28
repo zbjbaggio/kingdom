@@ -67,6 +67,7 @@ public class OrderServiceImpl {
 
     @Transactional
     public OrderDTO insert(OrderDTO orderDTO) {
+        checkPay(orderDTO.getOrderPayments(), null);
         //校验同时存入userId
         Map<Long, ProductVO> productNameMap = checkOrder(orderDTO);
         OrderInfo orderInfo = orderDTO.getOrderInfo();
@@ -85,6 +86,25 @@ public class OrderServiceImpl {
         }
         orderPaymentMapper.insertOrderPayments(orderPayments);
         return orderDTO;
+    }
+
+    private void checkPay(List<OrderPayment> orderPayments, Long orderId) {
+        Set set = new HashSet();
+        List list = new ArrayList();
+        orderPayments.forEach(orderPayment -> {
+            if (StringUtils.isNoneEmpty(orderPayment.getPayNo())) {
+                set.add(orderPayment.getPayNo());
+                list.add(orderPayment.getPayNo());
+            }
+        });
+        if (list.size() != set.size()) {
+            throw new PrivateException(ErrorInfo.CARD_SAME);
+        }
+        int count = orderPaymentMapper.selectOrderUserListByPayNo(list, orderId);
+        if (count > 0) {
+            throw new PrivateException(ErrorInfo.CARD_SAME2);
+        }
+
     }
 
     private void saveOrderProduct(List<OrderUser> orderUsers, Long orderId, Map<Long, ProductVO> productMap) {
@@ -304,6 +324,7 @@ public class OrderServiceImpl {
             log.info("订单修改id不能为空！");
             throw new PrivateException(ErrorInfo.PARAMS_ERROR);
         }
+        checkPay(orderDTO.getOrderPayments(), orderDTO.getOrderInfo().getId());
         checkOrderExpress(orderDTO.getOrderInfo().getId());
         Map<Long, ProductVO> productNameMap = checkOrder(orderDTO);
         OrderInfo orderInfo = orderDTO.getOrderInfo();
@@ -336,7 +357,22 @@ public class OrderServiceImpl {
 
     @Transactional
     public OrderExpressDTO insertExpress(OrderExpressDTO orderExpressDTO) {
+        //校验是否有订货人没有填写会员号
         OrderExpress orderExpress = orderExpressDTO.getOrderExpress();
+        List<OrderUser> orderUsers = orderUserMapper.selectOrderUserListByOrderId(orderExpress.getOrderId());
+        StringBuilder stringBuilder = new StringBuilder();
+        for (OrderUser orderUser : orderUsers) {
+            if (orderUser.getUserId() == -1L) {
+                stringBuilder.append(orderUser.getUserName()).append(",");
+            }
+        }
+        if (stringBuilder.length() > 0) {
+            String msg = stringBuilder.substring(0, stringBuilder.length() - 1);
+            PrivateException privateException = new PrivateException();
+            privateException.setCode(5004);
+            privateException.setMsg(msg + "没有会员号");
+            throw privateException;
+        }
         List<OrderDetailVO> orderDetailVOS = orderDetailMapper.selectExpressByOrderIdAndUserId(orderExpress.getOrderId(), orderExpress.getOrderUserId());
         if (orderDetailVOS == null || orderDetailVOS.size() == 0) {
             log.error("订单信息错误！orderExpressDTO:{}", orderExpressDTO);
@@ -393,6 +429,21 @@ public class OrderServiceImpl {
         //修改商品库存数量
         modifyProductNumber(productNumberMap);
         return orderExpressDTO;
+    }
+
+    private void checkUserId() {
+        List<OrderInfo> list = orderInfoMapper.getCountNoUserId();
+        if (list != null && list.size() > 0) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (OrderInfo orderInfo : list) {
+                stringBuilder.append(orderInfo.getOrderNo()).append(",");
+            }
+            PrivateException exception = new PrivateException();
+            exception.setCode(50002);
+            String msg = stringBuilder.toString();
+            exception.setMsg("以下订单的订货人未填写会员号：" + msg.substring(0, msg.length() - 1));
+            throw exception;
+        }
     }
 
     private void saveExpress(OrderExpress orderExpress) {
@@ -530,18 +581,7 @@ public class OrderServiceImpl {
     @Transactional
     public void doneOrder(OrderParent orderParent) {
         //校验是否有订货人没有填写会员号
-        List<OrderInfo> list = orderInfoMapper.getCountNoUserId();
-        if (list != null && list.size() > 0) {
-            StringBuilder stringBuilder = new StringBuilder();
-            for (OrderInfo orderInfo : list) {
-                stringBuilder.append(orderInfo.getOrderNo()).append(",");
-            }
-            PrivateException exception = new PrivateException();
-            exception.setCode(50002);
-            String msg = stringBuilder.toString();
-            exception.setMsg("以下订单的订货人未填写会员号：" + msg.substring(0, msg.length() - 1));
-            throw exception;
-        }
+        checkUserId();
         orderParentSave(orderParent);
         //计算积分
 /*        List<OrderProduct> list = orderProductMapper.selectUserSore();

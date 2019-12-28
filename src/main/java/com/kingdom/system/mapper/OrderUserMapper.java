@@ -3,6 +3,7 @@ package com.kingdom.system.mapper;
 
 import com.kingdom.system.data.entity.OrderUser;
 import com.kingdom.system.data.vo.OrderDetailVO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -67,4 +68,5 @@ public interface OrderUserMapper
     List<OrderUser> listUserByIds(List<Long> orderIds);
 
     int deleteOrderUserByOrderId(Long orderId);
+
 }

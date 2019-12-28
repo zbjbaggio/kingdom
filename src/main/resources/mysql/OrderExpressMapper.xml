@@ -19,6 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="productName"    column="productName"    />
         <result property="moveType"    column="moveType"    />
         <result property="payType"    column="payTpe"    />
+        <result property="phone"    column="phone"    />
     </resultMap>
 	
 	<sql id="selectOrderExpressVo">
@@ -63,11 +64,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="list" resultMap="OrderExpressResult">
-      select express_name,express_phone,express_address,'大件快递3.60' moveType, '月结' payTpe, '日用品' productName
+      select express_name,express_phone phone,express_address,'大件快递3.60' moveType, '月结' payTpe, '日用品' productName
       from t_order_express
       <where>
-        <if test="startDate != null  and startDate != '' "> and create_time <![CDATA[ >= ]]> #{endDate}</if>
-        <if test="endDate != null  and endDate != '' "> and create_time <![CDATA[ >= ]]> #{endDate}</if>
+        <if test="startDate != null  and startDate != '' "> and create_time <![CDATA[ >= ]]> #{startDate}</if>
+        <if test="endDate != null  and endDate != '' "> and create_time <![CDATA[ <= ]]> #{endDate}</if>
       </where>
     </select>
 

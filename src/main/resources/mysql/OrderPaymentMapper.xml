@@ -55,6 +55,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where b.parent_order_id = #{orderParentId}
     </select>
 
+    <select id="selectOrderUserListByPayNo" resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM t_order_payment
+        WHERE pay_no IN
+        <foreach item="payNO" collection="list" open="(" separator="," close=")">
+            #{payNO}
+        </foreach>
+        <if test="orderId != null">order_id = :orderId</if>
+    </select>
+
     <insert id="insertOrderPayment" parameterType="com.kingdom.system.data.entity.OrderPayment" useGeneratedKeys="true" keyProperty="id">
         insert into t_order_payment
 		<trim prefix="(" suffix=")" suffixOverrides=",">

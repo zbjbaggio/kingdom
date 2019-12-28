@@ -2,6 +2,7 @@ package com.kingdom.system.controller.advice.manager;
 
 import com.kingdom.system.data.dto.OrderExcelDTO;
 import com.kingdom.system.data.dto.OrderExcelPayDTO;
+import com.kingdom.system.data.exception.PrivateException;
 import com.kingdom.system.service.impl.OrderServiceImpl;
 import com.kingdom.system.util.excel.ExcelUtil;
 import com.kingdom.system.util.excel.HssfExcelUtil;
@@ -45,8 +46,11 @@ public class ExcelOrderParentController {
     public void excelExport(HttpServletResponse response, @RequestParam(value = "startDate", defaultValue = "")String startDate,
                             @RequestParam(value = "endDate", defaultValue = "")String endDate) throws Exception {
         List all = orderService.liseExpress(startDate, endDate);
-        ExcelUtil excelUtil = new HssfExcelUtil();
-        excelUtil.writeExcel(response, "发货订单", "发货订单", all);
-
+        if (all != null && all.size() > 0) {
+            ExcelUtil excelUtil = new HssfExcelUtil();
+            excelUtil.writeExcel(response, "发货订单", "发货订单", all);
+        } else {
+          throw new PrivateException(5034, "没有相关数据");
+        }
     }
 }
