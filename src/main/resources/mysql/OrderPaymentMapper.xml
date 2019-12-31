@@ -61,7 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <foreach item="payNO" collection="list" open="(" separator="," close=")">
             #{payNO}
         </foreach>
-        <if test="orderId != null"> and order_id = #{orderId}</if>
+        <if test="orderId != null"> and order_id != #{orderId}</if>
     </select>
 
     <insert id="insertOrderPayment" parameterType="com.kingdom.system.data.entity.OrderPayment" useGeneratedKeys="true" keyProperty="id">

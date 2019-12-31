@@ -40,7 +40,7 @@ public class OrderExpress extends EntityBase implements Serializable {
 
 
 	@ExcelExport(name = "收件人手机")
-	private Double phone;
+	private String phone;
 
 	/** 收货人电话 */
 	@NotEmpty(groups = {Insert.class, Update.class})
