@@ -56,6 +56,9 @@ public class OrderInfo extends EntityBase implements Serializable {
 
 	private String remark;
 
+	// 创建订单用户id
+	private Long managerId;
+
 	/**
 	 * 是否有快递 0 没有 1 有
 	 */

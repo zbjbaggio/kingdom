@@ -71,10 +71,13 @@ public class ManagerInfoServiceImpl implements ManagerInfoService {
         MenuAndButtonDTO menuAndButtonDTO = permissionInfoService.getMenu(newManagerInfo.getId());
         newManagerInfo.setPermissionSet(menuAndButtonDTO.getPermissionSet());
         List<RoleVO> roleVOS = roleMapper.listByUserId(newManagerInfo.getId());
-        int isSuperAdmin = 1;
+        long isSuperAdmin = 1L;
         for (RoleVO roleVO : roleVOS) {
             if (roleVO.getId() == 1L) {
-                isSuperAdmin = 0;
+                isSuperAdmin = 0L;
+                break;
+            } else {
+                isSuperAdmin = roleVO.getId();
             }
         }
         newManagerInfo.setRoleInfos(roleVOS);

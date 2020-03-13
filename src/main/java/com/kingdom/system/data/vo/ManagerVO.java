@@ -41,6 +41,6 @@ public class ManagerVO {
 
     private Long roleId;
 
-    private int superAdmin;
+    private long superAdmin;
 
 }

@@ -64,6 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test=" express != '' ">  join t_order_express e on a.id = e.order_id and (e.express_name like #{express} or e.express_phone like #{express} )</if>
         <if test=" orderUser != '' "> join t_order_user d on a.id = d.order_id  and (d.user_name like #{orderUser} or d.user_no like #{orderUser} ) </if>
         where 1 = 1
+        <if test=" managerId != null "> and a.manager_id = #{managerId}</if>
         <if test=" payUser != '' "> and (a.order_username like #{payUser} or a.member_no like #{payUser} )</if>
         group by a.id
         order by a.id desc
@@ -155,6 +156,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="orderUsername != null  and orderUsername != ''  ">order_username,</if>
 			<if test="memberNo != null  and memberNo != ''  ">member_no,</if>
 			<if test="userId != null  ">user_id,</if>
+			<if test="managerId != null  ">manager_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			NOW(),0,NOW(),
@@ -166,6 +168,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="orderUsername != null  and orderUsername != ''  ">#{orderUsername},</if>
 			<if test="memberNo != null  and memberNo != ''  ">#{memberNo},</if>
 			<if test="userId != null  ">#{userId},</if>
+			<if test="managerId != null  ">#{managerId},</if>
          </trim>
     </insert>
 	 

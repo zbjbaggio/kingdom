@@ -34,7 +34,7 @@ public interface OrderInfoMapper {
      */
     public List<OrderInfo> selectOrderInfoList(OrderInfo orderInfo);
 
-    public List<OrderInfo> selectOrderInfoList(@Param(value = "payUser") String payUser, @Param(value = "orderUser") String orderUser,
+    public List<OrderInfo> selectOrderInfoList(@Param(value = "managerId") Long managerId, @Param(value = "payUser") String payUser, @Param(value = "orderUser") String orderUser,
                                                @Param(value = "express") String express, @Param(value = "startDate") String startDate,
                                                @Param(value = "endDate") String endDate);
 

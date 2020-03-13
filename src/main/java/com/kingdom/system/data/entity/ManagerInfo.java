@@ -63,7 +63,7 @@ public class ManagerInfo extends EntityBase implements Serializable {
 
     private List<RoleVO> roleInfos;
 
-    private int superAdmin;
+    private long superAdmin;
 
     public interface LoginGroup {
     }

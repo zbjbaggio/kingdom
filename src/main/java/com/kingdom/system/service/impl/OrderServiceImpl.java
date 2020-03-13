@@ -232,8 +232,8 @@ public class OrderServiceImpl {
         return map;
     }
 
-    public List<OrderInfo> list(String payUser, String orderUser, String express, String startDate, String endDate) {
-        return orderInfoMapper.selectOrderInfoList(payUser, orderUser, express, startDate, endDate);
+    public List<OrderInfo> list(Long userId, String payUser, String orderUser, String express, String startDate, String endDate) {
+        return orderInfoMapper.selectOrderInfoList(userId, payUser, orderUser, express, startDate, endDate);
     }
 
     public OrderVO detail(Long orderId) {

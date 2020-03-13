@@ -4,40 +4,40 @@ import com.kingdom.system.ann.RequiresPermissions;
 import com.kingdom.system.controller.advice.BaseController;
 import com.kingdom.system.data.base.TableDataInfo;
 import com.kingdom.system.data.dto.OrderDTO;
-import com.kingdom.system.data.dto.OrderDetailDTO;
-import com.kingdom.system.data.dto.OrderExpressDTO;
 import com.kingdom.system.data.entity.*;
 import com.kingdom.system.data.vo.OrderDetailVO;
-import com.kingdom.system.data.vo.OrderVO;
 import com.kingdom.system.service.impl.ExchangeRateRecordServiceImpl;
 import com.kingdom.system.service.impl.OrderServiceImpl;
+import com.kingdom.system.service.impl.ProductServiceImpl;
 import com.kingdom.system.service.impl.UserServiceImpl;
 import com.kingdom.system.util.ValueHolder;
-import com.kingdom.system.util.excel.ExcelUtil;
-import com.kingdom.system.util.excel.HssfExcelUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 订单信息
+ * 自查订单信息
+ *
+ * 自己只能查到自己填写的订单
  */
 @RestController
-@RequestMapping("/manage/user/order")
+@RequestMapping("/manage/user/selfOrder")
 @Slf4j
-@RequiresPermissions("/manage/user/order")
-public class OrderController extends BaseController {
+@RequiresPermissions("/manage/user/selfOrder")
+public class SelfOrderController extends BaseController {
 
     @Autowired
     private OrderServiceImpl orderServiceImpl;
+
+    @Autowired
+    private ValueHolder valueHolder;
 
     @Autowired
     private UserServiceImpl userService;
@@ -46,7 +46,7 @@ public class OrderController extends BaseController {
     private ExchangeRateRecordServiceImpl exchangeRateRecordService;
 
     @Autowired
-    private ValueHolder valueHolder;
+    private ProductServiceImpl productService;
 
     @GetMapping(value = "/list")
     public TableDataInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
@@ -54,7 +54,7 @@ public class OrderController extends BaseController {
                               @RequestParam(defaultValue = "") String express, @RequestParam(defaultValue = "") String startDate,
                               @RequestParam(defaultValue = "") String endDate) {
         startPage();
-        TableDataInfo dataTable = getDataTable(orderServiceImpl.list(null, "".equals(payUser) ? "" : "%" + payUser + "%",
+        TableDataInfo dataTable = getDataTable(orderServiceImpl.list(valueHolder.getUserIdHolder().getId(), "".equals(payUser) ? "" : "%" + payUser + "%",
                 "".equals(orderUser) ? "" : "%" + orderUser + "%", "".equals(express) ? "" : "%" + express + "%", startDate, endDate));
         List<OrderInfo> rows = (List<OrderInfo>) dataTable.getRows();
         if (rows != null && rows.size() > 0) {
@@ -90,65 +90,16 @@ public class OrderController extends BaseController {
         return dataTable;
     }
 
-    @GetMapping(value = "/listUser/{memberNo}")
-    public List<UserEntity> listUser(@PathVariable(value = "memberNo") String memberNo) {
-        return userService.listByMemberNo(memberNo);
-    }
-
-    @GetMapping(value = "/detail/{orderId}")
-    public OrderVO detail(@PathVariable(value = "orderId") Long orderId) {
-        return orderServiceImpl.detail(orderId);
-    }
-
     @PostMapping(value = "/insert")
     public OrderDTO insert(@RequestBody @Validated(OrderInfo.Insert.class) OrderDTO orderDTO, BindingResult bindingResult) {
         OrderInfo orderInfo = orderDTO.getOrderInfo();
-        orderInfo.setManagerId(valueHolder.getMobileUserHolder());
+        orderInfo.setManagerId(valueHolder.getUserIdHolder().getId());
         return orderServiceImpl.insert(orderDTO);
     }
 
-    @PostMapping(value = "/update")
-    public OrderDTO update(@RequestBody @Validated(OrderDTO.BASE.class) OrderDTO orderDTO, BindingResult bindingResult) {
-        return orderServiceImpl.update(orderDTO);
-    }
-
-    @PostMapping(value = "/insertExpress")
-    public OrderExpressDTO insertExpress(@RequestBody @Validated(OrderExpress.Insert.class) OrderExpressDTO orderExpressDTO, BindingResult bindingResult) {
-        return orderServiceImpl.insertExpress(orderExpressDTO);
-    }
-
-    @PostMapping(value = "/updateExpress")
-    public OrderExpressDTO updateExpress(@RequestBody @Validated(OrderExpress.Update.class) OrderExpressDTO orderExpressDTO, BindingResult bindingResult) {
-        return orderServiceImpl.updateExpress(orderExpressDTO);
-    }
-
-    /**
-     * 记录打印次数
-     * @param orderExpressId
-     */
-    @PostMapping(value = "/printNumber/{orderExpressId}")
-    public void printNumber(@PathVariable(value = "orderExpressId") Long orderExpressId) {
-        orderServiceImpl.printNumber(orderExpressId);
-    }
-
-    /**
-     * 修改备注
-     * @param orderDetailDTO
-     * @param bindingResult
-     */
-    @PostMapping(value = "/updateDetail")
-    public void updateDetail(@RequestBody @Validated OrderDetailDTO orderDetailDTO, BindingResult bindingResult) {
-        orderServiceImpl.updateDetail(orderDetailDTO);
-    }
-
-    /**
-     * 保存截单
-     * @param orderParent
-     * @param bindingResult
-     */
-    @PostMapping(value = "/saveOrderParent")
-    public void saveOrderParent(@RequestBody @Validated OrderParent orderParent, BindingResult bindingResult) {
-        orderServiceImpl.orderParentSave(orderParent);
+    @GetMapping(value = "/getOrderParent")
+    public OrderParent getOrderParent() {
+        return orderServiceImpl.getOrderParent();
     }
 
     /**
@@ -160,50 +111,25 @@ public class OrderController extends BaseController {
      */
     @GetMapping(value = "/listOrderParent")
     public TableDataInfo listOrderParent(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
-                                             @RequestParam(value = "name", defaultValue = "") String name) {
+                                         @RequestParam(value = "name", defaultValue = "") String name) {
         startPage();
         return getDataTable(orderServiceImpl.listOrderParent(!"".equals(name) ? "%" + name + "%" : ""));
     }
 
-    /**
-     * 截单
-     * @param orderParent
-     * @param bindingResult
-     */
-    @PostMapping(value = "/doneOrder")
-    public void doneOrder(@RequestBody @Validated OrderParent orderParent, BindingResult bindingResult) {
-        orderServiceImpl.doneOrder(orderParent);
-    }
-
-    /**
-     * 删除
-     */
-    @PostMapping(value = "/delete/{orderId}")
-    public void delete(@PathVariable(value = "orderId") Long orderId) {
-        orderServiceImpl.delete(orderId);
-    }
-
-    /**
-     * 查询订货人地址
-     */
-    @GetMapping(value = "/listAddress/{userId}")
-    public List<UserSendAddress> listAddress(@PathVariable(value = "userId") Long userId) {
-        return userService.listAddress(userId);
-    }
-
-    @GetMapping(value = "/getOrderParent")
-    public OrderParent getOrderParent() {
-        return orderServiceImpl.getOrderParent();
-    }
-
-    @GetMapping(value = "/getOrderParentSum")
-    public List<OrderInfo> getOrderParentSum() {
-        return orderServiceImpl.getOrderParentSum();
+    @GetMapping(value = "/listUser/{memberNo}")
+    public List<UserEntity> listUser(@PathVariable(value = "memberNo") String memberNo) {
+        return userService.listByMemberNo(memberNo);
     }
 
     @PostMapping("/exchangeRate")
     public ExchangeRateRecord exchangeRate() {
         return exchangeRateRecordService.selectDefault();
+    }
+
+
+    @GetMapping("/listAllProduct")
+    public List<Product> listAllProduct(@RequestParam(defaultValue = "") String search) {
+        return productService.listAllProduct("".equals(search) ? "" : "%" + search + "%");
     }
 
 }
