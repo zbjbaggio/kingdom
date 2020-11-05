@@ -2,5 +2,5 @@ package com.kingdom.system.constant;
 
 public interface TimeZoneConstant {
 
-    String DEFAULT = "GMT-6";
+    String DEFAULT = "GMT+8";
 }
