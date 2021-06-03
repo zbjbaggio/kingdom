@@ -55,7 +55,7 @@ public class SelfOrderController extends BaseController {
                               @RequestParam(defaultValue = "") String endDate) {
         startPage();
         TableDataInfo dataTable = getDataTable(orderServiceImpl.list(valueHolder.getUserIdHolder().getId(), "".equals(payUser) ? "" : "%" + payUser + "%",
-                "".equals(orderUser) ? "" : "%" + orderUser + "%", "".equals(express) ? "" : "%" + express + "%", startDate, endDate));
+                "".equals(orderUser) ? "" : "%" + orderUser + "%", "".equals(express) ? "" : "%" + express + "%", "", startDate, endDate));
         List<OrderInfo> rows = (List<OrderInfo>) dataTable.getRows();
         if (rows != null && rows.size() > 0) {
             List<Long> orderIds = new ArrayList<>();

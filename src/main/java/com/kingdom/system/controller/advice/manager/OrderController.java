@@ -52,10 +52,13 @@ public class OrderController extends BaseController {
     public TableDataInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
                               @RequestParam(defaultValue = "") String payUser, @RequestParam(defaultValue = "") String orderUser,
                               @RequestParam(defaultValue = "") String express, @RequestParam(defaultValue = "") String startDate,
+                              @RequestParam(defaultValue = "") String productName,
                               @RequestParam(defaultValue = "") String endDate) {
         startPage();
         TableDataInfo dataTable = getDataTable(orderServiceImpl.list(null, "".equals(payUser) ? "" : "%" + payUser + "%",
-                "".equals(orderUser) ? "" : "%" + orderUser + "%", "".equals(express) ? "" : "%" + express + "%", startDate, endDate));
+                "".equals(orderUser) ? "" : "%" + orderUser + "%", "".equals(express) ? "" : "%" + express + "%",
+                "".equals(productName) ? "" : "%" + productName + "%",
+                startDate, endDate));
         List<OrderInfo> rows = (List<OrderInfo>) dataTable.getRows();
         if (rows != null && rows.size() > 0) {
             List<Long> orderIds = new ArrayList<>();

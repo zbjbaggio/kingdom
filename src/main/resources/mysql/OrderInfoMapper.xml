@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kingdom.system.mapper.OrderInfoMapper">
-    
+
     <resultMap type="com.kingdom.system.data.entity.OrderInfo" id="OrderInfoResult">
         <result property="id"    column="id"    />
         <result property="createTime"    column="create_time"    />
@@ -51,18 +51,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="orderUsername"    column="order_username"    />
     </resultMap>
 
-	
+
 	<sql id="selectOrderInfoVo">
         select id, create_time, status, send, remark, order_no, dr, parent_order_id, member_no, order_username, user_id, date from t_order_info
     </sql>
-	
+
     <select id="selectOrderInfoList" resultMap="OrderInfoResult">
         select a.id, a.create_time, a.status, a.send, a.remark, a.order_no, a.dr, a.parent_order_id, a.member_no, a.order_username, a.user_id, a.date,
         sum(b.cny_amount) cny_amount, sum(b.hk_amount) hk_amount
         from t_order_info a join t_order_product b on a.id = b.order_id
         <if test=" startDate != '' and endDate != '' ">  join t_order_parent f on a.parent_order_id = f.id and (f.date <![CDATA[ >= ]]> #{startDate} and f.date <![CDATA[ <= ]]> #{endDate} )</if>
         <if test=" express != '' ">  join t_order_express e on a.id = e.order_id and (e.express_name like #{express} or e.express_phone like #{express} )</if>
-        <if test=" orderUser != '' "> join t_order_user d on a.id = d.order_id  and (d.user_name like #{orderUser} or d.user_no like #{orderUser} ) </if>
+        <if test=" orderUser != '' "> join t_order_user d on a.id = d.order_id and (d.user_name like #{orderUser} or d.user_no like #{orderUser} ) </if>
+        <if test=" productName != '' "> join t_order_detail h on a.id = h.order_id and h.product_name like #{productName} and h.number <![CDATA[ > ]]> h.express_number</if>
         where 1 = 1
         <if test=" managerId != null "> and a.manager_id = #{managerId}</if>
         <if test=" payUser != '' "> and (a.order_username like #{payUser} or a.member_no like #{payUser} )</if>
@@ -88,7 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by a.id desc
     </select>
 
-    
+
     <select id="selectOrderInfoById" parameterType="Long" resultMap="OrderInfoResult">
         <include refid="selectOrderInfoVo"/>
         where id = #{id}
@@ -171,7 +172,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="managerId != null  ">#{managerId},</if>
          </trim>
     </insert>
-	 
+
     <update id="updateOrderInfo" parameterType="com.kingdom.system.data.entity.OrderInfo">
         update t_order_info
         <trim prefix="SET" suffixOverrides=",">
@@ -204,12 +205,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="deleteOrderInfoById" parameterType="Long">
         delete from t_order_info where id = #{id}
     </delete>
-	
+
     <delete id="deleteOrderInfoByIds" parameterType="String">
-        delete from t_order_info where id in 
+        delete from t_order_info where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>
