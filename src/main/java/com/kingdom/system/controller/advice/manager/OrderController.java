@@ -5,8 +5,11 @@ import com.kingdom.system.controller.advice.BaseController;
 import com.kingdom.system.data.base.TableDataInfo;
 import com.kingdom.system.data.dto.OrderDTO;
 import com.kingdom.system.data.dto.OrderDetailDTO;
+import com.kingdom.system.data.dto.OrderExcelImportDTO;
 import com.kingdom.system.data.dto.OrderExpressDTO;
+import com.kingdom.system.data.enmus.ErrorInfo;
 import com.kingdom.system.data.entity.*;
+import com.kingdom.system.data.exception.PrivateException;
 import com.kingdom.system.data.vo.OrderDetailVO;
 import com.kingdom.system.data.vo.OrderVO;
 import com.kingdom.system.service.impl.ExchangeRateRecordServiceImpl;
@@ -20,8 +23,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.io.PushbackInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,12 +58,12 @@ public class OrderController extends BaseController {
     public TableDataInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize,
                               @RequestParam(defaultValue = "") String payUser, @RequestParam(defaultValue = "") String orderUser,
                               @RequestParam(defaultValue = "") String express, @RequestParam(defaultValue = "") String startDate,
-                              @RequestParam(defaultValue = "") String productName,
+                              @RequestParam(defaultValue = "") String productName, @RequestParam(defaultValue = "1") String status,
                               @RequestParam(defaultValue = "") String endDate) {
         startPage();
         TableDataInfo dataTable = getDataTable(orderServiceImpl.list(null, "".equals(payUser) ? "" : "%" + payUser + "%",
                 "".equals(orderUser) ? "" : "%" + orderUser + "%", "".equals(express) ? "" : "%" + express + "%",
-                "".equals(productName) ? "" : "%" + productName + "%",
+                "".equals(productName) ? "" : "%" + productName + "%", status,
                 startDate, endDate));
         List<OrderInfo> rows = (List<OrderInfo>) dataTable.getRows();
         if (rows != null && rows.size() > 0) {
@@ -207,6 +213,20 @@ public class OrderController extends BaseController {
     @PostMapping("/exchangeRate")
     public ExchangeRateRecord exchangeRate() {
         return exchangeRateRecordService.selectDefault();
+    }
+
+    @PostMapping(value = "importExcel")
+    public void importExcel(MultipartFile file) throws Exception {
+        InputStream is = file.getInputStream();
+        if (!is.markSupported()) {
+            is = new PushbackInputStream(is, 8);
+        }
+        ExcelUtil excelUtil = ExcelUtil.create(is);
+        List<OrderExcelImportDTO> list = excelUtil.readExcel(OrderExcelImportDTO.class);
+        if (list == null || list.size() == 0) {
+            throw new PrivateException(ErrorInfo.EXCEL_EMPTY);
+        }
+        orderServiceImpl.importExcel(list);
     }
 
 }

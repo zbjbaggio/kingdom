@@ -81,10 +81,13 @@ public class OrderServiceImpl {
         }
         saveOrderProduct(orderDTO.getOrderUsers(), orderInfo.getId(), productNameMap);
         List<OrderPayment> orderPayments = orderDTO.getOrderPayments();
-        for (OrderPayment orderPayment : orderPayments) {
-            orderPayment.setOrderId(orderInfo.getId());
+        if (orderPayments.get(0).getPayAmount() != null) {
+            for (OrderPayment orderPayment : orderPayments) {
+                orderPayment.setOrderId(orderInfo.getId());
+            }
+            orderInfoMapper.updateOrderStatus(orderInfo.getId(), 3);
+            orderPaymentMapper.insertOrderPayments(orderPayments);
         }
-        orderPaymentMapper.insertOrderPayments(orderPayments);
         return orderDTO;
     }
 
@@ -109,7 +112,7 @@ public class OrderServiceImpl {
 
     }
 
-    private void saveOrderProduct(List<OrderUser> orderUsers, Long orderId, Map<Long, ProductVO> productMap) {
+    public void saveOrderProduct(List<OrderUser> orderUsers, Long orderId, Map<Long, ProductVO> productMap) {
         ExchangeRateRecord exchangeRateRecord = exchangeRateRecordMapper.selectDefault();
         BigDecimal rate = exchangeRateRecord.getRate();
         List<OrderDetail> orderDetails = new ArrayList<>();
@@ -232,8 +235,11 @@ public class OrderServiceImpl {
         return map;
     }
 
-    public List<OrderInfo> list(Long userId, String payUser, String orderUser, String express, String productName, String startDate, String endDate) {
-        return orderInfoMapper.selectOrderInfoList(userId, payUser, orderUser, express, productName, startDate, endDate);
+    public List<OrderInfo> list(Long userId, String payUser, String orderUser, String express, String productName,
+                                String status,
+                                String startDate, String endDate) {
+        Date date = DateUtil.addHour(new Date(), -6);
+        return orderInfoMapper.selectOrderInfoList(userId, payUser, orderUser, express, productName, status, DateUtil.formatTime(date), startDate, endDate);
     }
 
     public OrderVO detail(Long orderId) {
@@ -729,6 +735,73 @@ public class OrderServiceImpl {
 
     public List<OrderExpress> liseExpress(String startDate, String endDate) {
         return orderExpressMapper.list(startDate, endDate);
+    }
+
+    @Transactional
+    public void importExcel(List<OrderExcelImportDTO> list) {
+        StringBuilder message = new StringBuilder();
+        String orderNo = "";
+        String payNo = "";
+        // 默认港币
+        int payType = 0;
+        OrderPayment orderPayment;
+        for (int i = 0; i < list.size(); i++) {
+            OrderExcelImportDTO item = list.get(i);
+            if (StringUtils.isEmpty(item.getDesc())) {
+                message.append("第").append(i + 1).append("行，订单号为空！");
+                break;
+            }
+            orderNo = item.getDesc();
+            if (!StringUtils.isEmpty(item.getPayId2())) {
+                payNo = item.getPayId2().trim();
+            } else if (!StringUtils.isEmpty(item.getPayId())) {
+                payNo = item.getPayId().trim();
+            } else {
+                message.append("第").append(i + 1).append("行，交易id都为空！");
+                break;
+            }
+            OrderInfo orderInfo = orderInfoMapper.selectOrderDetailInfoByOrderNo(orderNo);
+            if (orderInfo == null) {
+                message.append("第").append(i + 1).append("行，该备注的订单未找到！");
+                break;
+            }
+            List<OrderPayment> orderPayments = orderPaymentMapper.selectOrderPaymentListByOrderId(orderInfo.getId());
+            if (orderPayments != null && orderPayments.size() > 0) {
+                message.append("第").append(i + 1).append("行，该订单已经有了支付信息！");
+            }
+            // 校验金额
+            List<OrderProduct> orderProducts = orderProductMapper.selectOrderProductListByOrderId(orderInfo.getId());
+            BigDecimal sum = new BigDecimal("0");
+            for (OrderProduct orderProduct : orderProducts) {
+                sum = sum.add(orderProduct.getHkAmount());
+            }
+            if (sum.add(new BigDecimal(10)).compareTo(new BigDecimal(item.getSumAmount())) < 0 ||
+                    sum.subtract(new BigDecimal(10)).compareTo(new BigDecimal(item.getSumAmount())) == 1) {
+                message.append("第").append(i + 1).append("行，该订单的支付金额与订单总额不符！");
+            }
+            // 校验付款码
+        }
+        if (message.toString().length() > 0) {
+            throw new PrivateException(500, message.toString());
+        }
+        for (int i = 0; i < list.size(); i++) {
+            OrderExcelImportDTO item = list.get(i);
+            orderPayment = new OrderPayment();
+            orderPayment.setPayType(payType);
+            orderPayment.setCreateTime(DateUtil.date());
+            OrderInfo orderInfo = orderInfoMapper.selectOrderDetailInfoByOrderNo(orderNo);
+            orderPayment.setOrderId(orderInfo.getId());
+            orderPayment.setPayAmount(new BigDecimal(item.getSumAmount()));
+            orderPayment.setPayNo(payNo);
+            orderInfoMapper.updateOrderStatus(orderInfo.getId(), 3);
+            orderPaymentMapper.insertOrderPayment(orderPayment);
+        }
+    }
+
+    public static void main(String[] args) {
+        BigDecimal sum = new BigDecimal("66");
+        BigDecimal item = new BigDecimal("56");
+        System.out.println(sum.add(new BigDecimal(10)).compareTo(item));
     }
 
 /*    private void checkProductExpress(List<OrderDetail> orderDetails, List<OrderExpress> orderExpresses) {

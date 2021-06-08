@@ -36,6 +36,7 @@ public interface OrderInfoMapper {
 
     public List<OrderInfo> selectOrderInfoList(@Param(value = "managerId") Long managerId, @Param(value = "payUser") String payUser, @Param(value = "orderUser") String orderUser,
                                                @Param(value = "express") String express, @Param("productName") String productName,
+                                               @Param(value = "status") String status, @Param("date") String date,
                                                @Param(value = "startDate") String startDate, @Param(value = "endDate") String endDate);
 
     /**
@@ -78,6 +79,8 @@ public interface OrderInfoMapper {
 
     int updateOrderNO(@Param(value = "id")Long id, @Param(value = "orderNo")String orderNo);
 
+    int updateOrderStatus(@Param(value = "id")Long id, @Param(value = "status")int status);
+
     List<OrderInfo> getOrderParentSum();
 
     int updateSend(@Param(value = "send") int send, @Param(value = "orderId")Long orderId);
@@ -91,4 +94,7 @@ public interface OrderInfoMapper {
     List<OrderDetailExcelDTO> selectOrderDetailExcel(Long orderParentId);
 
     List<OrderExcelPayDTO> selectPayExcel(Long orderParentId);
+
+    OrderInfo selectOrderDetailInfoByOrderNo(@Param("orderNo") String orderNo);
+
 }

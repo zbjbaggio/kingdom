@@ -8,16 +8,13 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
-        
 /**
  * 订单付款表 t_order_payment
- * 
+ *
  * @author kingdom
  * @date 2019-10-26
  */
@@ -39,7 +36,7 @@ public class OrderPayment extends EntityBase implements Serializable {
 	/** 付款金额 */
 	@ExcelExport(name = "付款金额")
 	@Min(value = 0, groups = {Insert.class, OrderDTO.BASE.class})
-	@NotNull(groups = {Insert.class, OrderDTO.BASE.class})
+	//@NotNull(groups = {Insert.class, OrderDTO.BASE.class})
 	private BigDecimal payAmount;
 
 	/** 订单编号 */

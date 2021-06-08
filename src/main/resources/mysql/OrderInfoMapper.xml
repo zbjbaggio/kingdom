@@ -66,6 +66,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test=" productName != '' "> join t_order_detail h on a.id = h.order_id and h.product_name like #{productName} and h.number <![CDATA[ > ]]> h.express_number</if>
         where 1 = 1
         <if test=" managerId != null "> and a.manager_id = #{managerId}</if>
+        <if test=" status != null "> and a.status = #{status}</if>
+        <if test=" status == 1 "> and a.create_time <![CDATA[ >= ]]> #{date}</if>
         <if test=" payUser != '' "> and (a.order_username like #{payUser} or a.member_no like #{payUser} )</if>
         group by a.id
         order by a.id desc
@@ -144,6 +146,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by a.id desc
     </select>
 
+    <select id="selectOrderDetailInfoByOrderNo" resultMap="OrderInfoResult">
+           select a.id, a.create_time, a.status, a.send, a.remark, a.order_no, a.dr, a.parent_order_id, a.member_no, a.order_username, a.user_id, a.date
+        from t_order_info a where a.order_no = #{orderNo}
+    </select>
+
     <insert id="insertOrderInfo" parameterType="com.kingdom.system.data.entity.OrderInfo" useGeneratedKeys="true" keyProperty="id">
         insert into t_order_info
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -200,6 +207,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <update id="updateSend">
          update t_order_info set send = #{send} where id = #{orderId}
+    </update>
+
+    <update id="updateOrderStatus">
+        update t_order_info set status = #{status} where id = #{id}
     </update>
 
     <delete id="deleteOrderInfoById" parameterType="Long">

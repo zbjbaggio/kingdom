@@ -35,6 +35,7 @@ public enum ErrorInfo {
     MEMBER_NO_NAME_ERROR(50024, "用户名和会员号不一致!"),
     CARD_SAME(50025, "填写的付款码之间重复!"),
     CARD_SAME2(50026, "填写的付款码与历史数据重复!"),
+    EXCEL_EMPTY(50027, "excel为空!")
     ;
 
     private int value;
