@@ -63,7 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test=" startDate != '' and endDate != '' ">  join t_order_parent f on a.parent_order_id = f.id and (f.date <![CDATA[ >= ]]> #{startDate} and f.date <![CDATA[ <= ]]> #{endDate} )</if>
         <if test=" express != '' ">  join t_order_express e on a.id = e.order_id and (e.express_name like #{express} or e.express_phone like #{express} )</if>
         <if test=" orderUser != '' "> join t_order_user d on a.id = d.order_id and (d.user_name like #{orderUser} or d.user_no like #{orderUser} ) </if>
-        <if test=" productName != '' "> join t_order_detail h on a.id = h.order_id and h.product_name like #{productName} and h.number <![CDATA[ > ]]> h.express_number</if>
+        <if test=" productName != '' "> join t_order_detail h on a.id = h.order_id and h.product_name = #{productName} and h.number <![CDATA[ > ]]> h.express_number</if>
         where 1 = 1
         <if test=" managerId != null "> and a.manager_id = #{managerId}</if>
         <if test=" status != null "> and a.status = #{status}</if>

@@ -63,7 +63,7 @@ public class OrderController extends BaseController {
         startPage();
         TableDataInfo dataTable = getDataTable(orderServiceImpl.list(null, "".equals(payUser) ? "" : "%" + payUser + "%",
                 "".equals(orderUser) ? "" : "%" + orderUser + "%", "".equals(express) ? "" : "%" + express + "%",
-                "".equals(productName) ? "" : "%" + productName + "%", status,
+                "".equals(productName) ? "" : productName, status,
                 startDate, endDate));
         List<OrderInfo> rows = (List<OrderInfo>) dataTable.getRows();
         if (rows != null && rows.size() > 0) {
