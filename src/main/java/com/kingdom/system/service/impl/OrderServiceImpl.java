@@ -65,6 +65,9 @@ public class OrderServiceImpl {
     @Inject
     private ValueHolder valueHolder;
 
+    @Inject
+    private PayNoMapper payNoMapper;
+
     @Transactional
     public OrderDTO insert(OrderDTO orderDTO) {
         checkPay(orderDTO.getOrderPayments(), null);
@@ -84,6 +87,9 @@ public class OrderServiceImpl {
         if (orderPayments.get(0).getPayAmount() != null) {
             for (OrderPayment orderPayment : orderPayments) {
                 orderPayment.setOrderId(orderInfo.getId());
+                PayNo payNo = new PayNo();
+                payNo.setPayNo(orderPayment.getPayNo());
+                payNoMapper.save(payNo);
             }
             orderInfoMapper.updateOrderStatus(orderInfo.getId(), 3);
             orderPaymentMapper.insertOrderPayments(orderPayments);
@@ -768,6 +774,7 @@ public class OrderServiceImpl {
             List<OrderPayment> orderPayments = orderPaymentMapper.selectOrderPaymentListByOrderId(orderInfo.getId());
             if (orderPayments != null && orderPayments.size() > 0) {
                 message.append("第").append(i + 1).append("行，该订单已经有了支付信息！");
+                break;
             }
             // 校验金额
             List<OrderProduct> orderProducts = orderProductMapper.selectOrderProductListByOrderId(orderInfo.getId());
@@ -778,14 +785,26 @@ public class OrderServiceImpl {
             if (sum.add(new BigDecimal(10)).compareTo(new BigDecimal(item.getSumAmount())) < 0 ||
                     sum.subtract(new BigDecimal(10)).compareTo(new BigDecimal(item.getSumAmount())) == 1) {
                 message.append("第").append(i + 1).append("行，该订单的支付金额与订单总额不符！");
+                break;
             }
             // 校验付款码
+            int count = payNoMapper.count(payNo);
+            if (count > 0) {
+                message.append("第").append(i + 1).append("行，付款码重复！");
+                break;
+            }
         }
         if (message.toString().length() > 0) {
             throw new PrivateException(500, message.toString());
         }
+        PayNo savePayNo;
         for (int i = 0; i < list.size(); i++) {
             OrderExcelImportDTO item = list.get(i);
+            if (!StringUtils.isEmpty(item.getPayId2())) {
+                payNo = item.getPayId2().trim();
+            } else if (!StringUtils.isEmpty(item.getPayId())) {
+                payNo = item.getPayId().trim();
+            }
             orderPayment = new OrderPayment();
             orderPayment.setPayType(payType);
             orderPayment.setCreateTime(DateUtil.date());
@@ -795,13 +814,10 @@ public class OrderServiceImpl {
             orderPayment.setPayNo(payNo);
             orderInfoMapper.updateOrderStatus(orderInfo.getId(), 3);
             orderPaymentMapper.insertOrderPayment(orderPayment);
+            savePayNo = new PayNo();
+            savePayNo.setPayNo(payNo);
+            payNoMapper.save(savePayNo);
         }
-    }
-
-    public static void main(String[] args) {
-        BigDecimal sum = new BigDecimal("66");
-        BigDecimal item = new BigDecimal("56");
-        System.out.println(sum.add(new BigDecimal(10)).compareTo(item));
     }
 
 /*    private void checkProductExpress(List<OrderDetail> orderDetails, List<OrderExpress> orderExpresses) {
