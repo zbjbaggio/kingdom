@@ -198,7 +198,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <update id="updateOrderParentId">
-        update t_order_info set parent_order_id = #{orderParentId} where parent_order_id = -1
+        update t_order_info set parent_order_id = #{orderParentId} where parent_order_id = -1 and status = 3;
     </update>
 
     <update id="updateOrderNO">

@@ -87,9 +87,12 @@ public class OrderServiceImpl {
         if (orderPayments.get(0).getPayAmount() != null) {
             for (OrderPayment orderPayment : orderPayments) {
                 orderPayment.setOrderId(orderInfo.getId());
-                PayNo payNo = new PayNo();
-                payNo.setPayNo(orderPayment.getPayNo());
-                payNoMapper.save(payNo);
+                if (!StringUtils.isEmpty(orderPayment.getPayNo())) {
+                    PayNo payNo = new PayNo();
+                    payNo.setPayNo(orderPayment.getPayNo());
+                    payNo.setOrderId(orderInfo.getId());
+                    payNoMapper.save(payNo);
+                }
             }
             orderInfoMapper.updateOrderStatus(orderInfo.getId(), 3);
             orderPaymentMapper.insertOrderPayments(orderPayments);
@@ -111,6 +114,10 @@ public class OrderServiceImpl {
                 throw new PrivateException(ErrorInfo.CARD_SAME);
             }
             int count = orderPaymentMapper.selectOrderUserListByPayNo(list, orderId);
+            if (count > 0) {
+                throw new PrivateException(ErrorInfo.CARD_SAME2);
+            }
+            count = payNoMapper.countByOrderId(list, orderId);
             if (count > 0) {
                 throw new PrivateException(ErrorInfo.CARD_SAME2);
             }
@@ -353,8 +360,15 @@ public class OrderServiceImpl {
         orderDetailMapper.deleteOrderDetailByOrderId(orderId);
         saveOrderProduct(orderDTO.getOrderUsers(), orderId, productNameMap);
         List<OrderPayment> orderPayments = orderDTO.getOrderPayments();
+        payNoMapper.deleteByOrderId(orderId);
         for (OrderPayment orderPayment : orderPayments) {
             orderPayment.setOrderId(orderInfo.getId());
+            if (!StringUtils.isEmpty(orderPayment.getPayNo())) {
+                PayNo payNo = new PayNo();
+                payNo.setOrderId(orderInfo.getId());
+                payNo.setPayNo(orderPayment.getPayNo());
+                payNoMapper.save(payNo);
+            }
         }
         orderPaymentMapper.deleteOrderPaymentByOrderId(orderId);
         orderPaymentMapper.insertOrderPayments(orderPayments);
@@ -751,6 +765,7 @@ public class OrderServiceImpl {
         // 默认港币
         int payType = 0;
         OrderPayment orderPayment;
+        Set<String> payNoSet = new HashSet<>();
         for (int i = 0; i < list.size(); i++) {
             OrderExcelImportDTO item = list.get(i);
             if (StringUtils.isEmpty(item.getDesc())) {
@@ -788,14 +803,18 @@ public class OrderServiceImpl {
                 break;
             }
             // 校验付款码
-            int count = payNoMapper.count(payNo);
+            int count = payNoMapper.count(payNo, orderInfo.getId());
             if (count > 0) {
                 message.append("第").append(i + 1).append("行，付款码重复！");
                 break;
             }
+            payNoSet.add(payNo);
         }
         if (message.toString().length() > 0) {
             throw new PrivateException(500, message.toString());
+        }
+        if (payNoSet.size() != list.size()) {
+            throw new PrivateException(500, "excel内有付款码重复！");
         }
         PayNo savePayNo;
         for (int i = 0; i < list.size(); i++) {
@@ -808,7 +827,7 @@ public class OrderServiceImpl {
             orderPayment = new OrderPayment();
             orderPayment.setPayType(payType);
             orderPayment.setCreateTime(DateUtil.date());
-            OrderInfo orderInfo = orderInfoMapper.selectOrderDetailInfoByOrderNo(orderNo);
+            OrderInfo orderInfo = orderInfoMapper.selectOrderDetailInfoByOrderNo(item.getDesc());
             orderPayment.setOrderId(orderInfo.getId());
             orderPayment.setPayAmount(new BigDecimal(item.getSumAmount()));
             orderPayment.setPayNo(payNo);
@@ -816,6 +835,7 @@ public class OrderServiceImpl {
             orderPaymentMapper.insertOrderPayment(orderPayment);
             savePayNo = new PayNo();
             savePayNo.setPayNo(payNo);
+            savePayNo.setOrderId(orderInfo.getId());
             payNoMapper.save(savePayNo);
         }
     }

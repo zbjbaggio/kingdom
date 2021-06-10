@@ -10,11 +10,25 @@
     </sql>
 
     <insert id="save" parameterType="com.kingdom.system.data.entity.PayNo" useGeneratedKeys="true" keyProperty="id">
-      insert into t_pay_no(create_time,last_modified, pay_no) values(now(),now(),#{payNo})
+      insert into t_pay_no(create_time,last_modified, pay_no, order_id) values(now(),now(),#{payNo},#{orderId})
     </insert>
 
+    <delete id="deleteByOrderId">
+        delete from t_pay_no where order_id = #{orderId}
+    </delete>
+
     <select id="count" resultType="java.lang.Integer">
-        SELECT COUNT(*) FROM t_pay_no WHERE pay_no = #{payNo}
+        SELECT COUNT(*) FROM t_pay_no WHERE pay_no = #{payNo} and order_id = #{orderId}
     </select>
+
+    <select id="countByOrderId" resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM t_pay_no
+        WHERE pay_no IN
+        <foreach item="payNO" collection="list" open="(" separator="," close=")">
+            #{payNO}
+        </foreach>
+        <if test="orderId != null"> and order_id != #{orderId}</if>
+    </select>
+
 
 </mapper>

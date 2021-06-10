@@ -9,6 +9,8 @@ import java.io.Serializable;
 @ToString(callSuper = true)
 public class PayNo extends EntityBase implements Serializable {
 
+    private Long orderId;
+
     private String payNo;
 
 }
