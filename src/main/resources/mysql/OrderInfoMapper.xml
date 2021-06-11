@@ -111,14 +111,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select a.order_no
         from t_order_info a
         join t_order_user b on a.id = b.order_id
-        where b.user_id = -1 and a.parent_order_id = -1;
+        where b.user_id = -1 and a.parent_order_id = -1 and a.status = 3;
     </select>
 
     <select id="getOrderParentSum" resultMap="OrderInfoResult">
         select a.date,sum(score) score,sum(hk_cost_amount) hk_cost_amount
         from t_order_info a
         join t_order_product b on a.id = b.order_id
-        where  a.parent_order_id = -1
+        where  a.parent_order_id = -1 and a.status = 3
         group by a.date;
     </select>
 
