@@ -9,7 +9,7 @@ public interface PayNoMapper {
 
     int save(PayNo payNo);
 
-    int count(@Param("payNo") String payNo, @Param("orderId") Long orderId);
+    int count(@Param("payNo") String payNo);
 
     int countByOrderId(@Param("list") List list, @Param("orderId") Long orderId);
 

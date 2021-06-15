@@ -18,7 +18,7 @@
     </delete>
 
     <select id="count" resultType="java.lang.Integer">
-        SELECT COUNT(*) FROM t_pay_no WHERE pay_no = #{payNo} and order_id = #{orderId}
+        SELECT COUNT(*) FROM t_pay_no WHERE pay_no = #{payNo}
     </select>
 
     <select id="countByOrderId" resultType="java.lang.Integer">

@@ -11,6 +11,7 @@ import com.kingdom.system.data.vo.ProductVO;
 import com.kingdom.system.mapper.*;
 import com.kingdom.system.util.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -551,7 +552,7 @@ public class OrderServiceImpl {
                             expressNumber = 0;
                             break;
                         } else {
-                            updateNumber(orderDetailVO, orderDetailVO.getExpressNumber());
+                            updateNumber(orderDetailVO, -orderDetailVO.getExpressNumber());
                             expressNumber = expressNumber + orderDetailVO.getExpressNumber();
                         }
                     }
@@ -803,7 +804,7 @@ public class OrderServiceImpl {
                 break;
             }
             // 校验付款码
-            int count = payNoMapper.count(payNo, orderInfo.getId());
+            int count = payNoMapper.count(payNo);
             if (count > 0) {
                 message.append("第").append(i + 1).append("行，付款码重复！");
                 break;
